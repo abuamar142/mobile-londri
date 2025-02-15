@@ -11,6 +11,11 @@ import 'features/auth/domain/usecases/auth_login.dart';
 import 'features/auth/domain/usecases/auth_logout.dart';
 import 'features/auth/domain/usecases/auth_register.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/user_role/data/datasources/user_role_remote_datasource.dart';
+import 'features/user_role/data/repositories/user_role_repository_implementation.dart';
+import 'features/user_role/domain/repositories/user_role_repository.dart';
+import 'features/user_role/domain/usecases/user_role_get_profiles.dart';
+import 'features/user_role/presentation/bloc/user_role_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -28,6 +33,9 @@ Future<void> initializeDependencies() async {
       () => SupabaseClient(
         dotenv.env['SUPABASE_URL']!,
         dotenv.env['SUPABASE_KEY']!,
+        headers: {
+          'Authorization': 'Bearer ${dotenv.env['SUPABASE_TOKEN']!}',
+        },
         authOptions: const AuthClientOptions(
           authFlowType: AuthFlowType.implicit,
         ),
@@ -71,6 +79,35 @@ Future<void> initializeDependencies() async {
         authLogin: serviceLocator(),
         authRegister: serviceLocator(),
         authLogout: serviceLocator(),
+      ),
+    )
+
+    // Feature - User Role
+    // DataSources
+    ..registerLazySingleton<UserRoleRemoteDatasource>(
+      () => UserRoleRemoteDataSourceImplementation(
+        supabaseClient: serviceLocator(),
+      ),
+    )
+
+    // Repositories
+    ..registerLazySingleton<UserRoleRepository>(
+      () => UserRoleRepositoryImplementation(
+        userRoleRemoteDatasource: serviceLocator(),
+      ),
+    )
+
+    // UseCases
+    ..registerLazySingleton<UserRoleGetProfiles>(
+      () => UserRoleGetProfiles(
+        userRoleRepository: serviceLocator(),
+      ),
+    )
+
+    // Bloc
+    ..registerFactory<UserRoleBloc>(
+      () => UserRoleBloc(
+        userRoleGetProfiles: serviceLocator(),
       ),
     );
 }
