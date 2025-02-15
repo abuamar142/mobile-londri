@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:londri/config/theme/app_bar.dart';
+
+import 'app_bar.dart';
 
 class AppThemes {
   AppThemes._();
