@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loading_widget.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../user_role/presentation/screens/user_roles_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,14 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: const Text('Home'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Home Screen'),
-          ],
-        ),
-      ),
+      body: UserRolesScreen(),
     );
   }
 }

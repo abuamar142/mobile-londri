@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/routes/app_routes.dart';
 import 'config/theme/app_themes.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/user_role/presentation/bloc/user_role_bloc.dart';
 import 'injection_container.dart';
 
 void main() async {
@@ -23,6 +24,9 @@ class MainApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => serviceLocator<AuthBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator<UserRoleBloc>(),
         ),
       ],
       child: MaterialApp.router(
