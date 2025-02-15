@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:londri/config/assets/app_assets.dart';
 
+import '../../../../config/assets/app_assets.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 
 class SplashScreen extends StatefulWidget {
