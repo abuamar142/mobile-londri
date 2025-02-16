@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'config/l10n/l10n.dart';
 import 'config/routes/app_routes.dart';
 import 'config/theme/app_themes.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
@@ -36,6 +39,14 @@ class MainApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         theme: AppThemes.lightTheme,
         darkTheme: AppThemes.darkTheme,
+        supportedLocales: AppLocales.locales,
+        locale: Locale('id'),
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
       ),
     );
   }
