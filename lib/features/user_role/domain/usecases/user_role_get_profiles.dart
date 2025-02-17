@@ -12,6 +12,6 @@ class UserRoleGetProfiles {
   });
 
   Future<Either<Failure, List<Profile>>> call() async {
-    return await userRoleRepository.read();
+    return await userRoleRepository.getProfiles();
   }
 }

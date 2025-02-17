@@ -3,10 +3,10 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failure.dart';
 import '../repositories/user_role_repository.dart';
 
-class UserRoleCreate {
+class UserRoleActivateUser {
   final UserRoleRepository userRoleRepository;
 
-  UserRoleCreate({
+  UserRoleActivateUser({
     required this.userRoleRepository,
   });
 
@@ -14,7 +14,7 @@ class UserRoleCreate {
     String userId,
     String role,
   ) async {
-    return await userRoleRepository.create(
+    return await userRoleRepository.activateUser(
       userId,
       role,
     );

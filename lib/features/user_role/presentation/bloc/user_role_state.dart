@@ -36,3 +36,7 @@ class UserRoleFailure extends UserRoleState {
         message,
       ];
 }
+
+class UserRoleSuccessActivateUser extends UserRoleState {}
+
+class UserRoleSuccessDeactivateUser extends UserRoleState {}

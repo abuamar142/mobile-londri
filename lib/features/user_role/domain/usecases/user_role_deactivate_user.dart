@@ -3,18 +3,18 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failure.dart';
 import '../repositories/user_role_repository.dart';
 
-class UserRoleDelete {
+class UserRoleDeactivateUser {
   final UserRoleRepository userRoleRepository;
 
-  UserRoleDelete({
+  UserRoleDeactivateUser({
     required this.userRoleRepository,
   });
 
   Future<Either<Failure, void>> call(
-    int id,
+    String userId,
   ) async {
-    return await userRoleRepository.delete(
-      id,
+    return await userRoleRepository.deactivateUser(
+      userId,
     );
   }
 }

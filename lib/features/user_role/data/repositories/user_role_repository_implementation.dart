@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/profile.dart';
 import '../../domain/repositories/user_role_repository.dart';
@@ -13,23 +14,32 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   });
 
   @override
-  Future<Either<Failure, void>> create(String userId, String role) {
-    // TODO: implement create
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, void>> delete(int id) {
-    // TODO: implement delete
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, List<Profile>>> read() async {
+  Future<Either<Failure, void>> activateUser(String userId, String role) async {
     try {
-      final response = await userRoleRemoteDatasource.readProfile();
+      await userRoleRemoteDatasource.createUserRole(userId, role);
+
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Profile>>> getProfiles() async {
+    try {
+      final response = await userRoleRemoteDatasource.readProfiles();
 
       return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
     } catch (e) {
       return Left(
         Failure(message: e.toString()),
@@ -41,5 +51,22 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   Future<Either<Failure, void>> update(int id, String role) {
     // TODO: implement update
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, void>> deactivateUser(String userId) async {
+    try {
+      await userRoleRemoteDatasource.deleteUserRole(userId);
+
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
   }
 }

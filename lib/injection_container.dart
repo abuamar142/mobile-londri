@@ -14,6 +14,8 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/user_role/data/datasources/user_role_remote_datasource.dart';
 import 'features/user_role/data/repositories/user_role_repository_implementation.dart';
 import 'features/user_role/domain/repositories/user_role_repository.dart';
+import 'features/user_role/domain/usecases/user_role_activate_user.dart';
+import 'features/user_role/domain/usecases/user_role_deactivate_user.dart';
 import 'features/user_role/domain/usecases/user_role_get_profiles.dart';
 import 'features/user_role/presentation/bloc/user_role_bloc.dart';
 
@@ -103,11 +105,23 @@ Future<void> initializeDependencies() async {
         userRoleRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<UserRoleActivateUser>(
+      () => UserRoleActivateUser(
+        userRoleRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<UserRoleDeactivateUser>(
+      () => UserRoleDeactivateUser(
+        userRoleRepository: serviceLocator(),
+      ),
+    )
 
     // Bloc
     ..registerFactory<UserRoleBloc>(
       () => UserRoleBloc(
         userRoleGetProfiles: serviceLocator(),
+        userRoleActivateUser: serviceLocator(),
+        userRoleDeactivateUser: serviceLocator(),
       ),
     );
 }

@@ -22,10 +22,51 @@ void main() async {
     supabaseClient: supabaseClient,
   );
 
+  // await createUserRole(datasource: datasource);
+  await readProfile(datasource: datasource);
+  // await deleteUserRole(datasource: datasource);
+}
+
+Future<void> createUserRole({
+  required UserRoleRemoteDataSourceImplementation datasource,
+}) async {
   try {
-    final response = await datasource.readProfile();
+    await datasource.createUserRole(
+      dotenv.env['USER_ID']!,
+      "user",
+    );
+
+    print("Success");
+  } on ServerException catch (e) {
+    print(e.message);
+  } catch (e) {
+    print(e);
+  }
+}
+
+Future<void> readProfile({
+  required UserRoleRemoteDataSourceImplementation datasource,
+}) async {
+  try {
+    final response = await datasource.readProfiles();
 
     print(response);
+  } on ServerException catch (e) {
+    print(e.message);
+  } catch (e) {
+    print(e);
+  }
+}
+
+Future<void> deleteUserRole({
+  required UserRoleRemoteDataSourceImplementation datasource,
+}) async {
+  try {
+    await datasource.deleteUserRole(
+      dotenv.env['USER_ID']!,
+    );
+
+    print("Success");
   } on ServerException catch (e) {
     print(e.message);
   } catch (e) {

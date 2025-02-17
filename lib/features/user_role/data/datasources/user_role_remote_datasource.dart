@@ -7,7 +7,7 @@ import '../models/profile_model.dart';
 
 abstract class UserRoleRemoteDatasource {
   Future<void> createUserRole(String userId, String roleId);
-  Future<List<ProfileModel>> readProfile();
+  Future<List<ProfileModel>> readProfiles();
   Future<void> updateUserRole(String userId, String roleId);
   Future<void> deleteUserRole(String userId);
 }
@@ -21,15 +21,30 @@ class UserRoleRemoteDataSourceImplementation extends UserRoleRemoteDatasource {
 
   @override
   Future<void> createUserRole(String userId, String roleId) {
-    // TODO: implement createUserRole
-    throw UnimplementedError();
+    try {
+      return supabaseClient
+          .from(
+        'user_roles',
+      )
+          .insert({
+        'user_id': userId,
+        'role': roleId,
+      });
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 
   @override
-  Future<List<ProfileModel>> readProfile() async {
+  Future<List<ProfileModel>> readProfiles() async {
     try {
-      final List<Map<String, dynamic>> response =
-          await supabaseClient.from('profiles').select();
+      final List<Map<String, dynamic>> response = await supabaseClient
+          .from(
+            'profiles',
+          )
+          .select();
 
       print('response: ${jsonEncode(response)}');
 
@@ -49,7 +64,17 @@ class UserRoleRemoteDataSourceImplementation extends UserRoleRemoteDatasource {
 
   @override
   Future<void> deleteUserRole(String userId) {
-    // TODO: implement deleteUserRole
-    throw UnimplementedError();
+    try {
+      return supabaseClient
+          .from(
+            'user_roles',
+          )
+          .delete()
+          .eq('user_id', userId);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
   }
 }
