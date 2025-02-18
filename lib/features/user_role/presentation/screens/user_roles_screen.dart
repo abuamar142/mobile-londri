@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
@@ -25,15 +26,10 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
         );
   }
 
-  Future<void> _refresh() async {
-    context.read<UserRoleBloc>().add(
-          UserRoleEventGetProfiles(),
-        );
-    showSnackbar(context, 'Data refreshed');
-  }
-
   @override
   Widget build(BuildContext context) {
+    final appText = AppLocalizations.of(context)!;
+
     return BlocListener<UserRoleBloc, UserRoleState>(
       listener: (context, state) {
         if (state is UserRoleFailure) {
@@ -43,17 +39,9 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'User Roles',
+            appText.userRoleTitle,
             style: AppTextstyle.title,
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                _refresh();
-              },
-            ),
-          ],
         ),
         body: SafeArea(
           child: BlocBuilder<UserRoleBloc, UserRoleState>(
@@ -65,36 +53,42 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
 
                 if (profiles.isEmpty) {
                   return Center(
-                    child: Text('No profiles found'),
+                    child: Text(
+                      appText.userRoleEmpty,
+                      style: AppTextstyle.body,
+                    ),
                   );
                 }
 
                 return ListView.builder(
                   itemCount: profiles.length,
                   itemBuilder: (context, index) {
+                    Profile profile = profiles[index];
+                    bool isUser = profile.role == 'user';
+
                     return ListTile(
-                      title: Text(profiles[index].name),
-                      subtitle: Text(profiles[index].email),
+                      contentPadding: const EdgeInsets.only(
+                        left: 16.0,
+                        right: 8,
+                      ),
+                      title: Text(profile.name),
+                      subtitle: Text(profile.email),
                       trailing: IconButton(
                         icon: Icon(
-                          profiles[index].role == 'user'
-                              ? Icons.check_circle
-                              : Icons.remove_circle,
-                          color: profiles[index].role == 'user'
-                              ? Colors.green
-                              : Colors.red,
+                          isUser ? Icons.check_circle : Icons.remove_circle,
+                          color: isUser ? Colors.green : Colors.red,
                         ),
                         onPressed: () {
-                          if (profiles[index].role == 'user') {
+                          if (isUser) {
                             deactivateUser(
                               context: context,
-                              profile: profiles[index],
+                              profile: profile,
                               index: index,
                             );
                           } else {
                             activateUser(
                               context: context,
-                              profile: profiles[index],
+                              profile: profile,
                               index: index,
                             );
                           }
@@ -105,7 +99,10 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
                 );
               } else {
                 return Center(
-                  child: Text('An error occurred'),
+                  child: Text(
+                    appText.errorOccured,
+                    style: AppTextstyle.body,
+                  ),
                 );
               }
             },

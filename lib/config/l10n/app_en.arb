@@ -2,5 +2,17 @@
   "splashText": "Manage your Laundry Business Easily",
   "@splashText": {
     "description": "Text displayed on the splash screen"
+  },
+  "userRoleTitle": "User Role",
+  "@userRoleTitle": {
+    "description": "Title for the user role"
+  },
+  "userRoleEmpty": "No user role found",
+  "@userRoleEmpty": {
+    "description": "Message displayed when no user role found"
+  },
+  "errorOccured": "An error occurred",
+  "@errorOccured": {
+    "description": "Error message displayed when an error occurs"
   }
 }

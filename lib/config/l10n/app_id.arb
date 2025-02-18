@@ -1,3 +1,6 @@
 {
-  "splashText": "Kelola Bisnis Laundry Anda dengan Mudah"
+  "splashText": "Kelola Bisnis Laundry Anda dengan Mudah",
+  "userRoleTitle": "Peran Pengguna",
+  "userRoleEmpty": "Tidak ada peran pengguna ditemukan",
+  "errorOccured": "Terjadi kesalahan"
 }
