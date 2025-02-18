@@ -9,11 +9,17 @@ class AppThemes {
     scaffoldBackgroundColor: Colors.black,
     primaryColor: Colors.blue,
     appBarTheme: darkAppBarTheme(),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.blue,
+    ),
   );
 
   static ThemeData lightTheme = ThemeData.light().copyWith(
     scaffoldBackgroundColor: Colors.blue.shade50,
     primaryColor: Colors.blue,
     appBarTheme: lightAppBarTheme(),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.blue,
+    ),
   );
 }

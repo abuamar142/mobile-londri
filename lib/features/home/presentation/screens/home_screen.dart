@@ -52,12 +52,27 @@ class _HomeScreenState extends State<HomeScreen> {
           style: AppTextstyle.title,
         ),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            context.pushNamed('user-roles');
-          },
-          child: const Text('User Roles'),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  context.pushNamed('user-roles');
+                },
+                child: const Text('User Roles'),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  context.pushNamed('services');
+                },
+                child: const Text('Services'),
+              ),
+            ],
+          ),
         ),
       ),
     );
