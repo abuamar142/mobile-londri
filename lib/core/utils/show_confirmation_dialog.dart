@@ -16,6 +16,7 @@ Future<void> showConfirmationDialog({
       return AlertDialog(
         title: Text(title),
         content: Text(content),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: <Widget>[
           TextButton(
             child: Text('Cancel'),
