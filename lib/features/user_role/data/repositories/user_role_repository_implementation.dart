@@ -48,12 +48,6 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   }
 
   @override
-  Future<Either<Failure, void>> update(int id, String role) {
-    // TODO: implement update
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, void>> deactivateUser(String userId) async {
     try {
       await userRoleRemoteDatasource.deleteUserRole(userId);

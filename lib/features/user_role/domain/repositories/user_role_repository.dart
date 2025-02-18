@@ -9,10 +9,6 @@ abstract class UserRoleRepository {
     String role,
   );
   Future<Either<Failure, List<Profile>>> getProfiles();
-  Future<Either<Failure, void>> update(
-    int id,
-    String role,
-  );
   Future<Either<Failure, void>> deactivateUser(
     String userId,
   );

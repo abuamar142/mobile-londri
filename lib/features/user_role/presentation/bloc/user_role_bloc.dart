@@ -38,7 +38,6 @@ class UserRoleBloc extends Bloc<UserRoleEvent, UserRoleState> {
     });
     on<UserRoleEventActivateUser>((event, emit) async {
       emit(UserRoleLoading());
-
       Either<Failure, void> result = await userRoleActivateUser(
         event.userId,
         event.role,
@@ -50,6 +49,7 @@ class UserRoleBloc extends Bloc<UserRoleEvent, UserRoleState> {
         ));
       }, (right) {
         emit(UserRoleSuccessActivateUser());
+        add(UserRoleEventGetProfiles());
       });
     });
     on<UserRoleEventDeactivateUser>((event, emit) async {
@@ -65,6 +65,7 @@ class UserRoleBloc extends Bloc<UserRoleEvent, UserRoleState> {
         ));
       }, (right) {
         emit(UserRoleSuccessDeactivateUser());
+        add(UserRoleEventGetProfiles());
       });
     });
   }
