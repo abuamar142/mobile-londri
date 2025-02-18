@@ -9,18 +9,16 @@ import '../datasources/service_remote_datasource.dart';
 import '../models/service_model.dart';
 
 class ServiceRepositoryImplementation extends ServiceRepository {
-  final ServiceRemoteDatasourceImplementation
-      serviceRemoteDatasourceImplementation;
+  final ServiceRemoteDatasource serviceRemoteDatasource;
 
   ServiceRepositoryImplementation({
-    required this.serviceRemoteDatasourceImplementation,
+    required this.serviceRemoteDatasource,
   });
 
   @override
   Future<Either<Failure, List<Service>>> getServices() async {
     try {
-      final response =
-          await serviceRemoteDatasourceImplementation.readServices();
+      final response = await serviceRemoteDatasource.readServices();
 
       return Right(response);
     } on ServerException catch (e) {
@@ -37,8 +35,7 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   @override
   Future<Either<Failure, Service>> getServiceById(String id) async {
     try {
-      final response =
-          await serviceRemoteDatasourceImplementation.readServiceById(id);
+      final response = await serviceRemoteDatasource.readServiceById(id);
 
       return Right(response);
     } on ServerException catch (e) {
@@ -55,7 +52,7 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   @override
   Future<Either<Failure, void>> createService(Service service) async {
     try {
-      await serviceRemoteDatasourceImplementation.createService(ServiceModel(
+      await serviceRemoteDatasource.createService(ServiceModel(
         id: Uuid().v4(),
         name: service.name,
         description: service.description,
@@ -79,7 +76,7 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   @override
   Future<Either<Failure, void>> updateService(Service service) async {
     try {
-      await serviceRemoteDatasourceImplementation.updateService(ServiceModel(
+      await serviceRemoteDatasource.updateService(ServiceModel(
         id: service.id,
         name: service.name,
         description: service.description,
@@ -102,7 +99,7 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   @override
   Future<Either<Failure, void>> deleteService(String id) async {
     try {
-      await serviceRemoteDatasourceImplementation.deleteService(id);
+      await serviceRemoteDatasource.deleteService(id);
 
       return Right(null);
     } on ServerException catch (e) {
