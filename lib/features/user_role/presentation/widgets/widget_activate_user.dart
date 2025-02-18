@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/profile.dart';
 import '../bloc/user_role_bloc.dart';
@@ -24,7 +23,7 @@ Future<void> activateUser({
           role: 'user',
         ),
       );
-      context.pop();
+      context.pushReplacementNamed('user-roles');
     },
   );
 }

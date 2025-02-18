@@ -2,9 +2,9 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
-import '../../domain/entities/profile.dart';
 import '../../domain/repositories/user_role_repository.dart';
 import '../datasources/user_role_remote_datasource.dart';
+import '../models/profile_model.dart';
 
 class UserRoleRepositoryImplementation extends UserRoleRepository {
   final UserRoleRemoteDatasource userRoleRemoteDatasource;
@@ -31,9 +31,11 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   }
 
   @override
-  Future<Either<Failure, List<Profile>>> getProfiles() async {
+  Future<Either<Failure, List<ProfileModel>>> getProfiles() async {
     try {
       final response = await userRoleRemoteDatasource.readProfiles();
+
+      response.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return Right(response);
     } on ServerException catch (e) {
