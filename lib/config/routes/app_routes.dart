@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 
 class AppRoutes {
@@ -10,7 +11,7 @@ class AppRoutes {
 
   static GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: '/',
+    initialLocation: '/services',
     routes: [
       GoRoute(
         path: '/',
@@ -36,6 +37,13 @@ class AppRoutes {
         name: 'home',
         builder: (context, state) {
           return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        path: '/services',
+        name: 'services',
+        builder: (context, state) {
+          return const ServicesScreen();
         },
       ),
     ],
