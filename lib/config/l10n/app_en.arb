@@ -11,6 +11,30 @@
   "@userRoleEmpty": {
     "description": "Message displayed when no user role found"
   },
+  "userRoleActivateUser": "Activate User",
+  "@userRoleActivateUser": {
+    "description": "Dialog to activate user"
+  },
+  "userRoleDeactivateUser": "Deactivate User",
+  "@userRoleDeactivateUser": {
+    "description": "Dialog to deactivate user"
+  },
+  "userRoleActivateSuccess": "User activated successfully",
+  "@userRoleActivateSuccess": {
+    "description": "Message displayed when user activated successfully"
+  },
+  "userRoleDeactivateSuccess": "User deactivated successfully",
+  "@userRoleDeactivateSuccess": {
+    "description": "Message displayed when user deactivated successfully"
+  },
+  "userRoleActivateConfirm": "Are you sure you want to activate this user?",
+  "@userRoleActivateConfirm": {
+    "description": "Confirmation message to activate user"
+  },
+  "userRoleDeactivateConfirm": "Are you sure you want to deactivate this user?",
+  "@userRoleDeactivateConfirm": {
+    "description": "Confirmation message to deactivate user"
+  },
   "serviceTitle": "Service",
   "@serviceTitle": {
     "description": "Title for the service"
