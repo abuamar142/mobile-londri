@@ -84,12 +84,14 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
                               context: context,
                               profile: profile,
                               index: index,
+                              appText: appText,
                             );
                           } else {
                             activateUser(
                               context: context,
                               profile: profile,
                               index: index,
+                              appText: appText,
                             );
                           }
                         },

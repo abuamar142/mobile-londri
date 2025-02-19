@@ -45,7 +45,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   void onServiceEventGetServices(
-      ServiceEventGetServices event, Emitter<ServiceState> emit) async {
+    ServiceEventGetServices event,
+    Emitter<ServiceState> emit,
+  ) async {
     emit(ServiceStateLoading());
 
     Either<Failure, List<Service>> result = await serviceGetServices();
@@ -62,7 +64,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   void onServiceEventGetServiceById(
-      ServiceEventGetServiceById event, Emitter<ServiceState> emit) async {
+    ServiceEventGetServiceById event,
+    Emitter<ServiceState> emit,
+  ) async {
     emit(ServiceStateLoading());
 
     Either<Failure, Service> result = await serviceGetServiceById(event.id);
@@ -79,7 +83,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   void onServiceEventCreateService(
-      ServiceEventCreateService event, Emitter<ServiceState> emit) async {
+    ServiceEventCreateService event,
+    Emitter<ServiceState> emit,
+  ) async {
     emit(ServiceStateLoading());
 
     Either<Failure, void> result = await serviceCreateService(event.service);
@@ -90,11 +96,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ));
     }, (right) {
       emit(ServiceStateSuccessCreateService());
+      add(ServiceEventGetServices());
     });
   }
 
   void onServiceEventUpdateService(
-      ServiceEventUpdateService event, Emitter<ServiceState> emit) async {
+    ServiceEventUpdateService event,
+    Emitter<ServiceState> emit,
+  ) async {
     emit(ServiceStateLoading());
 
     Either<Failure, void> result = await serviceUpdateService(event.service);
@@ -105,11 +114,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ));
     }, (right) {
       emit(ServiceStateSuccessUpdateService());
+      add(ServiceEventGetServices());
     });
   }
 
   void onServiceEventDeleteService(
-      ServiceEventDeleteService event, Emitter<ServiceState> emit) async {
+    ServiceEventDeleteService event,
+    Emitter<ServiceState> emit,
+  ) async {
     emit(ServiceStateLoading());
 
     Either<Failure, void> result = await serviceDeleteService(event.id);
@@ -120,6 +132,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       ));
     }, (right) {
       emit(ServiceStateSuccessDeleteService());
+      add(ServiceEventGetServices());
     });
   }
 }
