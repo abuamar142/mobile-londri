@@ -14,9 +14,9 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   });
 
   @override
-  Future<Either<Failure, void>> activateUser(String userId, String role) async {
+  Future<Either<Failure, void>> activateUser(String userId) async {
     try {
-      await userRoleRemoteDatasource.createUserRole(userId, role);
+      await userRoleRemoteDatasource.createUserRole(userId);
 
       return Right(null);
     } on ServerException catch (e) {

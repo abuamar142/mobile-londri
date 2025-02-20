@@ -4,7 +4,7 @@ import '../../../../core/error/exceptions.dart';
 import '../models/profile_model.dart';
 
 abstract class UserRoleRemoteDatasource {
-  Future<void> createUserRole(String userId, String roleId);
+  Future<void> createUserRole(String userId);
   Future<List<ProfileModel>> readProfiles();
   Future<void> deleteUserRole(String userId);
 }
@@ -17,7 +17,7 @@ class UserRoleRemoteDataSourceImplementation extends UserRoleRemoteDatasource {
   });
 
   @override
-  Future<void> createUserRole(String userId, String roleId) {
+  Future<void> createUserRole(String userId) {
     try {
       return supabaseClient
           .from(
@@ -25,7 +25,7 @@ class UserRoleRemoteDataSourceImplementation extends UserRoleRemoteDatasource {
       )
           .insert({
         'user_id': userId,
-        'role': roleId,
+        'role': 'user',
       });
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);

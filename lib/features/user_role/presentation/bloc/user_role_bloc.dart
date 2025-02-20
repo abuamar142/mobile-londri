@@ -21,52 +21,74 @@ class UserRoleBloc extends Bloc<UserRoleEvent, UserRoleState> {
     required this.userRoleActivateUser,
     required this.userRoleDeactivateUser,
   }) : super(UserRoleInitial()) {
-    on<UserRoleEventGetProfiles>((event, emit) async {
-      emit(UserRoleLoading());
+    on<UserRoleEventGetProfiles>(
+      (event, emit) => onUserRoleEventGetProfiles(event, emit),
+    );
+    on<UserRoleEventActivateUser>(
+      (event, emit) => onUserRoleEventActivateUser(event, emit),
+    );
+    on<UserRoleEventDeactivateUser>(
+      (event, emit) => onUserRoleEventDeactivateUser(event, emit),
+    );
+  }
 
-      Either<Failure, List<Profile>> result = await userRoleGetProfiles();
+  void onUserRoleEventGetProfiles(
+    UserRoleEventGetProfiles event,
+    Emitter<UserRoleState> emit,
+  ) async {
+    emit(UserRoleLoading());
 
-      result.fold((left) {
-        emit(UserRoleFailure(
-          message: left.message,
-        ));
-      }, (right) {
-        emit(UserRoleSuccessGetProfiles(
-          profiles: right,
-        ));
-      });
+    Either<Failure, List<Profile>> result = await userRoleGetProfiles();
+
+    result.fold((left) {
+      emit(UserRoleFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(UserRoleSuccessGetProfiles(
+        profiles: right,
+      ));
     });
-    on<UserRoleEventActivateUser>((event, emit) async {
-      emit(UserRoleLoading());
-      Either<Failure, void> result = await userRoleActivateUser(
-        event.userId,
-        event.role,
-      );
+  }
 
-      result.fold((left) {
-        emit(UserRoleFailure(
-          message: left.message,
-        ));
-      }, (right) {
-        emit(UserRoleSuccessActivateUser());
-        add(UserRoleEventGetProfiles());
-      });
+  void onUserRoleEventActivateUser(
+    UserRoleEventActivateUser event,
+    Emitter<UserRoleState> emit,
+  ) async {
+    emit(UserRoleLoading());
+
+    Either<Failure, void> result = await userRoleActivateUser(
+      event.userId,
+      event.role,
+    );
+
+    result.fold((left) {
+      emit(UserRoleFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(UserRoleSuccessActivateUser());
+      add(UserRoleEventGetProfiles());
     });
-    on<UserRoleEventDeactivateUser>((event, emit) async {
-      emit(UserRoleLoading());
+  }
 
-      Either<Failure, void> result = await userRoleDeactivateUser(
-        event.userId,
-      );
+  void onUserRoleEventDeactivateUser(
+    UserRoleEventDeactivateUser event,
+    Emitter<UserRoleState> emit,
+  ) async {
+    emit(UserRoleLoading());
 
-      result.fold((left) {
-        emit(UserRoleFailure(
-          message: left.message,
-        ));
-      }, (right) {
-        emit(UserRoleSuccessDeactivateUser());
-        add(UserRoleEventGetProfiles());
-      });
+    Either<Failure, void> result = await userRoleDeactivateUser(
+      event.userId,
+    );
+
+    result.fold((left) {
+      emit(UserRoleFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(UserRoleSuccessDeactivateUser());
+      add(UserRoleEventGetProfiles());
     });
   }
 }

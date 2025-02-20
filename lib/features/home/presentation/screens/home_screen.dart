@@ -53,25 +53,38 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('user-roles');
-                },
-                child: const Text('User Roles'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  context.pushNamed('services');
-                },
-                child: const Text('Services'),
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all(
+                      const Size(double.infinity, 54),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.pushNamed('user-roles');
+                  },
+                  child: const Text('User Roles'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    minimumSize: WidgetStateProperty.all(
+                      const Size(double.infinity, 54),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.pushNamed('services');
+                  },
+                  child: const Text('Services'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

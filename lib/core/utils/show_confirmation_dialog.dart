@@ -3,13 +3,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../config/textstyle/app_textstyle.dart';
-import '../widgets/loading_widget.dart';
 
 Future<void> showConfirmationDialog({
   required BuildContext context,
   required String title,
   required String content,
-  required bool isLoading,
   required VoidCallback onConfirm,
   required AppLocalizations appText,
 }) async {
@@ -45,11 +43,9 @@ Future<void> showConfirmationDialog({
               ),
               TextButton(
                 onPressed: onConfirm,
-                child: isLoading
-                    ? const LoadingWidget()
-                    : const Text(
-                        'Confirm',
-                      ),
+                child: const Text(
+                  'Confirm',
+                ),
               ),
             ],
           ),

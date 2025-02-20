@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app_observer.dart';
+import 'core/services/auth_service.dart';
 import 'features/auth/data/datasources/auth_local_datasource.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
@@ -36,9 +36,6 @@ Future<void> initializeDependencies() async {
   // Flutter Dotenv
   await dotenv.load(fileName: ".env");
 
-  // SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
-
   // Bloc Observer
   Bloc.observer = AppObserver();
 
@@ -49,20 +46,14 @@ Future<void> initializeDependencies() async {
       () => SupabaseClient(
         dotenv.env['SUPABASE_URL']!,
         dotenv.env['SUPABASE_KEY']!,
-        headers: {
-          'Authorization': 'Bearer ${sharedPreferences.getString(
-            'token',
-          )}',
-        },
-        authOptions: const AuthClientOptions(
-          authFlowType: AuthFlowType.implicit,
-        ),
       ),
     )
 
-    // SharedPreferences
-    ..registerLazySingleton<SharedPreferences>(
-      () => sharedPreferences,
+    // Auth Service
+    ..registerLazySingleton<AuthService>(
+      () => AuthService(
+        supabaseClient: serviceLocator(),
+      ),
     )
 
     // DataSources
@@ -204,4 +195,7 @@ Future<void> initializeDependencies() async {
         serviceDeleteService: serviceLocator(),
       ),
     );
+
+  // Auth Listener
+  await serviceLocator<AuthService>().initializeAuthListener();
 }

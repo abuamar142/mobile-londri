@@ -8,8 +8,6 @@ import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/loading_widget.dart';
-import '../../../../injection_container.dart';
-import '../../../user_role/presentation/bloc/user_role_bloc.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
@@ -268,7 +266,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
       title: appText.serviceDelete,
       appText: appText,
       content: appText.serviceDeleteConfirm,
-      isLoading: serviceLocator<UserRoleBloc>().state is UserRoleLoading,
       onConfirm: () {
         context.read<ServiceBloc>().add(
               ServiceEventDeleteService(id: service.id!),

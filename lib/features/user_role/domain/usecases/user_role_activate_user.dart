@@ -16,7 +16,6 @@ class UserRoleActivateUser {
   ) async {
     return await userRoleRepository.activateUser(
       userId,
-      role,
     );
   }
 }
