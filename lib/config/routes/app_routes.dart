@@ -12,7 +12,7 @@ class AppRoutes {
 
   static GoRouter routes = GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: '/home',
+    initialLocation: '/',
     routes: [
       GoRoute(
         path: '/',

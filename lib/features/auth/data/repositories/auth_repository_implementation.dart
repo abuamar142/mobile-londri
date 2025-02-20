@@ -4,13 +4,16 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/auth.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_local_datasource.dart';
 import '../datasources/auth_remote_datasource.dart';
 
 class AuthRepositoryImplementation extends AuthRepository {
   final AuthRemoteDatasource authRemoteDatasource;
+  final AuthLocalDatasource authLocalDatasource;
 
   AuthRepositoryImplementation({
     required this.authRemoteDatasource,
+    required this.authLocalDatasource,
   });
 
   @override
@@ -20,6 +23,8 @@ class AuthRepositoryImplementation extends AuthRepository {
         email,
         password,
       );
+
+      await authLocalDatasource.saveToken(response.accessToken!);
 
       return Right(response);
     } on ServerException catch (e) {
@@ -62,6 +67,8 @@ class AuthRepositoryImplementation extends AuthRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       await authRemoteDatasource.logout();
+
+      await authLocalDatasource.deleteToken();
 
       return const Right(null);
     } on ServerException catch (e) {
