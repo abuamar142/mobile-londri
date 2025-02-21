@@ -7,7 +7,8 @@ import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/widget_button.dart';
+import '../../../../core/widgets/widget_loading.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
@@ -67,7 +68,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         },
         builder: (context, state) {
           if (state is ServiceStateLoading) {
-            return LoadingWidget(usingPadding: true);
+            return WidgetLoading(usingPadding: true);
           } else if (state is ServiceStateSuccessGetServices) {
             return SafeArea(
               child: ListView.builder(
@@ -184,20 +185,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   SizedBox(height: 8),
                   WidgetTextFormField(
                     label: appText.formNameLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    enabled: state is! ServiceStateLoading,
                     controller: _nameController,
                     validator: (value) =>
                         value?.isEmpty ?? true ? appText.formNameHint : null,
                   ),
                   WidgetTextFormField(
                     label: appText.formDescriptionLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    enabled: state is! ServiceStateLoading,
                     maxLines: 3,
                     controller: _descriptionController,
                   ),
                   WidgetTextFormField(
                     label: appText.formPriceLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    enabled: state is! ServiceStateLoading,
                     controller: _priceController,
                     textInputType:
                         TextInputType.numberWithOptions(decimal: false),
@@ -205,15 +206,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         value?.isEmpty ?? true ? appText.formPriceHint : null,
                   ),
                   const SizedBox(height: 4),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: WidgetStateProperty.all(
-                        const Size(
-                          double.infinity,
-                          54,
-                        ),
-                      ),
-                    ),
+                  WidgetButton(
+                    label: appText.buttonSubmit,
+                    isLoading: state is ServiceStateLoading,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         final newService = Service(
@@ -222,15 +217,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           description: _descriptionController.text,
                           price: int.parse(_priceController.text),
                         );
+
                         onSubmit(newService);
                       }
                     },
-                    child: state is ServiceStateLoading
-                        ? LoadingWidget()
-                        : Text(
-                            appText.buttonSubmit,
-                            style: AppTextstyle.body,
-                          ),
                   ),
                   const SizedBox(height: 8),
                   if (showDeleteButton)
@@ -240,7 +230,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         appText: appText,
                       ),
                       child: state is ServiceStateLoading
-                          ? LoadingWidget()
+                          ? WidgetLoading()
                           : Text(
                               appText.buttonDelete,
                               style: AppTextstyle.body,

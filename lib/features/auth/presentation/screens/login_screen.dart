@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/widget_button.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -92,21 +92,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: !_isPasswordVisible,
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: WidgetStateProperty.all(
-                        const Size(double.infinity, 54),
-                      ),
-                    ),
-                    onPressed: () {
-                      _login();
-                    },
-                    child: state is AuthStateLoading
-                        ? LoadingWidget()
-                        : Text(
-                            'Login',
-                            style: AppTextstyle.body,
-                          ),
+                  WidgetButton(
+                    label: 'Login',
+                    isLoading: state is AuthStateLoading,
+                    onPressed: _login,
                   ),
                   const SizedBox(height: 6),
                   Row(

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/widget_button.dart';
 import '../bloc/auth_bloc.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -129,21 +129,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: !_isPasswordAgainVisible,
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: WidgetStateProperty.all(
-                        const Size(double.infinity, 54),
-                      ),
-                    ),
-                    onPressed: () {
-                      state is AuthStateLoading ? null : _register();
-                    },
-                    child: state is AuthStateLoading
-                        ? LoadingWidget()
-                        : Text(
-                            'Register',
-                            style: AppTextstyle.body,
-                          ),
+                  WidgetButton(
+                    label: 'Register',
+                    isLoading: state is AuthStateLoading,
+                    onPressed: _register,
                   ),
                   const SizedBox(height: 6),
                   Row(

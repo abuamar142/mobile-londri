@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class LoadingWidget extends StatelessWidget {
+class WidgetLoading extends StatelessWidget {
   final bool usingPadding;
 
-  const LoadingWidget({
+  const WidgetLoading({
     super.key,
     this.usingPadding = false,
   });

@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/widget_button.dart';
+import '../../../../core/widgets/widget_loading.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           builder: (context, state) {
             if (state is AuthStateLoading) {
-              return LoadingWidget(usingPadding: true);
+              return WidgetLoading(usingPadding: true);
             } else {
               return IconButton(
                 icon: const Icon(Icons.logout),
@@ -60,28 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all(
-                      const Size(double.infinity, 54),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.pushNamed('user-roles');
-                  },
-                  child: const Text('User Roles'),
+                WidgetButton(
+                  label: 'User Roles',
+                  onPressed: () => context.pushNamed('user-roles'),
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: WidgetStateProperty.all(
-                      const Size(double.infinity, 54),
-                    ),
-                  ),
-                  onPressed: () {
-                    context.pushNamed('services');
-                  },
-                  child: const Text('Services'),
+                WidgetButton(
+                  label: 'Services',
+                  onPressed: () => context.pushNamed('services'),
                 ),
               ],
             ),
