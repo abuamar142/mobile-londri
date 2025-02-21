@@ -9,6 +9,7 @@ import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_text_button.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
@@ -224,17 +225,13 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                   const SizedBox(height: 8),
                   if (showDeleteButton)
-                    TextButton(
+                    WidgetTextButton(
+                      label: appText.buttonDelete,
+                      isLoading: state is ServiceStateLoading,
                       onPressed: () => deleteService(
                         service: service!,
                         appText: appText,
                       ),
-                      child: state is ServiceStateLoading
-                          ? WidgetLoading()
-                          : Text(
-                              appText.buttonDelete,
-                              style: AppTextstyle.body,
-                            ),
                     ),
                 ],
               );

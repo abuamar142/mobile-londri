@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
+import '../../../../core/widgets/widget_text_button.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -101,16 +102,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: state is AuthStateLoading
-                            ? null
-                            : () {
-                                context.pushNamed('register');
-                              },
-                        child: Text(
-                          'Register',
-                          style: AppTextstyle.body,
-                        ),
+                      WidgetTextButton(
+                        label: 'Register',
+                        isLoading: state is AuthStateLoading,
+                        onPressed: () => context.pushNamed('register'),
                       ),
                     ],
                   ),
