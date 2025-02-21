@@ -5,13 +5,13 @@ import '../entities/customer.dart';
 import '../repositories/customer_repository.dart';
 
 class CustomerGetCustomers {
-  final CustomerRepository customerRespository;
+  final CustomerRepository customerRepository;
 
   CustomerGetCustomers({
-    required this.customerRespository,
+    required this.customerRepository,
   });
 
   Future<Either<Failure, List<Customer>>> call() async {
-    return await customerRespository.getCustomers();
+    return await customerRepository.getCustomers();
   }
 }

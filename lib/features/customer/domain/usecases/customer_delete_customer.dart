@@ -4,15 +4,15 @@ import '../../../../core/error/failure.dart';
 import '../repositories/customer_repository.dart';
 
 class CustomerDeleteCustomer {
-  final CustomerRepository customerRespository;
+  final CustomerRepository customerRepository;
 
   CustomerDeleteCustomer({
-    required this.customerRespository,
+    required this.customerRepository,
   });
 
   Future<Either<Failure, void>> call(
     String customerId,
   ) async {
-    return await customerRespository.deleteCustomer(customerId);
+    return await customerRepository.deleteCustomer(customerId);
   }
 }

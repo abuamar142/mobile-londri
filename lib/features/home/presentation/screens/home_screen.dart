@@ -70,6 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Services',
                   onPressed: () => context.pushNamed('services'),
                 ),
+                const SizedBox(height: 16),
+                WidgetButton(
+                  label: 'Customers',
+                  onPressed: () => context.pushNamed('customers'),
+                ),
               ],
             ),
           ),

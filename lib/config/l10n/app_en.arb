@@ -59,6 +59,54 @@
   "@serviceEditFailed": {
     "description": "Message displayed when failed to update service"
   },
+  "customerTitle": "Customer",
+  "@customerTitle": {
+    "description": "Title for the customer"
+  },
+  "customerEmpty": "No customer found",
+  "@customerEmpty": {
+    "description": "Message displayed when no customer found"
+  },
+  "customerAdd": "Add Customer",
+  "@customerAdd": {
+    "description": "Dialog to add customer"
+  },
+  "customerEdit": "Edit Customer",
+  "@customerEdit": {
+    "description": "Dialog to edit customer"
+  },
+  "customerDelete": "Delete Customer",
+  "@customerDelete": {
+    "description": "Dialog to delete customer"
+  },
+  "customerAddSuccess": "Customer added successfully",
+  "@customerAddSuccess": {
+    "description": "Message displayed when customer added successfully"
+  },
+  "customerUpdateSuccess": "Customer updated successfully",
+  "@customerUpdateSuccess": {
+    "description": "Message displayed when customer updated successfully"
+  },
+  "customerDeleteSuccess": "Customer deleted successfully",
+  "@customerDeleteSuccess": {
+    "description": "Message displayed when customer deleted successfully"
+  },
+  "customerDeleteConfirm": "Are you sure you want to delete this customer?",
+  "@customerDeleteConfirm": {
+    "description": "Confirmation message to delete customer"
+  },
+  "customerDeleteFailed": "Failed to delete customer",
+  "@customerDeleteFailed": {
+    "description": "Message displayed when failed to delete customer"
+  },
+  "customerAddFailed": "Failed to add customer",
+  "@customerAddFailed": {
+    "description": "Message displayed when failed to add customer"
+  },
+  "customerEditFailed": "Failed to update customer",
+  "@customerEditFailed": {
+    "description": "Message displayed when failed to update customer"
+  },
   "errorOccured": "An error occurred",
   "@errorOccured": {
     "description": "Error message displayed when an error occurs"
@@ -86,6 +134,10 @@
   "formPhoneLabel": "Phone",
   "@formPhoneLabel": {
     "description": "Label for the phone form"
+  },
+  "formPhoneHint": "Please enter your phone",
+  "@formPhoneHint": {
+    "description": "Hint for the phone form"
   },
   "formDescriptionLabel": "Description",
   "@formDescriptionLabel": {
