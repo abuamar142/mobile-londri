@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:londri/core/error/exceptions.dart';
 import 'package:londri/core/services/auth_service.dart';
 import 'package:londri/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:londri/features/customers/data/datasources/customer_remote_datasource.dart';
-import 'package:londri/features/customers/data/models/customer_model.dart';
+import 'package:londri/features/customer/data/datasources/customer_remote_datasource.dart';
+import 'package:londri/features/customer/data/models/customer_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
