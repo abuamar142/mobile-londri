@@ -142,7 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       WidgetTextButton(
                         label: 'Login',
                         isLoading: state is AuthStateLoading,
-                        onPressed: () => context.pushNamed('login'),
+                        onPressed: () => context.pop(),
                       ),
                     ],
                   ),
