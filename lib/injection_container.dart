@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app_observer.dart';
 import 'core/services/auth_service.dart';
-import 'features/auth/data/datasources/auth_local_datasource.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
@@ -62,17 +61,11 @@ Future<void> initializeDependencies() async {
         supabaseClient: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<AuthLocalDatasource>(
-      () => AuthLocalDatasourceImplementation(
-        sharedPreferences: serviceLocator(),
-      ),
-    )
 
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImplementation(
         authRemoteDatasource: serviceLocator(),
-        authLocalDatasource: serviceLocator(),
       ),
     )
 
