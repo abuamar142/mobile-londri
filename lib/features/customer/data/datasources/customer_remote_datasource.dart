@@ -26,7 +26,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
             'customers',
           )
           .select()
-          .filter('deleted_at', 'is', null);
+          .order('created_at', ascending: false);
 
       return response.map((e) => CustomerModel.fromJson(e)).toList();
     } on PostgrestException catch (e) {

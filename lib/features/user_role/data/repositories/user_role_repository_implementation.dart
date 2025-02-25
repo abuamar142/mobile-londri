@@ -35,8 +35,6 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
     try {
       final response = await userRoleRemoteDatasource.readProfiles();
 
-      response.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
       return Right(response);
     } on ServerException catch (e) {
       return Left(

@@ -20,8 +20,6 @@ class CustomerRepositoryImplementation extends CustomerRepository {
     try {
       final response = await customerRemoteDatasource.readCustomers();
 
-      response.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-
       return Right(response);
     } on ServerException catch (e) {
       return Left(

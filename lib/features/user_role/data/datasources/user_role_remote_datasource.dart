@@ -41,7 +41,8 @@ class UserRoleRemoteDataSourceImplementation extends UserRoleRemoteDatasource {
           .from(
             'profiles',
           )
-          .select();
+          .select()
+          .order('created_at', ascending: false);
 
       return response.map((e) => ProfileModel.fromJson(e)).toList();
     } on PostgrestException catch (e) {

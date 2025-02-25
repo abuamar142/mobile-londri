@@ -20,8 +20,6 @@ class ServiceRepositoryImplementation extends ServiceRepository {
     try {
       final response = await serviceRemoteDatasource.readServices();
 
-      response.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
-
       return Right(response);
     } on ServerException catch (e) {
       return Left(
