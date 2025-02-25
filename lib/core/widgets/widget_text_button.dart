@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../config/textstyle/app_textstyle.dart';
-import 'widget_loading.dart';
 
 class WidgetTextButton extends StatelessWidget {
   final String label;
@@ -19,12 +18,10 @@ class WidgetTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: isLoading ? null : onPressed,
-      child: isLoading
-          ? WidgetLoading()
-          : Text(
-              label,
-              style: AppTextstyle.body,
-            ),
+      child: Text(
+        label,
+        style: AppTextstyle.body,
+      ),
     );
   }
 }
