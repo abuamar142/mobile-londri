@@ -4,9 +4,9 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/customer.dart';
+import '../../domain/usecases/customer_activate_customer.dart';
 import '../../domain/usecases/customer_create_customer.dart';
 import '../../domain/usecases/customer_delete_customer.dart';
-import '../../domain/usecases/customer_get_customer_by_id.dart';
 import '../../domain/usecases/customer_get_customers.dart';
 import '../../domain/usecases/customer_update_customer.dart';
 
@@ -15,23 +15,20 @@ part 'customer_state.dart';
 
 class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   final CustomerGetCustomers customerGetCustomers;
-  final CustomerGetCustomerById customerGetCustomerById;
   final CustomerCreateCustomer customerCreateCustomer;
   final CustomerUpdateCustomer customerUpdateCustomer;
   final CustomerDeleteCustomer customerDeleteCustomer;
+  final CustomerActivateCustomer customerActivateCustomer;
 
   CustomerBloc({
     required this.customerGetCustomers,
-    required this.customerGetCustomerById,
     required this.customerCreateCustomer,
     required this.customerUpdateCustomer,
     required this.customerDeleteCustomer,
+    required this.customerActivateCustomer,
   }) : super(CustomerStateInitial()) {
     on<CustomerEventGetCustomers>(
       (event, emit) => onCustomerEventGetCustomers(event, emit),
-    );
-    on<CustomerEventGetCustomerById>(
-      (event, emit) => onCustomerEventGetCustomerById(event, emit),
     );
     on<CustomerEventCreateCustomer>(
       (event, emit) => onCustomerEventCreateCustomer(event, emit),
@@ -41,6 +38,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     );
     on<CustomerEventDeleteCustomer>(
       (event, emit) => onCustomerEventDeleteCustomer(event, emit),
+    );
+    on<CustomerEventActivateCustomer>(
+      (event, emit) => onCustomerEventActivateCustomer(event, emit),
     );
   }
 
@@ -59,25 +59,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     }, (right) {
       emit(CustomerStateSuccessGetCustomers(
         customers: right,
-      ));
-    });
-  }
-
-  void onCustomerEventGetCustomerById(
-    CustomerEventGetCustomerById event,
-    Emitter<CustomerState> emit,
-  ) async {
-    emit(CustomerStateLoading());
-
-    Either<Failure, Customer> result = await customerGetCustomerById(event.id);
-
-    result.fold((left) {
-      emit(CustomerStateFailure(
-        message: left.message,
-      ));
-    }, (right) {
-      emit(CustomerStateSuccessGetCustomerById(
-        customer: right,
       ));
     });
   }
@@ -124,7 +105,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   ) async {
     emit(CustomerStateLoading());
 
-    Either<Failure, void> result = await customerDeleteCustomer(event.id);
+    Either<Failure, void> result = await customerDeleteCustomer(
+      event.customerId,
+    );
 
     result.fold((left) {
       emit(CustomerStateFailure(
@@ -132,6 +115,26 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessDeleteCustomer());
+      add(CustomerEventGetCustomers());
+    });
+  }
+
+  void onCustomerEventActivateCustomer(
+    CustomerEventActivateCustomer event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(CustomerStateLoading());
+
+    Either<Failure, void> result = await customerActivateCustomer(
+      event.customerId,
+    );
+
+    result.fold((left) {
+      emit(CustomerStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(CustomerStateSuccessActivateCustomer());
       add(CustomerEventGetCustomers());
     });
   }

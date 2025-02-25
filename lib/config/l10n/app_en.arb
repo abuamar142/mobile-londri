@@ -79,6 +79,10 @@
   "@customerDelete": {
     "description": "Dialog to delete customer"
   },
+  "customerActivate": "Activate Customer",
+  "@customerActivate": {
+    "description": "Dialog to activate customer"
+  },
   "customerAddSuccess": "Customer added successfully",
   "@customerAddSuccess": {
     "description": "Message displayed when customer added successfully"
@@ -91,9 +95,17 @@
   "@customerDeleteSuccess": {
     "description": "Message displayed when customer deleted successfully"
   },
+  "customerActivateSuccess": "Customer activated successfully",
+  "@customerActivateSuccess": {
+    "description": "Message displayed when customer activated successfully"
+  },
   "customerDeleteConfirm": "Are you sure you want to delete this customer?",
   "@customerDeleteConfirm": {
     "description": "Confirmation message to delete customer"
+  },
+  "customerActivateConfirm": "Are you sure you want to activate this customer?",
+  "@customerActivateConfirm": {
+    "description": "Confirmation message to activate customer"
   },
   "customerDeleteFailed": "Failed to delete customer",
   "@customerDeleteFailed": {
@@ -106,6 +118,14 @@
   "customerEditFailed": "Failed to update customer",
   "@customerEditFailed": {
     "description": "Message displayed when failed to update customer"
+  },
+  "customerInfoNonActive": "Long press to activate",
+  "@customerInfoNonActive": {
+    "description": "Info message in non active customer"
+  },
+  "customerInfoActive": "This customer is active",
+  "@customerInfoActive": {
+    "description": "Info message in active customer"
   },
   "errorOccured": "An error occurred",
   "@errorOccured": {

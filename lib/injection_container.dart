@@ -15,9 +15,9 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/data/datasources/customer_remote_datasource.dart';
 import 'features/customer/data/repositories/customer_repository_implementation.dart';
 import 'features/customer/domain/repositories/customer_repository.dart';
+import 'features/customer/domain/usecases/customer_activate_customer.dart';
 import 'features/customer/domain/usecases/customer_create_customer.dart';
 import 'features/customer/domain/usecases/customer_delete_customer.dart';
-import 'features/customer/domain/usecases/customer_get_customer_by_id.dart';
 import 'features/customer/domain/usecases/customer_get_customers.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
@@ -219,11 +219,6 @@ Future<void> initializeDependencies() async {
         customerRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<CustomerGetCustomerById>(
-      () => CustomerGetCustomerById(
-        customerRepository: serviceLocator(),
-      ),
-    )
     ..registerLazySingleton<CustomerCreateCustomer>(
       () => CustomerCreateCustomer(
         customerRepository: serviceLocator(),
@@ -239,15 +234,20 @@ Future<void> initializeDependencies() async {
         customerRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<CustomerActivateCustomer>(
+      () => CustomerActivateCustomer(
+        customerRepository: serviceLocator(),
+      ),
+    )
 
     // Bloc
     ..registerFactory(
       () => CustomerBloc(
         customerGetCustomers: serviceLocator(),
-        customerGetCustomerById: serviceLocator(),
         customerCreateCustomer: serviceLocator(),
         customerUpdateCustomer: serviceLocator(),
         customerDeleteCustomer: serviceLocator(),
+        customerActivateCustomer: serviceLocator(),
       ),
     );
 

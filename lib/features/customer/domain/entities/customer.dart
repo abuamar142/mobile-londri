@@ -5,12 +5,14 @@ class Customer extends Equatable {
   final String? name;
   final String? phone;
   final String? description;
+  final bool? isActive;
 
   const Customer({
     this.id,
     this.name,
     this.phone,
     this.description,
+    this.isActive,
   });
 
   @override
@@ -19,5 +21,6 @@ class Customer extends Equatable {
         name,
         phone,
         description,
+        isActive,
       ];
 }

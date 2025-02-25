@@ -15,7 +15,9 @@ class CustomerModel extends Customer {
     this.createdAt,
     required this.updatedAt,
     this.deletedAt,
-  });
+  }) : super(
+          isActive: deletedAt == null,
+        );
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(

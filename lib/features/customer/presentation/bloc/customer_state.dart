@@ -24,24 +24,13 @@ class CustomerStateSuccessGetCustomers extends CustomerState {
       ];
 }
 
-class CustomerStateSuccessGetCustomerById extends CustomerState {
-  final Customer customer;
-
-  const CustomerStateSuccessGetCustomerById({
-    required this.customer,
-  });
-
-  @override
-  List<Object> get props => [
-        customer,
-      ];
-}
-
 class CustomerStateSuccessCreateCustomer extends CustomerState {}
 
 class CustomerStateSuccessUpdateCustomer extends CustomerState {}
 
 class CustomerStateSuccessDeleteCustomer extends CustomerState {}
+
+class CustomerStateSuccessActivateCustomer extends CustomerState {}
 
 class CustomerStateFailure extends CustomerState {
   final String message;

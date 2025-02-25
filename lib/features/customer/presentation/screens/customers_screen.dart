@@ -64,6 +64,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
             showSnackbar(context, appText.customerUpdateSuccess);
           } else if (state is CustomerStateSuccessDeleteCustomer) {
             showSnackbar(context, appText.customerDeleteSuccess);
+          } else if (state is CustomerStateSuccessActivateCustomer) {
+            showSnackbar(context, appText.customerActivateSuccess);
           }
         },
         builder: (context, state) {
@@ -78,19 +80,44 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
                   return ListTile(
                     key: ValueKey(customer.id),
-                    title: Text(customer.name!, style: AppTextstyle.tileTitle),
+                    title: Text(
+                      customer.name!,
+                      style: AppTextstyle.tileTitle.copyWith(
+                        color: customer.isActive! ? null : Colors.grey,
+                      ),
+                    ),
                     subtitle: Text(
                       customer.description ?? '-',
-                      style: AppTextstyle.tileSubtitle,
+                      style: AppTextstyle.tileSubtitle.copyWith(
+                        color: customer.isActive! ? null : Colors.grey,
+                      ),
                     ),
                     trailing: Text(
                       customer.phone.toString(),
-                      style: AppTextstyle.tileTrailing,
+                      style: AppTextstyle.tileTrailing.copyWith(
+                        color: customer.isActive! ? null : Colors.grey,
+                      ),
                     ),
-                    onTap: () => editCustomer(
-                      customer: customer,
-                      appText: appText,
-                    ),
+                    onTap: () {
+                      if (customer.isActive!) {
+                        editCustomer(
+                          customer: customer,
+                          appText: appText,
+                        );
+                      } else {
+                        showSnackbar(context, appText.customerInfoNonActive);
+                      }
+                    },
+                    onLongPress: () {
+                      if (customer.isActive!) {
+                        showSnackbar(context, appText.customerInfoActive);
+                      } else {
+                        activateCustomer(
+                          customer: customer,
+                          appText: appText,
+                        );
+                      }
+                    },
                   );
                 },
               ),
@@ -253,8 +280,31 @@ class _CustomersScreenState extends State<CustomersScreen> {
       content: appText.customerDeleteConfirm,
       onConfirm: () {
         context.read<CustomerBloc>().add(
-              CustomerEventDeleteCustomer(id: customer.id!),
+              CustomerEventDeleteCustomer(
+                customerId: customer.id!,
+              ),
             );
+        context.pop();
+      },
+    );
+  }
+
+  void activateCustomer({
+    required Customer customer,
+    required AppLocalizations appText,
+  }) {
+    showConfirmationDialog(
+      context: context,
+      title: appText.customerActivate,
+      appText: appText,
+      content: appText.customerActivateConfirm,
+      onConfirm: () {
+        context.read<CustomerBloc>().add(
+              CustomerEventActivateCustomer(
+                customerId: customer.id!,
+              ),
+            );
+
         context.pop();
       },
     );

@@ -1,19 +1,18 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
-import '../entities/customer.dart';
 import '../repositories/customer_repository.dart';
 
-class CustomerGetCustomerById {
+class CustomerActivateCustomer {
   final CustomerRepository customerRepository;
 
-  CustomerGetCustomerById({
+  CustomerActivateCustomer({
     required this.customerRepository,
   });
 
-  Future<Either<Failure, Customer>> call(
+  Future<Either<Failure, void>> call(
     String customerId,
   ) async {
-    return await customerRepository.getCustomerById(customerId);
+    return await customerRepository.activateCustomer(customerId);
   }
 }

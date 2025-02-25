@@ -9,19 +9,6 @@ abstract class CustomerEvent extends Equatable {
 
 class CustomerEventGetCustomers extends CustomerEvent {}
 
-class CustomerEventGetCustomerById extends CustomerEvent {
-  final String id;
-
-  const CustomerEventGetCustomerById({
-    required this.id,
-  });
-
-  @override
-  List<Object> get props => [
-        id,
-      ];
-}
-
 class CustomerEventCreateCustomer extends CustomerEvent {
   final Customer customer;
 
@@ -49,14 +36,27 @@ class CustomerEventUpdateCustomer extends CustomerEvent {
 }
 
 class CustomerEventDeleteCustomer extends CustomerEvent {
-  final String id;
+  final String customerId;
 
   const CustomerEventDeleteCustomer({
-    required this.id,
+    required this.customerId,
   });
 
   @override
   List<Object> get props => [
-        id,
+        customerId,
+      ];
+}
+
+class CustomerEventActivateCustomer extends CustomerEvent {
+  final String customerId;
+
+  const CustomerEventActivateCustomer({
+    required this.customerId,
+  });
+
+  @override
+  List<Object> get props => [
+        customerId,
       ];
 }
