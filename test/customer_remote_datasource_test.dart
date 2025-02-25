@@ -40,10 +40,6 @@ void main() async {
   );
 
   await getCustomers(datasource: datasource);
-  // await getCustomerById(
-  //   datasource: datasource,
-  //   id: 'a0058e2f-566f-4fb8-8cbf-d1d632bd6e50',
-  // );
   // await createCustomer(datasource: datasource);
   // await updateCustomer(datasource: datasource);
   // await deleteCustomer(datasource: datasource);
@@ -54,21 +50,6 @@ Future<void> getCustomers({
 }) async {
   try {
     final response = await datasource.readCustomers();
-
-    log(response.toString());
-  } on ServerException catch (e) {
-    log(e.message);
-  } catch (e) {
-    log(e.toString());
-  }
-}
-
-Future<void> getCustomerById({
-  required CustomerRemoteDatasourceImplementation datasource,
-  required String id,
-}) async {
-  try {
-    final response = await datasource.readCustomerById(id);
 
     log(response.toString());
   } on ServerException catch (e) {
