@@ -39,7 +39,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            appText.userRoleTitle,
+            appText.user_role_screen_title,
             style: AppTextstyle.title,
           ),
         ),
@@ -54,7 +54,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
                 if (profiles.isEmpty) {
                   return Center(
                     child: Text(
-                      appText.userRoleEmpty,
+                      appText.user_role_empty_message,
                       style: AppTextstyle.body,
                     ),
                   );
@@ -102,7 +102,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
               } else {
                 return Center(
                   child: Text(
-                    appText.errorOccured,
+                    appText.error_occurred_message,
                     style: AppTextstyle.body,
                   ),
                 );

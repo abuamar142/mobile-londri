@@ -50,7 +50,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          appText.customerTitle,
+          appText.customer_screen_title,
           style: AppTextstyle.title,
         ),
       ),
@@ -59,13 +59,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
           if (state is CustomerStateFailure) {
             showSnackbar(context, state.message.toString());
           } else if (state is CustomerStateSuccessCreateCustomer) {
-            showSnackbar(context, appText.customerAddSuccess);
+            showSnackbar(context, appText.customer_add_success_message);
           } else if (state is CustomerStateSuccessUpdateCustomer) {
-            showSnackbar(context, appText.customerUpdateSuccess);
+            showSnackbar(context, appText.customer_update_success_message);
           } else if (state is CustomerStateSuccessDeleteCustomer) {
-            showSnackbar(context, appText.customerDeleteSuccess);
+            showSnackbar(context, appText.customer_delete_success_message);
           } else if (state is CustomerStateSuccessActivateCustomer) {
-            showSnackbar(context, appText.customerActivateSuccess);
+            showSnackbar(context, appText.customer_activate_success_message);
           }
         },
         builder: (context, state) {
@@ -105,12 +105,12 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           appText: appText,
                         );
                       } else {
-                        showSnackbar(context, appText.customerInfoNonActive);
+                        showSnackbar(context, appText.customer_info_non_active);
                       }
                     },
                     onLongPress: () {
                       if (customer.isActive!) {
-                        showSnackbar(context, appText.customerInfoActive);
+                        showSnackbar(context, appText.customer_info_active);
                       } else {
                         activateCustomer(
                           customer: customer,
@@ -125,7 +125,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
           } else {
             return Center(
               child: Text(
-                appText.customerEmpty,
+                appText.customer_empty_message,
                 style: AppTextstyle.body,
               ),
             );
@@ -150,7 +150,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     _showCustomerDialog(
       context: context,
       appText: appText,
-      title: appText.customerAdd,
+      title: appText.customer_add_dialog_title,
       onSubmit: (Customer customer) {
         context
             .read<CustomerBloc>()
@@ -167,7 +167,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
     _showCustomerDialog(
       context: context,
       appText: appText,
-      title: appText.customerEdit,
+      title: appText.customer_edit_dialog_title,
       customer: customer,
       showDeleteButton: true,
       onSubmit: (Customer newCustomer) {
@@ -211,29 +211,29 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   Text(title, style: AppTextstyle.title),
                   SizedBox(height: 8),
                   WidgetTextFormField(
-                    label: appText.formNameLabel,
+                    label: appText.form_name_label,
                     enabled: state is! CustomerStateLoading,
                     controller: _nameController,
                     validator: (value) =>
-                        value?.isEmpty ?? true ? appText.formNameHint : null,
+                        value?.isEmpty ?? true ? appText.form_name_hint : null,
                   ),
                   WidgetTextFormField(
-                    label: appText.formPhoneLabel,
+                    label: appText.form_phone_label,
                     enabled: state is! CustomerStateLoading,
                     controller: _phoneController,
                     textInputType: TextInputType.phone,
                     validator: (value) =>
-                        value?.isEmpty ?? true ? appText.formPhoneHint : null,
+                        value?.isEmpty ?? true ? appText.form_phone_hint : null,
                   ),
                   WidgetTextFormField(
-                    label: appText.formDescriptionLabel,
+                    label: appText.form_description_label,
                     enabled: state is! CustomerStateLoading,
                     maxLines: 3,
                     controller: _descriptionController,
                   ),
                   const SizedBox(height: 4),
                   WidgetButton(
-                    label: appText.buttonSubmit,
+                    label: appText.button_submit,
                     isLoading: state is CustomerStateLoading,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -251,7 +251,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   const SizedBox(height: 8),
                   if (showDeleteButton)
                     WidgetTextButton(
-                      label: appText.buttonDelete,
+                      label: appText.button_delete,
                       isLoading: state is CustomerStateLoading,
                       onPressed: () => deleteCustomer(
                         customer: customer!,
@@ -275,9 +275,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
     showConfirmationDialog(
       context: context,
-      title: appText.customerDelete,
+      title: appText.customer_delete_dialog_title,
       appText: appText,
-      content: appText.customerDeleteConfirm,
+      content: appText.customer_delete_confirm_message,
       onConfirm: () {
         context.read<CustomerBloc>().add(
               CustomerEventDeleteCustomer(
@@ -295,9 +295,9 @@ class _CustomersScreenState extends State<CustomersScreen> {
   }) {
     showConfirmationDialog(
       context: context,
-      title: appText.customerActivate,
+      title: appText.customer_activate_dialog_title,
       appText: appText,
-      content: appText.customerActivateConfirm,
+      content: appText.customer_activate_confirm_message,
       onConfirm: () {
         context.read<CustomerBloc>().add(
               CustomerEventActivateCustomer(

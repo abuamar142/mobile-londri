@@ -34,7 +34,7 @@ Future<void> showConfirmationDialog({
             children: [
               TextButton(
                 child: Text(
-                  appText.buttonCancel,
+                  appText.button_cancel,
                   style: AppTextstyle.body,
                 ),
                 onPressed: () {

@@ -1,202 +1,204 @@
 {
-  "splashText": "Manage your Laundry Business Easily",
-  "@splashText": {
+  "splash_screen_text": "Manage your Laundry Business Easily",
+  "@splash_screen_text": {
     "description": "Text displayed on the splash screen"
   },
-  "userRoleTitle": "User Role",
-  "@userRoleTitle": {
-    "description": "Title for the user role"
+
+  "user_role_screen_title": "User Role",
+  "@user_role_screen_title": {
+    "description": "Title for the user role screen"
   },
-  "userRoleEmpty": "No user role found",
-  "@userRoleEmpty": {
-    "description": "Message displayed when no user role found"
+  "user_role_empty_message": "No user role found",
+  "@user_role_empty_message": {
+    "description": "Message displayed when no user role is found"
   },
-  "serviceTitle": "Service",
-  "@serviceTitle": {
-    "description": "Title for the service"
+
+  "service_screen_title": "Service",
+  "@service_screen_title": {
+    "description": "Title for the service screen"
   },
-  "serviceEmpty": "No service found",
-  "@serviceEmpty": {
-    "description": "Message displayed when no service found"
+  "service_empty_message": "No service found",
+  "@service_empty_message": {
+    "description": "Message displayed when no service is found"
   },
-  "serviceAdd": "Add Service",
-  "@serviceAdd": {
-    "description": "Dialog to add service"
+  "service_add_dialog_title": "Add Service",
+  "@service_add_dialog_title": {
+    "description": "Title for the add service dialog"
   },
-  "serviceEdit": "Edit Service",
-  "@serviceEdit": {
-    "description": "Dialog to edit service"
+  "service_edit_dialog_title": "Edit Service",
+  "@service_edit_dialog_title": {
+    "description": "Title for the edit service dialog"
   },
-  "serviceDelete": "Delete Service",
-  "@serviceDelete": {
-    "description": "Dialog to delete service"
+  "service_delete_dialog_title": "Delete Service",
+  "@service_delete_dialog_title": {
+    "description": "Title for the delete service dialog"
   },
-  "serviceAddSuccess": "Service added successfully",
-  "@serviceAddSuccess": {
-    "description": "Message displayed when service added successfully"
+  "service_add_success_message": "Service added successfully",
+  "@service_add_success_message": {
+    "description": "Message displayed when service is added successfully"
   },
-  "serviceUpdateSuccess": "Service updated successfully",
-  "@serviceUpdateSuccess": {
-    "description": "Message displayed when service updated successfully"
+  "service_update_success_message": "Service updated successfully",
+  "@service_update_success_message": {
+    "description": "Message displayed when service is updated successfully"
   },
-  "serviceDeleteSuccess": "Service deleted successfully",
-  "@serviceDeleteSuccess": {
-    "description": "Message displayed when service deleted successfully"
+  "service_delete_success_message": "Service deleted successfully",
+  "@service_delete_success_message": {
+    "description": "Message displayed when service is deleted successfully"
   },
-  "serviceDeleteConfirm": "Are you sure you want to delete this service?",
-  "@serviceDeleteConfirm": {
-    "description": "Confirmation message to delete service"
+  "service_delete_confirm_message": "Are you sure you want to delete this service?",
+  "@service_delete_confirm_message": {
+    "description": "Confirmation message for deleting a service"
   },
-  "serviceDeleteFailed": "Failed to delete service",
-  "@serviceDeleteFailed": {
-    "description": "Message displayed when failed to delete service"
+  "service_add_failed_message": "Failed to add service",
+  "@service_add_failed_message": {
+    "description": "Message displayed when adding a service fails"
   },
-  "serviceAddFailed": "Failed to add service",
-  "@serviceAddFailed": {
-    "description": "Message displayed when failed to add service"
+  "service_edit_failed_message": "Failed to update service",
+  "@service_edit_failed_message": {
+    "description": "Message displayed when updating a service fails"
   },
-  "serviceEditFailed": "Failed to update service",
-  "@serviceEditFailed": {
-    "description": "Message displayed when failed to update service"
+  "service_delete_failed_message": "Failed to delete service",
+  "@service_delete_failed_message": {
+    "description": "Message displayed when deleting a service fails"
   },
-  "customerTitle": "Customer",
-  "@customerTitle": {
-    "description": "Title for the customer"
+
+  "customer_screen_title": "Customer",
+  "@customer_screen_title": {
+    "description": "Title for the customer screen"
   },
-  "customerEmpty": "No customer found",
-  "@customerEmpty": {
-    "description": "Message displayed when no customer found"
+  "customer_empty_message": "No customer found",
+  "@customer_empty_message": {
+    "description": "Message displayed when no customer is found"
   },
-  "customerAdd": "Add Customer",
-  "@customerAdd": {
-    "description": "Dialog to add customer"
+  "customer_add_dialog_title": "Add Customer",
+  "@customer_add_dialog_title": {
+    "description": "Title for the add customer dialog"
   },
-  "customerEdit": "Edit Customer",
-  "@customerEdit": {
-    "description": "Dialog to edit customer"
+  "customer_edit_dialog_title": "Edit Customer",
+  "@customer_edit_dialog_title": {
+    "description": "Title for the edit customer dialog"
   },
-  "customerDelete": "Delete Customer",
-  "@customerDelete": {
-    "description": "Dialog to delete customer"
+  "customer_delete_dialog_title": "Delete Customer",
+  "@customer_delete_dialog_title": {
+    "description": "Title for the delete customer dialog"
   },
-  "customerActivate": "Activate Customer",
-  "@customerActivate": {
-    "description": "Dialog to activate customer"
+  "customer_activate_dialog_title": "Activate Customer",
+  "@customer_activate_dialog_title": {
+    "description": "Title for the activate customer dialog"
   },
-  "customerAddSuccess": "Customer added successfully",
-  "@customerAddSuccess": {
-    "description": "Message displayed when customer added successfully"
+  "customer_add_success_message": "Customer added successfully",
+  "@customer_add_success_message": {
+    "description": "Message displayed when customer is added successfully"
   },
-  "customerUpdateSuccess": "Customer updated successfully",
-  "@customerUpdateSuccess": {
-    "description": "Message displayed when customer updated successfully"
+  "customer_update_success_message": "Customer updated successfully",
+  "@customer_update_success_message": {
+    "description": "Message displayed when customer is updated successfully"
   },
-  "customerDeleteSuccess": "Customer deleted successfully",
-  "@customerDeleteSuccess": {
-    "description": "Message displayed when customer deleted successfully"
+  "customer_delete_success_message": "Customer deleted successfully",
+  "@customer_delete_success_message": {
+    "description": "Message displayed when customer is deleted successfully"
   },
-  "customerActivateSuccess": "Customer activated successfully",
-  "@customerActivateSuccess": {
-    "description": "Message displayed when customer activated successfully"
+  "customer_activate_success_message": "Customer activated successfully",
+  "@customer_activate_success_message": {
+    "description": "Message displayed when customer is activated successfully"
   },
-  "customerDeleteConfirm": "Are you sure you want to delete this customer?",
-  "@customerDeleteConfirm": {
-    "description": "Confirmation message to delete customer"
+  "customer_delete_confirm_message": "Are you sure you want to delete this customer?",
+  "@customer_delete_confirm_message": {
+    "description": "Confirmation message for deleting a customer"
   },
-  "customerActivateConfirm": "Are you sure you want to activate this customer?",
-  "@customerActivateConfirm": {
-    "description": "Confirmation message to activate customer"
+  "customer_activate_confirm_message": "Are you sure you want to activate this customer?",
+  "@customer_activate_confirm_message": {
+    "description": "Confirmation message for activating a customer"
   },
-  "customerDeleteFailed": "Failed to delete customer",
-  "@customerDeleteFailed": {
-    "description": "Message displayed when failed to delete customer"
+  "customer_add_failed_message": "Failed to add customer",
+  "@customer_add_failed_message": {
+    "description": "Message displayed when adding a customer fails"
   },
-  "customerAddFailed": "Failed to add customer",
-  "@customerAddFailed": {
-    "description": "Message displayed when failed to add customer"
+  "customer_edit_failed_message": "Failed to update customer",
+  "@customer_edit_failed_message": {
+    "description": "Message displayed when updating a customer fails"
   },
-  "customerEditFailed": "Failed to update customer",
-  "@customerEditFailed": {
-    "description": "Message displayed when failed to update customer"
+  "customer_delete_failed_message": "Failed to delete customer",
+  "@customer_delete_failed_message": {
+    "description": "Message displayed when deleting a customer fails"
   },
-  "customerInfoNonActive": "Long press to activate",
-  "@customerInfoNonActive": {
-    "description": "Info message in non active customer"
+  "customer_info_non_active": "Long press to activate",
+  "@customer_info_non_active": {
+    "description": "Info message for non-active customer"
   },
-  "customerInfoActive": "This customer is active",
-  "@customerInfoActive": {
-    "description": "Info message in active customer"
+  "customer_info_active": "This customer is active",
+  "@customer_info_active": {
+    "description": "Info message for active customer"
   },
-  "errorOccured": "An error occurred",
-  "@errorOccured": {
-    "description": "Error message displayed when an error occurs"
+
+  "error_occurred_message": "An error occurred",
+  "@error_occurred_message": {
+    "description": "Generic error message"
   },
-  "formNameLabel": "Name",
-  "@formNameLabel": {
-    "description": "Label for the name form"
+
+  "form_name_label": "Name",
+  "@form_name_label": {
+    "description": "Label for the name input field"
   },
-  "formNameHint": "Please enter your name",
-  "@formNameHint": {
-    "description": "Hint for the name form"
+  "form_email_label": "Email",
+  "@form_email_label": {
+    "description": "Label for the email input field"
   },
-  "formEmailLabel": "Email",
-  "@formEmailLabel": {
-    "description": "Label for the email form"
+  "form_password_label": "Password",
+  "@form_password_label": {
+    "description": "Label for the password input field"
   },
-  "formPasswordLabel": "Password",
-  "@formPasswordLabel": {
-    "description": "Label for the password form"
+  "form_confirm_password_label": "Confirm Password",
+  "@form_confirm_password_label": {
+    "description": "Label for the confirm password input field"
   },
-  "formConfirmPasswordLabel": "Confirm Password",
-  "@formConfirmPasswordLabel": {
-    "description": "Label for the confirm password form"
+  "form_phone_label": "Phone",
+  "@form_phone_label": {
+    "description": "Label for the phone input field"
   },
-  "formPhoneLabel": "Phone",
-  "@formPhoneLabel": {
-    "description": "Label for the phone form"
+  "form_description_label": "Description",
+  "@form_description_label": {
+    "description": "Label for the description input field"
   },
-  "formPhoneHint": "Please enter your phone",
-  "@formPhoneHint": {
-    "description": "Hint for the phone form"
+  "form_price_label": "Price",
+  "@form_price_label": {
+    "description": "Label for the price input field"
   },
-  "formDescriptionLabel": "Description",
-  "@formDescriptionLabel": {
-    "description": "Label for the description form"
+  "form_name_hint": "Please enter your name",
+  "@form_name_hint": {
+    "description": "Hint text for the name input field"
   },
-  "formDescriptionHint": "Please enter your description",
-  "@formDescriptionHint": {
-    "description": "Hint for the description form"
+  "form_phone_hint": "Please enter your phone number",
+  "@form_phone_hint": {
+    "description": "Hint text for the phone input field"
   },
-  "formPriceLabel": "Price",
-  "@formPriceLabel": {
-    "description": "Label for the price form"
+  "form_price_hint": "Please enter the price",
+  "@form_price_hint": {
+    "description": "Hint text for the price input field"
   },
-  "formPriceHint": "Please enter your price",
-  "@formPriceHint": {
-    "description": "Hint for the price form"
+
+  "button_submit": "Submit",
+  "@button_submit": {
+    "description": "Text for the submit button"
   },
-  "buttonSubmit": "Submit",
-  "@buttonSubmit": {
-    "description": "Submit button"
+  "button_cancel": "Cancel",
+  "@button_cancel": {
+    "description": "Text for the cancel button"
   },
-  "buttonCancel": "Cancel",
-  "@buttonCancel": {
-    "description": "Cancel button"
+  "button_save": "Save",
+  "@button_save": {
+    "description": "Text for the save button"
   },
-  "buttonSave": "Save",
-  "@buttonSave": {
-    "description": "Save button"
+  "button_delete": "Delete",
+  "@button_delete": {
+    "description": "Text for the delete button"
   },
-  "buttonDelete": "Delete",
-  "@buttonDelete": {
-    "description": "Delete button"
+  "button_login": "Login",
+  "@button_login": {
+    "description": "Text for the login button"
   },
-  "buttonLogin": "Login",
-  "@buttonLogin": {
-    "description": "Login button"
-  },
-  "buttonRegister": "Register",
-  "@buttonRegister": {
-    "description": "Register button"
+  "button_register": "Register",
+  "@button_register": {
+    "description": "Text for the register button"
   }
 }
