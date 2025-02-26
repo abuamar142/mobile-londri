@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:londri/core/error/exceptions.dart';
@@ -35,11 +37,11 @@ Future<void> createUserRole({
       dotenv.env['USER_ID']!,
     );
 
-    print("Success");
+    log("Success");
   } on ServerException catch (e) {
-    print(e.message);
+    log(e.message);
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 }
 
@@ -49,11 +51,11 @@ Future<void> readProfile({
   try {
     final response = await datasource.readProfiles();
 
-    print(response);
+    log(response.toString());
   } on ServerException catch (e) {
-    print(e.message);
+    log(e.message);
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 }
 
@@ -65,10 +67,10 @@ Future<void> deleteUserRole({
       dotenv.env['USER_ID']!,
     );
 
-    print("Success");
+    log("Success");
   } on ServerException catch (e) {
-    print(e.message);
+    log(e.message);
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 }
