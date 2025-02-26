@@ -33,7 +33,6 @@ Future<void> createUserRole({
   try {
     await datasource.createUserRole(
       dotenv.env['USER_ID']!,
-      "user",
     );
 
     print("Success");

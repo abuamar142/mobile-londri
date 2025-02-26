@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
+import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
@@ -52,6 +53,13 @@ class AppRoutes {
         name: 'user-roles',
         builder: (context, state) {
           return const UserRolesScreen();
+        },
+      ),
+      GoRoute(
+        path: '/customers',
+        name: 'customers',
+        builder: (context, state) {
+          return const CustomersScreen();
         },
       ),
     ],

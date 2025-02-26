@@ -7,9 +7,9 @@ import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
-import '../../../../injection_container.dart';
-import '../../../user_role/presentation/bloc/user_role_bloc.dart';
+import '../../../../core/widgets/widget_button.dart';
+import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_text_button.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
@@ -51,7 +51,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          appText.serviceTitle,
+          appText.service_screen_title,
           style: AppTextstyle.title,
         ),
       ),
@@ -60,16 +60,16 @@ class _ServicesScreenState extends State<ServicesScreen> {
           if (state is ServiceStateFailure) {
             showSnackbar(context, state.message.toString());
           } else if (state is ServiceStateSuccessCreateService) {
-            showSnackbar(context, appText.serviceAddSuccess);
+            showSnackbar(context, appText.service_add_success_message);
           } else if (state is ServiceStateSuccessUpdateService) {
-            showSnackbar(context, appText.serviceUpdateSuccess);
+            showSnackbar(context, appText.service_update_success_message);
           } else if (state is ServiceStateSuccessDeleteService) {
-            showSnackbar(context, appText.serviceDeleteSuccess);
+            showSnackbar(context, appText.service_delete_success_message);
           }
         },
         builder: (context, state) {
           if (state is ServiceStateLoading) {
-            return LoadingWidget(usingPadding: true);
+            return WidgetLoading(usingPadding: true);
           } else if (state is ServiceStateSuccessGetServices) {
             return SafeArea(
               child: ListView.builder(
@@ -99,7 +99,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
           } else {
             return Center(
               child: Text(
-                appText.serviceEmpty,
+                appText.service_empty_message,
                 style: AppTextstyle.body,
               ),
             );
@@ -124,7 +124,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     _showServiceDialog(
       context: context,
       appText: appText,
-      title: appText.serviceAdd,
+      title: appText.service_add_dialog_title,
       onSubmit: (Service service) {
         context
             .read<ServiceBloc>()
@@ -141,7 +141,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     _showServiceDialog(
       context: context,
       appText: appText,
-      title: appText.serviceEdit,
+      title: appText.service_edit_dialog_title,
       service: service,
       showDeleteButton: true,
       onSubmit: (Service newService) {
@@ -185,37 +185,31 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   Text(title, style: AppTextstyle.title),
                   SizedBox(height: 8),
                   WidgetTextFormField(
-                    label: appText.formNameLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    label: appText.form_name_label,
+                    enabled: state is! ServiceStateLoading,
                     controller: _nameController,
                     validator: (value) =>
-                        value?.isEmpty ?? true ? appText.formNameHint : null,
+                        value?.isEmpty ?? true ? appText.form_name_hint : null,
                   ),
                   WidgetTextFormField(
-                    label: appText.formDescriptionLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    label: appText.form_description_label,
+                    enabled: state is! ServiceStateLoading,
                     maxLines: 3,
                     controller: _descriptionController,
                   ),
                   WidgetTextFormField(
-                    label: appText.formPriceLabel,
-                    enabled: state is ServiceStateLoading ? false : true,
+                    label: appText.form_price_label,
+                    enabled: state is! ServiceStateLoading,
                     controller: _priceController,
                     textInputType:
                         TextInputType.numberWithOptions(decimal: false),
                     validator: (value) =>
-                        value?.isEmpty ?? true ? appText.formPriceHint : null,
+                        value?.isEmpty ?? true ? appText.form_price_hint : null,
                   ),
                   const SizedBox(height: 4),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: WidgetStateProperty.all(
-                        const Size(
-                          double.infinity,
-                          54,
-                        ),
-                      ),
-                    ),
+                  WidgetButton(
+                    label: appText.button_submit,
+                    isLoading: state is ServiceStateLoading,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         final newService = Service(
@@ -224,29 +218,20 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           description: _descriptionController.text,
                           price: int.parse(_priceController.text),
                         );
+
                         onSubmit(newService);
                       }
                     },
-                    child: state is ServiceStateLoading
-                        ? LoadingWidget()
-                        : Text(
-                            appText.buttonSubmit,
-                            style: AppTextstyle.body,
-                          ),
                   ),
                   const SizedBox(height: 8),
                   if (showDeleteButton)
-                    TextButton(
+                    WidgetTextButton(
+                      label: appText.button_delete,
+                      isLoading: state is ServiceStateLoading,
                       onPressed: () => deleteService(
                         service: service!,
                         appText: appText,
                       ),
-                      child: state is ServiceStateLoading
-                          ? LoadingWidget()
-                          : Text(
-                              appText.buttonDelete,
-                              style: AppTextstyle.body,
-                            ),
                     ),
                 ],
               );
@@ -265,10 +250,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
     showConfirmationDialog(
       context: context,
-      title: appText.serviceDelete,
+      title: appText.service_delete_dialog_title,
       appText: appText,
-      content: appText.serviceDeleteConfirm,
-      isLoading: serviceLocator<UserRoleBloc>().state is UserRoleLoading,
+      content: appText.service_delete_confirm_message,
       onConfirm: () {
         context.read<ServiceBloc>().add(
               ServiceEventDeleteService(id: service.id!),

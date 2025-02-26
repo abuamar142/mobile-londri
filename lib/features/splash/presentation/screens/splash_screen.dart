@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  AppLocalizations.of(context)!.splashText,
+                  AppLocalizations.of(context)!.splash_screen_text,
                   textAlign: TextAlign.center,
                   style: AppTextstyle.subtitle,
                 ),

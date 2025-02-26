@@ -1,11 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app_observer.dart';
-import 'features/auth/data/datasources/auth_local_datasource.dart';
+import 'core/services/auth_service.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
@@ -13,6 +12,15 @@ import 'features/auth/domain/usecases/auth_login.dart';
 import 'features/auth/domain/usecases/auth_logout.dart';
 import 'features/auth/domain/usecases/auth_register.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/customer/data/datasources/customer_remote_datasource.dart';
+import 'features/customer/data/repositories/customer_repository_implementation.dart';
+import 'features/customer/domain/repositories/customer_repository.dart';
+import 'features/customer/domain/usecases/customer_activate_customer.dart';
+import 'features/customer/domain/usecases/customer_create_customer.dart';
+import 'features/customer/domain/usecases/customer_delete_customer.dart';
+import 'features/customer/domain/usecases/customer_get_customers.dart';
+import 'features/customer/domain/usecases/customer_update_customer.dart';
+import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
@@ -36,9 +44,6 @@ Future<void> initializeDependencies() async {
   // Flutter Dotenv
   await dotenv.load(fileName: ".env");
 
-  // SharedPreferences
-  final sharedPreferences = await SharedPreferences.getInstance();
-
   // Bloc Observer
   Bloc.observer = AppObserver();
 
@@ -49,20 +54,14 @@ Future<void> initializeDependencies() async {
       () => SupabaseClient(
         dotenv.env['SUPABASE_URL']!,
         dotenv.env['SUPABASE_KEY']!,
-        headers: {
-          'Authorization': 'Bearer ${sharedPreferences.getString(
-            'token',
-          )}',
-        },
-        authOptions: const AuthClientOptions(
-          authFlowType: AuthFlowType.implicit,
-        ),
       ),
     )
 
-    // SharedPreferences
-    ..registerLazySingleton<SharedPreferences>(
-      () => sharedPreferences,
+    // Auth Service
+    ..registerLazySingleton<AuthService>(
+      () => AuthService(
+        supabaseClient: serviceLocator(),
+      ),
     )
 
     // DataSources
@@ -71,17 +70,11 @@ Future<void> initializeDependencies() async {
         supabaseClient: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<AuthLocalDatasource>(
-      () => AuthLocalDatasourceImplementation(
-        sharedPreferences: serviceLocator(),
-      ),
-    )
 
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImplementation(
         authRemoteDatasource: serviceLocator(),
-        authLocalDatasource: serviceLocator(),
       ),
     )
 
@@ -203,5 +196,61 @@ Future<void> initializeDependencies() async {
         serviceUpdateService: serviceLocator(),
         serviceDeleteService: serviceLocator(),
       ),
+    )
+
+    // Feature - Customer
+    // DataSources
+    ..registerLazySingleton<CustomerRemoteDatasource>(
+      () => CustomerRemoteDatasourceImplementation(
+        supabaseClient: serviceLocator(),
+      ),
+    )
+
+    // Repositories
+    ..registerLazySingleton<CustomerRepository>(
+      () => CustomerRepositoryImplementation(
+        customerRemoteDatasource: serviceLocator(),
+      ),
+    )
+
+    // UseCases
+    ..registerLazySingleton<CustomerGetCustomers>(
+      () => CustomerGetCustomers(
+        customerRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<CustomerCreateCustomer>(
+      () => CustomerCreateCustomer(
+        customerRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<CustomerUpdateCustomer>(
+      () => CustomerUpdateCustomer(
+        customerRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<CustomerDeleteCustomer>(
+      () => CustomerDeleteCustomer(
+        customerRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<CustomerActivateCustomer>(
+      () => CustomerActivateCustomer(
+        customerRepository: serviceLocator(),
+      ),
+    )
+
+    // Bloc
+    ..registerFactory(
+      () => CustomerBloc(
+        customerGetCustomers: serviceLocator(),
+        customerCreateCustomer: serviceLocator(),
+        customerUpdateCustomer: serviceLocator(),
+        customerDeleteCustomer: serviceLocator(),
+        customerActivateCustomer: serviceLocator(),
+      ),
     );
+
+  // Auth Listener
+  await serviceLocator<AuthService>().initializeAuthListener();
 }

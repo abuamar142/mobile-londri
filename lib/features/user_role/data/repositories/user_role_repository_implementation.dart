@@ -14,9 +14,9 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   });
 
   @override
-  Future<Either<Failure, void>> activateUser(String userId, String role) async {
+  Future<Either<Failure, void>> activateUser(String userId) async {
     try {
-      await userRoleRemoteDatasource.createUserRole(userId, role);
+      await userRoleRemoteDatasource.createUserRole(userId);
 
       return Right(null);
     } on ServerException catch (e) {
@@ -34,8 +34,6 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   Future<Either<Failure, List<ProfileModel>>> getProfiles() async {
     try {
       final response = await userRoleRemoteDatasource.readProfiles();
-
-      response.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return Right(response);
     } on ServerException catch (e) {

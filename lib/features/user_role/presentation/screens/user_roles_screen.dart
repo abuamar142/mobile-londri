@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/loading_widget.dart';
+import '../../../../core/widgets/widget_loading.dart';
 import '../../domain/entities/profile.dart';
 import '../bloc/user_role_bloc.dart';
 import '../widgets/widget_activate_user.dart';
@@ -39,7 +39,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            appText.userRoleTitle,
+            appText.user_role_screen_title,
             style: AppTextstyle.title,
           ),
         ),
@@ -47,14 +47,14 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
           child: BlocBuilder<UserRoleBloc, UserRoleState>(
             builder: (context, state) {
               if (state is UserRoleLoading) {
-                return LoadingWidget(usingPadding: true);
+                return WidgetLoading(usingPadding: true);
               } else if (state is UserRoleSuccessGetProfiles) {
                 List<Profile> profiles = state.profiles;
 
                 if (profiles.isEmpty) {
                   return Center(
                     child: Text(
-                      appText.userRoleEmpty,
+                      appText.user_role_empty_message,
                       style: AppTextstyle.body,
                     ),
                   );
@@ -102,7 +102,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
               } else {
                 return Center(
                   child: Text(
-                    appText.errorOccured,
+                    appText.error_occurred_message,
                     style: AppTextstyle.body,
                   ),
                 );
