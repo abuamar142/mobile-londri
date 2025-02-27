@@ -54,6 +54,9 @@ Future<void> initializeDependencies() async {
       () => SupabaseClient(
         dotenv.env['SUPABASE_URL']!,
         dotenv.env['SUPABASE_KEY']!,
+        authOptions: const AuthClientOptions(
+          authFlowType: AuthFlowType.implicit,
+        ),
       ),
     )
 
