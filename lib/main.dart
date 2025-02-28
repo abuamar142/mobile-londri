@@ -9,6 +9,7 @@ import 'config/theme/app_themes.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
+import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'features/user_role/presentation/bloc/user_role_bloc.dart';
 import 'injection_container.dart';
 
@@ -38,6 +39,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => serviceLocator<CustomerBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => serviceLocator<TransactionBloc>(),
         ),
       ],
       child: MaterialApp.router(

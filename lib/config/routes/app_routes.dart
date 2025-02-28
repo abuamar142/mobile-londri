@@ -6,6 +6,7 @@ import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
+import '../../features/transaction/presentation/screens/transactions_screen.dart';
 import '../../features/user_role/presentation/screens/user_roles_screen.dart';
 
 class AppRoutes {
@@ -60,6 +61,13 @@ class AppRoutes {
         name: 'customers',
         builder: (context, state) {
           return const CustomersScreen();
+        },
+      ),
+      GoRoute(
+        path: '/transactions',
+        name: 'transactions',
+        builder: (context, state) {
+          return const TransactionsScreen();
         },
       ),
     ],

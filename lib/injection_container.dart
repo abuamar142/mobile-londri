@@ -30,6 +30,11 @@ import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
 import 'features/service/domain/usecases/service_update_service.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
+import 'features/transaction/data/datasources/transaction_remote_datasource.dart';
+import 'features/transaction/data/repositories/transaction_repository_implementation.dart';
+import 'features/transaction/domain/repositories/transaction_repository.dart';
+import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
+import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'features/user_role/data/datasources/user_role_remote_datasource.dart';
 import 'features/user_role/data/repositories/user_role_repository_implementation.dart';
 import 'features/user_role/domain/repositories/user_role_repository.dart';
@@ -251,6 +256,35 @@ Future<void> initializeDependencies() async {
         customerUpdateCustomer: serviceLocator(),
         customerDeleteCustomer: serviceLocator(),
         customerActivateCustomer: serviceLocator(),
+      ),
+    )
+
+    // Feature - Transaction
+    // DataSources
+    ..registerLazySingleton<TransactionRemoteDatasource>(
+      () => TransactionRemoteDatasourceImplementation(
+        supabaseClient: serviceLocator(),
+      ),
+    )
+
+    // Repositories
+    ..registerLazySingleton<TransactionRepository>(
+      () => TransactionRepositoryImplementation(
+        transactionRemoteDatasource: serviceLocator(),
+      ),
+    )
+
+    // UseCases
+    ..registerLazySingleton<TransactionGetTransactions>(
+      () => TransactionGetTransactions(
+        transactionRepository: serviceLocator(),
+      ),
+    )
+
+    // Bloc
+    ..registerFactory(
+      () => TransactionBloc(
+        serviceGetTransactions: serviceLocator(),
       ),
     );
 
