@@ -110,6 +110,78 @@
   "@transaction_delete_failed_message": {
     "description": "Message displayed when deleting a transaction fails"
   },
+  "transaction_item_service_label": "Service: {serviceName}",
+  "@transaction__item_service_label": {
+    "description": "Message displaying the service name in a transaction item"
+  },
+  "transaction_item_weight_label": "Weight: {weight} Kg",
+  "@transaction_item_weight_label": {
+    "description": "Message displaying the weight in a transaction item"
+  },
+  "transaction_item_amount_label": "Amount: {amount}",
+  "@transaction_item_amount_label": {
+    "description": "Message displaying the amount in a transaction item"
+  },
+  "transaction_item_start_date_label": "Start : {startDate}",
+  "@transaction_item_start_date_label": {
+    "description": "Message displaying the start date in a transaction item"
+  },
+  "transaction_item_end_date_label": "End : {endDate}",
+  "@transaction_item_end_date_label": {
+    "description": "Message displaying the end date in a transaction item"
+  },
+  "transaction_item_empty_customer_name": "Customer not found",
+  "@transaction_item_empty_customer_name": {
+    "description": "Message displayed when the customer name is empty in a transaction item"
+  },
+  "transaction_item_empty_service_name": "Service not found",
+  "@transaction_item_empty_service_name": {
+    "description": "Message displayed when the service name is empty in a transaction item"
+  },
+  "transaction_status_pending": "Pending",
+  "@transaction_status_pending": {
+    "description": "Status for pending transaction"
+  },
+  "transaction_status_received": "Received",
+  "@transaction_status_received": {
+    "description": "Status for received transaction"
+  },
+  "transaction_status_in_progress": "In Progress",
+  "@transaction_status_in_progress": {
+    "description": "Status for in-progress transaction"
+  },
+  "transaction_status_washing": "Washing",
+  "@transaction_status_washing": {
+    "description": "Status for washing transaction"
+  },
+  "transaction_status_drying": "Drying",
+  "@transaction_status_drying": {
+    "description": "Status for drying transaction"
+  },
+  "transaction_status_ironing": "Ironing",
+  "@transaction_status_ironing": {
+    "description": "Status for ironing transaction"
+  },
+  "transaction_status_ready_for_pickup": "Ready for Pickup",
+  "@transaction_status_ready_for_pickup": {
+    "description": "Status for ready for pickup transaction"
+  },
+  "transaction_status_picked_up": "Picked Up",
+  "@transaction_status_picked_up": {
+    "description": "Status for picked up transaction"
+  },
+  "transaction_status_cancelled": "Cancelled",
+  "@transaction_status_cancelled": {
+    "description": "Status for cancelled transaction"
+  },
+  "transaction_status_delayed": "Delayed",
+  "@transaction_status_delayed": {
+    "description": "Status for delayed transaction"
+  },
+  "transaction_status_default": "Status not found",
+  "@transaction_status_default": {
+    "description": "Default status for transaction"
+  },
 
   "customer_screen_title": "Customer",
   "@customer_screen_title": {

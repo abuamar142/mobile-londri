@@ -41,6 +41,11 @@ class AppTextstyle {
     fontWeight: FontWeight.normal,
   );
 
+  static final TextStyle tileSubtitleSmall = _baseTextStyle.copyWith(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+  );
+
   static final TextStyle tileTrailing = _baseTextStyle.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.bold,

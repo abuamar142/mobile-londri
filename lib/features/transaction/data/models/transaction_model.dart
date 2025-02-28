@@ -29,7 +29,7 @@ class TransactionModel extends Transaction {
           json['customers'] != null ? json['customers']['name'] : null,
       serviceId: json['service_id'],
       serviceName: json['services'] != null ? json['services']['name'] : null,
-      weight: json['weight'],
+      weight: double.tryParse(json['weight'].toString()),
       amount: json['amount'],
       status: json['status'],
       startDate: json['start_date'] != null

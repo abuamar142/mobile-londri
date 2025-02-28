@@ -52,7 +52,7 @@ class MainApp extends StatelessWidget {
         theme: AppThemes.lightTheme,
         darkTheme: AppThemes.darkTheme,
         supportedLocales: AppLocales.locales,
-        locale: Locale('id'),
+        locale: AppLocales.getLocale,
         localizationsDelegates: [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

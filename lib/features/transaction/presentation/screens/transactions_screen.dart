@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
+import '../widgets/transaction_item.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -47,27 +46,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             return WidgetLoading(usingPadding: true);
           } else if (state is TransactionStateSuccessGetTransactions) {
             return SafeArea(
-              child: ListView.builder(
-                itemCount: state.transactions.length,
-                itemBuilder: (context, index) {
-                  final Transaction transaction = state.transactions[index];
-
-                  return ListTile(
-                    key: ValueKey(transaction.id),
-                    title: Text(
-                      transaction.customerName ?? '',
-                      style: AppTextstyle.tileTitle,
-                    ),
-                    subtitle: Text(
-                      transaction.startDate.toString(),
-                      style: AppTextstyle.tileSubtitle,
-                    ),
-                    trailing: Text(
-                      transaction.amount!.formatNumber(),
-                      style: AppTextstyle.tileTrailing,
-                    ),
-                  );
-                },
+              child: TransactionItem(
+                transactions: state.transactions,
               ),
             );
           } else {

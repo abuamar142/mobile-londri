@@ -2,9 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timezone/data/latest.dart' as timezone;
+import 'package:timezone/timezone.dart' as timezone;
 
 import 'app_observer.dart';
 import 'core/services/auth_service.dart';
+import 'core/utils/get_timezone.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
@@ -48,6 +51,14 @@ final serviceLocator = GetIt.instance;
 Future<void> initializeDependencies() async {
   // Flutter Dotenv
   await dotenv.load(fileName: ".env");
+
+  // Timezone
+  timezone.initializeTimeZones();
+  timezone.setLocalLocation(
+    timezone.getLocation(
+      await AppTimezone.getCurrentTimezone(),
+    ),
+  );
 
   // Bloc Observer
   Bloc.observer = AppObserver();
