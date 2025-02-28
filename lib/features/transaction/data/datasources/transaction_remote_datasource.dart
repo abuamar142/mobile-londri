@@ -28,14 +28,12 @@ class TransactionRemoteDatasourceImplementation
           .select(
             '''
               *,
-              customers(name),
+              customers(name, phone),
               services(name)
             ''',
           )
           .filter('deleted_at', 'is', null)
           .order('created_at', ascending: false);
-
-      print(response);
 
       return response.map((e) => TransactionModel.fromJson(e)).toList();
     } on PostgrestException catch (e) {

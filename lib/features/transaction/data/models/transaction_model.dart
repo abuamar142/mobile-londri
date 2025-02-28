@@ -9,6 +9,7 @@ class TransactionModel extends Transaction {
     super.id,
     super.customerId,
     super.customerName,
+    super.customerPhone,
     super.serviceId,
     super.serviceName,
     super.weight,
@@ -27,6 +28,8 @@ class TransactionModel extends Transaction {
       customerId: json['customer_id'],
       customerName:
           json['customers'] != null ? json['customers']['name'] : null,
+      customerPhone:
+          json['customers'] != null ? json['customers']['phone'] : null,
       serviceId: json['service_id'],
       serviceName: json['services'] != null ? json['services']['name'] : null,
       weight: double.tryParse(json['weight'].toString()),

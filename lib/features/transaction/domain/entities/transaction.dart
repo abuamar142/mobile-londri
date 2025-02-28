@@ -4,6 +4,7 @@ class Transaction extends Equatable {
   final String? id;
   final String? customerId;
   final String? customerName;
+  final String? customerPhone;
   final String? serviceId;
   final String? serviceName;
   final double? weight;
@@ -16,6 +17,7 @@ class Transaction extends Equatable {
     this.id,
     this.customerId,
     this.customerName,
+    this.customerPhone,
     this.serviceId,
     this.serviceName,
     this.weight,
@@ -30,6 +32,7 @@ class Transaction extends Equatable {
         id,
         customerId,
         customerName,
+        customerPhone,
         serviceId,
         serviceName,
         weight,
