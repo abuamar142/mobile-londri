@@ -35,8 +35,6 @@ class TransactionRemoteDatasourceImplementation
           .filter('deleted_at', 'is', null)
           .order('created_at', ascending: false);
 
-      print(response);
-
       return response.map((e) => TransactionModel.fromJson(e)).toList();
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);

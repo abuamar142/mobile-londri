@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../customer/domain/entities/customer.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/transaction_item.dart';
 
@@ -16,6 +18,8 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  String? selectedCustomer;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,68 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               ),
             );
           }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Add Transaction'),
+                content: Form(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                          label: Text('Customer'),
+                        ),
+                        readOnly: true,
+                        style: AppTextstyle.textField,
+                        controller: TextEditingController(
+                          text: selectedCustomer,
+                        ),
+                        onTap: () async {
+                          final customer = await context.pushNamed<Customer>(
+                            'select-customer',
+                          );
+                          if (customer != null) {
+                            setState(
+                              () {
+                                selectedCustomer = customer.name;
+                              },
+                            );
+                          }
+                        },
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Description',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/transaction/add');
+                    },
+                    child: Text('Oke'),
+                  ),
+                ],
+              );
+            },
+          );
         },
       ),
     );

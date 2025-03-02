@@ -6,6 +6,7 @@ import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
+import '../../features/transaction/presentation/screens/select_customer_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 import '../../features/user_role/presentation/screens/user_roles_screen.dart';
 
@@ -69,6 +70,15 @@ class AppRoutes {
         builder: (context, state) {
           return const TransactionsScreen();
         },
+        routes: [
+          GoRoute(
+            path: '/select-customer',
+            name: 'select-customer',
+            builder: (context, state) {
+              return const SelectCustomerScreen();
+            },
+          )
+        ],
       ),
     ],
   );

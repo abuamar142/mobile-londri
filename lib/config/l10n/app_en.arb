@@ -243,7 +243,11 @@
   "@customer_delete_failed_message": {
     "description": "Message displayed when deleting a customer fails"
   },
-  "customer_info_non_active": "Long press to activate",
+  "customer_info_activate": "Long press to activate",
+  "@customer_info_activate": {
+    "description": "Info message for activating customer"
+  },
+  "customer_info_non_active": "This customer is not active",
   "@customer_info_non_active": {
     "description": "Info message for non-active customer"
   },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/show_snackbar.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/usecases/transaction_get_transaction_status.dart';
 import 'transaction_item_content.dart';
@@ -41,6 +42,14 @@ class TransactionItem extends StatelessWidget {
             subtitle: TransactionItemContent(
               transaction: transaction,
               status: status,
+            ),
+            onTap: () => showSnackbar(
+              context,
+              'Munculkan dialog ubah status',
+            ),
+            onLongPress: () => showSnackbar(
+              context,
+              'Munculkan dialog untuk edit atau hapus',
             ),
           ),
         );

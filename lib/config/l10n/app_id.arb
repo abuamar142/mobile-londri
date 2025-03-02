@@ -63,7 +63,8 @@
   "customer_add_failed_message": "Gagal menambahkan pelanggan",
   "customer_edit_failed_message": "Gagal memperbarui pelanggan",
   "customer_delete_failed_message": "Gagal menghapus pelanggan",
-  "customer_info_non_active": "Tekan lama untuk mengaktifkan pelanggan",
+  "customer_info_activate": "Tekan lama untuk mengaktifkan pelanggan",
+  "customer_info_non_active": "Pelanggan ini tidak aktif",
   "customer_info_active": "Pelanggan ini sudah aktif",
 
   "error_occurred_message": "Terjadi kesalahan",

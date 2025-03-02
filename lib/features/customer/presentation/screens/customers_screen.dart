@@ -105,7 +105,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           appText: appText,
                         );
                       } else {
-                        showSnackbar(context, appText.customer_info_non_active);
+                        showSnackbar(context, appText.customer_info_activate);
                       }
                     },
                     onLongPress: () {
