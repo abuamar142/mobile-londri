@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
@@ -41,12 +42,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appText = AppLocalizations.of(context)!;
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthStateFailure) {
           showSnackbar(context, state.message.toString());
         } else if (state is AuthStateSuccessLogin) {
-          showSnackbar(context, 'Login successful');
+          showSnackbar(context, appText.auth_login_success_message);
           context.pushReplacementNamed('home');
         }
       },

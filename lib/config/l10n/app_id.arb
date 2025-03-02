@@ -1,6 +1,10 @@
 {
   "splash_screen_text": "Kelola Bisnis Laundry Anda dengan Mudah",
 
+  "auth_login_success_message": "Berhasil masuk",
+  "auth_register_success_message": "Berhasil mendaftar",
+  "auth_logout_success_message": "Berhasil keluar",
+
   "user_role_screen_title": "Peran Pengguna",
   "user_role_empty_message": "Tidak ada peran pengguna ditemukan",
 

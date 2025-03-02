@@ -4,6 +4,19 @@
     "description": "Text displayed on the splash screen"
   },
 
+  "auth_login_success_message": "Login successful",
+  "@auth_login_success_message": {
+    "description": "Message displayed when login is successful"
+  },
+  "auth_register_success_message": "Register successful",
+  "@auth_register_success_message": {
+    "description": "Message displayed when register is successful"
+  },
+  "auth_logout_success_message": "Logout successful",
+  "@auth_logout_success_message": {
+    "description": "Message displayed when logout is successful"
+  },
+
   "user_role_screen_title": "User Role",
   "@user_role_screen_title": {
     "description": "Title for the user role screen"
