@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Execute something after the widget is built
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         Future.delayed(

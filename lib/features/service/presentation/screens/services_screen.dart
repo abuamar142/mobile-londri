@@ -38,10 +38,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
+    super.dispose();
   }
 
   @override

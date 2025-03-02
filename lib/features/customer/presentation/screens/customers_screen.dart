@@ -37,10 +37,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _nameController.dispose();
     _phoneController.dispose();
     _descriptionController.dispose();
+    super.dispose();
   }
 
   @override
