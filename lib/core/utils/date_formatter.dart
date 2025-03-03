@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../config/l10n/l10n.dart';
+import '../../config/i18n/i18n.dart';
 
 extension DateFormatter on DateTime {
   String formatDateTime() {
