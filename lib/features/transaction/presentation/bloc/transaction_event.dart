@@ -8,3 +8,16 @@ abstract class TransactionEvent extends Equatable {
 }
 
 class TransactionEventGetTransactions extends TransactionEvent {}
+
+class TransactionEventCreateTransaction extends TransactionEvent {
+  final Transaction transaction;
+
+  const TransactionEventCreateTransaction({
+    required this.transaction,
+  });
+
+  @override
+  List<Object> get props => [
+        transaction,
+      ];
+}

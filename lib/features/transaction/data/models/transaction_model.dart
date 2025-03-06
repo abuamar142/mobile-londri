@@ -7,6 +7,7 @@ class TransactionModel extends Transaction {
 
   const TransactionModel({
     super.id,
+    super.staffId,
     super.customerId,
     super.customerName,
     super.serviceId,
@@ -24,6 +25,7 @@ class TransactionModel extends Transaction {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
+      staffId: json['staff_id'],
       customerId: json['customer_id'],
       customerName:
           json['customers'] != null ? json['customers']['name'] : null,
@@ -50,6 +52,7 @@ class TransactionModel extends Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'staff_id': staffId,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,

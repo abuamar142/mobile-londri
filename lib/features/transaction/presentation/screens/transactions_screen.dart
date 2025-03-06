@@ -4,9 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../customer/domain/entities/customer.dart';
+import '../../../service/domain/entities/service.dart';
+import '../../../service/presentation/bloc/service_bloc.dart';
+import '../../../transaction/domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/transaction_item.dart';
 
@@ -18,7 +23,15 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String? selectedCustomer;
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _customerNameController = TextEditingController();
+  final TextEditingController _serviceController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
 
   @override
   void initState() {
@@ -26,6 +39,18 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     context.read<TransactionBloc>().add(
           TransactionEventGetTransactions(),
         );
+  }
+
+  @override
+  void dispose() {
+    _customerNameController.dispose();
+    _serviceController.dispose();
+    _weightController.dispose();
+    _amountController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _statusController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,66 +90,276 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Add Transaction'),
-                content: Form(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          label: Text('Customer'),
-                        ),
-                        readOnly: true,
-                        style: AppTextstyle.textField,
-                        controller: TextEditingController(
-                          text: selectedCustomer,
-                        ),
-                        onTap: () async {
-                          final customer = await context.pushNamed<Customer>(
-                            'select-customer',
-                          );
-                          if (customer != null) {
-                            setState(
-                              () {
-                                selectedCustomer = customer.name;
-                              },
+        onPressed: () => addTransaction(
+          appText: appText,
+        ),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  void addTransaction({
+    required AppLocalizations appText,
+  }) {
+    _showTransactionDialog(
+      context: context,
+      appText: appText,
+      title: appText.transaction_add_dialog_title,
+      onSubmit: (Transaction transaction) {
+        context.read<TransactionBloc>().add(
+              TransactionEventCreateTransaction(
+                transaction: transaction,
+              ),
+            );
+
+        context.pop();
+      },
+    );
+  }
+
+  void _showTransactionDialog({
+    required BuildContext context,
+    required AppLocalizations appText,
+    required String title,
+    Transaction? transaction,
+    required Function(Transaction) onSubmit,
+    showDeleteButton = false,
+  }) {
+    if (transaction != null) {
+      _customerNameController.text = transaction.customerName!;
+      _serviceController.text = transaction.serviceName!;
+      _weightController.text = transaction.weight.toString();
+      _amountController.text = transaction.amount.toString();
+      _startDateController.text = transaction.startDate!.toString();
+      _endDateController.text = transaction.endDate!.toString();
+      _statusController.text = transaction.status!;
+    } else {
+      _customerNameController.clear();
+      _serviceController.clear();
+      _weightController.clear();
+      _amountController.clear();
+      _startDateController.clear();
+      _endDateController.clear();
+      _statusController.clear();
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        content: Form(
+          key: _formKey,
+          child: BlocBuilder<TransactionBloc, TransactionState>(
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(title, style: AppTextstyle.title),
+                  SizedBox(height: 8),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      label: Text('Customer'),
+                    ),
+                    readOnly: true,
+                    style: AppTextstyle.textField,
+                    controller: _customerNameController,
+                    onTap: () async {
+                      final customer = await context.pushNamed<Customer>(
+                        'select-customer',
+                      );
+                      if (customer != null) {
+                        setState(
+                          () {
+                            _customerNameController.text = customer.id!;
+                          },
+                        );
+                      }
+                    },
+                  ),
+                  BlocConsumer<ServiceBloc, ServiceState>(
+                    bloc: context.read<ServiceBloc>()
+                      ..add(
+                        ServiceEventGetServices(),
+                      ),
+                    listener: (context, state) {
+                      if (state is ServiceStateFailure) {
+                        showSnackbar(context, state.message.toString());
+                      }
+                    },
+                    builder: (context, state) {
+                      final List<Service> services = [];
+
+                      if (state is ServiceStateLoading) {
+                        return WidgetLoading();
+                      } else if (state is ServiceStateSuccessGetServices) {
+                        services.addAll(state.services);
+
+                        return Autocomplete(
+                          fieldViewBuilder: (
+                            context,
+                            textEditingController,
+                            focusNode,
+                            onFieldSubmitted,
+                          ) {
+                            return TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Service',
+                              ),
+                              controller: textEditingController,
+                              focusNode: focusNode,
+                              style: AppTextstyle.textField,
                             );
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+                          },
+                          displayStringForOption: (option) {
+                            return option.name!;
+                          },
+                          optionsBuilder: (TextEditingValue value) {
+                            return services.where(
+                              (service) {
+                                return service.name!.toLowerCase().contains(
+                                      value.text.toLowerCase(),
+                                    );
+                              },
+                            ).toList();
+                          },
+                          onSelected: (Service service) {
+                            _serviceController.text = service.name!;
+                          },
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
                     },
-                    child: Text('Cancel'),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/transaction/add');
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Weight',
+                    ),
+                    controller: _weightController,
+                    style: AppTextstyle.textField,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Amount',
+                    ),
+                    controller: _amountController,
+                    style: AppTextstyle.textField,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Start Date',
+                    ),
+                    controller: _startDateController,
+                    style: AppTextstyle.textField,
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          final dateTime = DateTime(
+                            pickedDate.year,
+                            pickedDate.month,
+                            pickedDate.day,
+                            pickedTime.hour,
+                            pickedTime.minute,
+                          );
+                          setState(() {
+                            _startDateController.text =
+                                dateTime.toIso8601String();
+                          });
+                        }
+                      }
                     },
-                    child: Text('Oke'),
                   ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'End Date',
+                    ),
+                    controller: _endDateController,
+                    style: AppTextstyle.textField,
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now().add(Duration(days: 3)),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          final dateTime = DateTime(
+                            pickedDate.year,
+                            pickedDate.month,
+                            pickedDate.day,
+                            pickedTime.hour,
+                            pickedTime.minute,
+                          );
+                          setState(() {
+                            _endDateController.text =
+                                dateTime.toIso8601String();
+                          });
+                        }
+                      }
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Status',
+                    ),
+                    controller: _statusController,
+                    style: AppTextstyle.textField,
+                  ),
+                  const SizedBox(height: 4),
+                  WidgetButton(
+                    label: appText.button_submit,
+                    isLoading: state is TransactionStateLoading,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        final newTransaction = Transaction(
+                          id: transaction?.id,
+                          customerId: _customerNameController.text,
+                          serviceName: _serviceController.text,
+                          weight: 3.1,
+                          amount: int.tryParse(_amountController.text),
+                          startDate: DateTime.parse(_startDateController.text),
+                          endDate: DateTime.parse(_endDateController.text),
+                          status: 'received',
+                        );
+
+                        print(newTransaction);
+
+                        onSubmit(newTransaction);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  if (showDeleteButton)
+                    WidgetTextButton(
+                      label: appText.button_delete,
+                      isLoading: state is TransactionStateLoading,
+                      onPressed: () {},
+                    ),
                 ],
               );
             },
-          );
-        },
+          ),
+        ),
       ),
     );
   }

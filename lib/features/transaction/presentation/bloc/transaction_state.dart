@@ -24,6 +24,8 @@ class TransactionStateSuccessGetTransactions extends TransactionState {
       ];
 }
 
+class TransactionStateSuccessCreateTransaction extends TransactionState {}
+
 class TransactionStateFailure extends TransactionState {
   final String message;
 
