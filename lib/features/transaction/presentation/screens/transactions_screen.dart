@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
@@ -180,52 +181,43 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     },
                   ),
                   BlocConsumer<ServiceBloc, ServiceState>(
-                    bloc: context.read<ServiceBloc>()
-                      ..add(
-                        ServiceEventGetServices(),
-                      ),
                     listener: (context, state) {
                       if (state is ServiceStateFailure) {
                         showSnackbar(context, state.message.toString());
                       }
                     },
                     builder: (context, state) {
-                      final List<Service> services = [];
-
                       if (state is ServiceStateLoading) {
                         return WidgetLoading();
                       } else if (state is ServiceStateSuccessGetServices) {
-                        services.addAll(state.services);
+                        final List<Service> services = state.services;
 
-                        return Autocomplete(
-                          fieldViewBuilder: (
-                            context,
-                            textEditingController,
-                            focusNode,
-                            onFieldSubmitted,
-                          ) {
-                            return TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Service',
-                              ),
-                              controller: textEditingController,
-                              focusNode: focusNode,
-                              style: AppTextstyle.textField,
-                            );
-                          },
-                          displayStringForOption: (option) {
-                            return option.name!;
-                          },
-                          optionsBuilder: (TextEditingValue value) {
+                        return TypeAheadField<Service>(
+                          suggestionsCallback: (pattern) {
                             return services.where(
                               (service) {
                                 return service.name!.toLowerCase().contains(
-                                      value.text.toLowerCase(),
+                                      pattern.toLowerCase(),
                                     );
                               },
                             ).toList();
                           },
-                          onSelected: (Service service) {
+                          builder: (context, controller, focusNode) {
+                            return TextField(
+                              controller: _serviceController,
+                              focusNode: focusNode,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                labelText: 'Service',
+                              ),
+                            );
+                          },
+                          itemBuilder: (context, service) {
+                            return ListTile(
+                              title: Text(service.name ?? ''),
+                            );
+                          },
+                          onSelected: (service) {
                             _serviceController.text = service.name!;
                           },
                         );
@@ -325,7 +317,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     controller: _statusController,
                     style: AppTextstyle.textField,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 16),
                   WidgetButton(
                     label: appText.button_submit,
                     isLoading: state is TransactionStateLoading,
