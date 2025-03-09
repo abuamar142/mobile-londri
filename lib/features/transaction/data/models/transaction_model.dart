@@ -1,4 +1,5 @@
 import '../../domain/entities/transaction.dart';
+import '../../domain/usecases/transaction_get_transaction_status.dart';
 
 class TransactionModel extends Transaction {
   final DateTime? createdAt;
@@ -33,7 +34,9 @@ class TransactionModel extends Transaction {
       serviceName: json['services'] != null ? json['services']['name'] : null,
       weight: double.tryParse(json['weight'].toString()),
       amount: json['amount'],
-      status: json['status'],
+      status: TransactionStatusId.values.firstWhere(
+        (e) => e.name == json['status'],
+      ),
       startDate: json['start_date'] != null
           ? DateTime.parse(json['start_date'])
           : null,

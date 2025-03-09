@@ -24,7 +24,7 @@ class TransactionItem extends StatelessWidget {
         final getTransactionStatus = GetTransactionStatus();
         final status = getTransactionStatus(
           context,
-          transaction.status ?? '',
+          transaction.status!,
         );
 
         return Card(

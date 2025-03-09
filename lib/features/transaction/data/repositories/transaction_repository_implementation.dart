@@ -5,15 +5,20 @@ import 'package:uuid/uuid.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/transaction.dart';
+import '../../domain/entities/transaction_status.dart';
 import '../../domain/repositories/transaction_repository.dart';
+import '../datasources/transaction_local_datasource.dart';
 import '../datasources/transaction_remote_datasource.dart';
 import '../models/transaction_model.dart';
+import '../models/transaction_status_model.dart';
 
 class TransactionRepositoryImplementation extends TransactionRepository {
   final TransactionRemoteDatasource transactionRemoteDatasource;
+  final TransactionLocalDatasource transactionLocalDatasource;
 
   TransactionRepositoryImplementation({
     required this.transactionRemoteDatasource,
+    required this.transactionLocalDatasource,
   });
 
   @override
@@ -74,5 +79,42 @@ class TransactionRepositoryImplementation extends TransactionRepository {
   Future<Either<Failure, void>> updateTransaction(Transaction transaction) {
     // TODO: implement updateTransaction
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, TransactionStatus>>
+      getDefaultTransactionStatus() async {
+    try {
+      final response =
+          await transactionLocalDatasource.getDefaultTransactionStatus();
+
+      return Right(response);
+    } on GeneralException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateDefaultTransactionStatus(
+    TransactionStatus transactionStatus,
+  ) async {
+    try {
+      await transactionLocalDatasource.updateDefaultTransactionStatus(
+        TransactionStatusModel(
+          id: transactionStatus.id,
+          status: transactionStatus.status,
+          icon: transactionStatus.icon,
+          color: transactionStatus.color,
+        ),
+      );
+
+      return Right(null);
+    } on GeneralException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    }
   }
 }

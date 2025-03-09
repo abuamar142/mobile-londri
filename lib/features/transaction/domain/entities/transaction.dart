@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../usecases/transaction_get_transaction_status.dart';
+
 class Transaction extends Equatable {
   final String? id;
   final String? staffId;
@@ -9,7 +11,7 @@ class Transaction extends Equatable {
   final String? serviceName;
   final double? weight;
   final int? amount;
-  final String? status;
+  final TransactionStatusId? status;
   final DateTime? startDate;
   final DateTime? endDate;
 

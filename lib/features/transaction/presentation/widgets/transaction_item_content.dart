@@ -92,7 +92,7 @@ class TransactionItemContent extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                status.status,
+                status.status!,
                 style: TextStyle(
                   fontSize: 12,
                   color: status.color,

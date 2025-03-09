@@ -13,6 +13,7 @@ import '../../../customer/domain/entities/customer.dart';
 import '../../../service/domain/entities/service.dart';
 import '../../../service/presentation/bloc/service_bloc.dart';
 import '../../../transaction/domain/entities/transaction.dart';
+import '../../domain/usecases/transaction_get_transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/transaction_item.dart';
 
@@ -136,7 +137,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       _amountController.text = transaction.amount.toString();
       _startDateController.text = transaction.startDate!.toString();
       _endDateController.text = transaction.endDate!.toString();
-      _statusController.text = transaction.status!;
+      _statusController.text = transaction.status!.name;
     } else {
       _customerNameController.clear();
       _serviceController.clear();
@@ -331,7 +332,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                           amount: int.tryParse(_amountController.text),
                           startDate: DateTime.parse(_startDateController.text),
                           endDate: DateTime.parse(_endDateController.text),
-                          status: 'received',
+                          status: TransactionStatusId.received,
                         );
 
                         print(newTransaction);

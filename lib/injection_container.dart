@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timezone/data/latest.dart' as timezone;
 import 'package:timezone/timezone.dart' as timezone;
@@ -33,11 +34,14 @@ import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
 import 'features/service/domain/usecases/service_update_service.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
+import 'features/transaction/data/datasources/transaction_local_datasource.dart';
 import 'features/transaction/data/datasources/transaction_remote_datasource.dart';
 import 'features/transaction/data/repositories/transaction_repository_implementation.dart';
 import 'features/transaction/domain/repositories/transaction_repository.dart';
 import 'features/transaction/domain/usecases/transaction_create_transaction.dart';
+import 'features/transaction/domain/usecases/transaction_get_default_transaction_status.dart';
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
+import 'features/transaction/domain/usecases/transaction_update_default_transaction_status.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'features/user_role/data/datasources/user_role_remote_datasource.dart';
 import 'features/user_role/data/repositories/user_role_repository_implementation.dart';
@@ -63,6 +67,12 @@ Future<void> initializeDependencies() async {
 
   // Bloc Observer
   Bloc.observer = AppObserver();
+
+  // SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  serviceLocator.registerLazySingleton<SharedPreferences>(
+    () => sharedPreferences,
+  );
 
   // Feature - Auth
   // Supabase
@@ -278,11 +288,17 @@ Future<void> initializeDependencies() async {
         supabaseClient: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<TransactionLocalDatasource>(
+      () => TransactionLocalDatasourceImplementation(
+        sharedPreferences: serviceLocator(),
+      ),
+    )
 
     // Repositories
     ..registerLazySingleton<TransactionRepository>(
       () => TransactionRepositoryImplementation(
         transactionRemoteDatasource: serviceLocator(),
+        transactionLocalDatasource: serviceLocator(),
       ),
     )
 
@@ -292,8 +308,18 @@ Future<void> initializeDependencies() async {
         transactionRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<TransactionGetDefaultTransactionStatus>(
+      () => TransactionGetDefaultTransactionStatus(
+        transactionRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<TransactionCreateTransaction>(
       () => TransactionCreateTransaction(
+        transactionRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<TransactionUpdateDefaultTransactionStatus>(
+      () => TransactionUpdateDefaultTransactionStatus(
         transactionRepository: serviceLocator(),
       ),
     )
@@ -301,8 +327,10 @@ Future<void> initializeDependencies() async {
     // Bloc
     ..registerFactory(
       () => TransactionBloc(
-        serviceGetTransactions: serviceLocator(),
-        serviceCreateTransaction: serviceLocator(),
+        transactionGetTransactions: serviceLocator(),
+        transactionGetDefaultTransactionStatus: serviceLocator(),
+        transactionCreateTransaction: serviceLocator(),
+        transactionUpdateDefaultTransactionStatus: serviceLocator(),
       ),
     );
 
