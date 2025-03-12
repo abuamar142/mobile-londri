@@ -17,7 +17,6 @@ class MainScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (RoleManager.hasPermission(
-                RoleManager.getUserRole,
                 Permission.manageUserRoles,
               ))
                 WidgetButton(
@@ -25,10 +24,13 @@ class MainScreen extends StatelessWidget {
                   onPressed: () => context.pushNamed('user-roles'),
                 ),
               SizedBox(height: 16),
-              WidgetButton(
-                label: 'Services',
-                onPressed: () => context.pushNamed('services'),
-              ),
+              if (RoleManager.hasPermission(
+                Permission.manageServices,
+              ))
+                WidgetButton(
+                  label: 'Services',
+                  onPressed: () => context.pushNamed('services'),
+                ),
               SizedBox(height: 16),
               WidgetButton(
                 label: 'Customers',

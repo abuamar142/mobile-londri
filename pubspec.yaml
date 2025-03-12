@@ -48,6 +48,9 @@ dependencies:
   # Shared Preferences
   shared_preferences: ^2.5.2
 
+  # JWT Decoder
+  jwt_decoder: ^2.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
