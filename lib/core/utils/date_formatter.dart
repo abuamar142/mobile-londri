@@ -12,7 +12,7 @@ extension DateFormatter on DateTime {
 
     return DateFormat(
       'EEEE, dd MMM, HH:mm',
-      AppLocales.getLocale.toString(),
+      AppLocales.localeNotifier.value.toString(),
     ).format(
       localTime,
     );

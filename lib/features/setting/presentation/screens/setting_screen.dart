@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:go_router/go_router.dart';
+import 'package:settings_ui/settings_ui.dart';
 
+import '../../../../config/i18n/i18n.dart';
+import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../injection_container.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../transaction/domain/entities/transaction_status.dart';
 import '../../../transaction/domain/usecases/transaction_get_transaction_status.dart';
 import '../../../transaction/presentation/bloc/transaction_bloc.dart';
@@ -27,10 +32,26 @@ class _SettingScreenState extends State<SettingScreen> {
     context.read<TransactionBloc>().add(
           TransactionEventGetDefaultTransactionStatus(),
         );
+
+    AppLocales.localeNotifier.addListener(_onLocaleChanged);
+  }
+
+  @override
+  void dispose() {
+    AppLocales.localeNotifier.removeListener(_onLocaleChanged);
+    _transactionStatusController.dispose();
+
+    super.dispose();
+  }
+
+  void _onLocaleChanged() {
+    context.pushNamed('home');
   }
 
   @override
   Widget build(BuildContext context) {
+    final appText = AppLocalizations.of(context)!;
+
     final getTransactionStatus = GetTransactionStatus();
 
     return Scaffold(
@@ -50,7 +71,7 @@ class _SettingScreenState extends State<SettingScreen> {
               is TransactionStateSuccessUpdateDefaultTransactionStatus) {
             showSnackbar(
               context,
-              'Transaction status updated',
+              appText.transaction_status_change_success_message,
             );
           }
         },
@@ -59,72 +80,104 @@ class _SettingScreenState extends State<SettingScreen> {
             return WidgetLoading(usingPadding: true);
           } else {
             return SafeArea(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TypeAheadField<TransactionStatus>(
-                            suggestionsCallback: (pattern) {
-                              return TransactionStatusId.values
-                                  .map(
-                                      (id) => getTransactionStatus(context, id))
-                                  .where(
-                                    (status) =>
-                                        status.status!.toLowerCase().contains(
-                                              pattern.toLowerCase(),
-                                            ),
-                                  )
-                                  .toList();
-                            },
-                            builder: (context, controller, focusNode) {
-                              return TextField(
-                                controller: _transactionStatusController,
-                                focusNode: focusNode,
-                                decoration: InputDecoration(
-                                  labelText: 'Transaction Status',
-                                ),
-                              );
-                            },
-                            listBuilder: (context, children) {
-                              return SizedBox(
-                                height: 200,
-                                child: ListView(
-                                  children: children,
-                                ),
-                              );
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(suggestion.status.toString()),
-                              );
-                            },
-                            onSelected: (suggestion) {
-                              _transactionStatusController.text =
-                                  suggestion.status.toString();
+              child: Column(
+                children: [
+                  SettingsList(
+                    shrinkWrap: true,
+                    applicationType: ApplicationType.material,
+                    sections: [
+                      SettingsSection(
+                        tiles: [
+                          SettingsTile(
+                            title: Text(
+                              appText.setting_language_label,
+                              style: AppTextstyle.label,
+                            ),
+                            trailing: SizedBox(
+                              width: 200,
+                              child: DropdownButton<Locale>(
+                                isExpanded: true,
+                                value: AppLocales.localeNotifier.value,
+                                onChanged: (Locale? newLocale) {
+                                  if (newLocale != null) {
+                                    serviceLocator<AppLocales>().setLocale(
+                                      newLocale,
+                                    );
 
-                              transactionStatusId = suggestion.id!;
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () => context.read<TransactionBloc>().add(
-                                TransactionEventUpdateDefaultTransactionStatus(
-                                  transactionStatus: getTransactionStatus(
-                                    context,
-                                    transactionStatusId,
-                                  ),
-                                ),
+                                    showSnackbar(
+                                      context,
+                                      appText.locale_change_success_message,
+                                    );
+                                  }
+                                },
+                                items: AppLocalizations.supportedLocales
+                                    .map<DropdownMenuItem<Locale>>(
+                                      (Locale locale) =>
+                                          DropdownMenuItem<Locale>(
+                                        value: locale,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            locale.languageCode == 'en'
+                                                ? appText.setting_language_en
+                                                : appText.setting_language_id,
+                                            style: AppTextstyle.body,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
-                          child: Text('Save'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                            ),
+                          ),
+                          SettingsTile(
+                            title: Text(
+                              appText.setting_transaction_status_label,
+                              style: AppTextstyle.label,
+                            ),
+                            trailing: SizedBox(
+                              width: 200,
+                              child: DropdownButton<TransactionStatus>(
+                                isExpanded: true,
+                                value: getTransactionStatus(
+                                  context,
+                                  transactionStatusId,
+                                ),
+                                onChanged: (TransactionStatus? newStatus) {
+                                  if (newStatus != null) {
+                                    _transactionStatusController.text =
+                                        newStatus.status.toString();
+                                    transactionStatusId = newStatus.id!;
+
+                                    context.read<TransactionBloc>().add(
+                                          TransactionEventUpdateDefaultTransactionStatus(
+                                            transactionStatus: newStatus,
+                                          ),
+                                        );
+                                  }
+                                },
+                                items: TransactionStatusId.values.map((id) {
+                                  final status =
+                                      getTransactionStatus(context, id);
+                                  return DropdownMenuItem<TransactionStatus>(
+                                    value: status,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        status.status.toString(),
+                                        style: AppTextstyle.body,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             );
           }

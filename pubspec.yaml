@@ -51,6 +51,9 @@ dependencies:
   # JWT Decoder
   jwt_decoder: ^2.0.1
 
+  # Settings UI
+  settings_ui: ^2.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

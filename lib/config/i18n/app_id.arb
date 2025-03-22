@@ -71,6 +71,18 @@
   "customer_info_non_active": "Pelanggan ini tidak aktif",
   "customer_info_active": "Pelanggan ini sudah aktif",
 
+  "locale_change_success_message": "Bahasa berhasil diubah",
+
+  "transaction_status_change_success_message": "Status transaksi berhasil diubah",
+
+  "home_screen_title": "Beranda",
+
+  "setting_screen_title": "Pengaturan",
+  "setting_language_label": "Bahasa",
+  "setting_language_en": "Bahasa Inggris",
+  "setting_language_id": "Bahasa Indonesia",
+  "setting_transaction_status_label": "Status Transaksi",
+
   "error_occurred_message": "Terjadi kesalahan",
 
   "form_name_label": "Nama",

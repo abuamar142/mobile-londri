@@ -44,21 +44,26 @@ class MainApp extends StatelessWidget {
           create: (context) => serviceLocator<TransactionBloc>(),
         ),
       ],
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        title: 'Londri',
-        routerConfig: AppRoutes.routes,
-        themeMode: ThemeMode.system,
-        theme: AppThemes.lightTheme,
-        darkTheme: AppThemes.darkTheme,
-        locale: AppLocales.getLocale,
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
+      child: ValueListenableBuilder<Locale>(
+        valueListenable: AppLocales.localeNotifier,
+        builder: (context, locale, child) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'Londri',
+            routerConfig: AppRoutes.routes,
+            themeMode: ThemeMode.system,
+            theme: AppThemes.lightTheme,
+            darkTheme: AppThemes.darkTheme,
+            locale: locale,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+          );
+        },
       ),
     );
   }

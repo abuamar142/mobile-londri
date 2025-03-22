@@ -269,6 +269,42 @@
     "description": "Info message for active customer"
   },
 
+  "locale_change_success_message": "Language changed successfully",
+  "@locale_change_success_message": {
+    "description": "Message displayed when language is changed successfully"
+  },
+
+  "transaction_status_change_success_message": "Transaction status changed successfully",
+  "@transaction_status_change_success_message": {
+    "description": "Message displayed when transaction status is changed successfully"
+  },
+
+  "home_screen_title": "Home",
+  "@home_screen_title": {
+    "description": "Title for the home screen"
+  },
+
+  "setting_screen_title": "Setting",
+  "@setting_screen_title": {
+    "description": "Title for the setting screen"
+  },
+  "setting_language_label": "Language",
+  "@setting_language_label": {
+    "description": "Label for the language setting"
+  },
+  "setting_language_en": "English",
+  "@setting_language_en": {
+    "description": "English"
+  },
+  "setting_language_id": "Indonesian",
+  "@setting_language_id": {
+    "description": "Indonesian"
+  },
+  "setting_transaction_status_label": "Transaction Status",
+  "@setting_transaction_status_label": {
+    "description": "Label for the transaction status setting"
+  },
+
   "error_occurred_message": "An error occurred",
   "@error_occurred_message": {
     "description": "Generic error message"

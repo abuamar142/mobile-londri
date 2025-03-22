@@ -7,6 +7,7 @@ import 'package:timezone/data/latest.dart' as timezone;
 import 'package:timezone/timezone.dart' as timezone;
 
 import 'app_observer.dart';
+import 'config/i18n/i18n.dart';
 import 'core/services/auth_service.dart';
 import 'core/utils/get_timezone.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
@@ -73,6 +74,14 @@ Future<void> initializeDependencies() async {
   serviceLocator.registerLazySingleton<SharedPreferences>(
     () => sharedPreferences,
   );
+
+  // Localization
+  serviceLocator.registerLazySingleton<AppLocales>(
+    () => AppLocales(
+      sharedPreferences: serviceLocator(),
+    ),
+  );
+  serviceLocator<AppLocales>().loadLocale();
 
   // Feature - Auth
   // Supabase
