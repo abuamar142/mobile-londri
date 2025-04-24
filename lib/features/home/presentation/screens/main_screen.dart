@@ -41,6 +41,11 @@ class MainScreen extends StatelessWidget {
                 label: 'Transactions',
                 onPressed: () => context.pushNamed('transactions'),
               ),
+              SizedBox(height: 16),
+              WidgetButton(
+                label: 'Print',
+                onPressed: () => context.pushNamed('print'),
+              ),
             ],
           ),
         ),

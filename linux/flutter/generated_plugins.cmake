@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  bluetooth_print_plus
   flutter_timezone
   gtk
   url_launcher_linux

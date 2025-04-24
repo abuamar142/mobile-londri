@@ -5,6 +5,7 @@ import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
+import '../../features/print/presentation/screens/print_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/select_customer_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
@@ -79,6 +80,13 @@ class AppRoutes {
             },
           )
         ],
+      ),
+      GoRoute(
+        path: '/print',
+        name: 'print',
+        builder: (context, state) {
+          return const PrintScreen();
+        },
       ),
     ],
   );

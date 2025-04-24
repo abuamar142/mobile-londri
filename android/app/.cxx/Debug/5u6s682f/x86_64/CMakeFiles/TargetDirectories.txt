@@ -1,0 +1,2 @@
+/home/abuuamar_/abuAmar/kegiatan/projectFlutter/mobile-londri/android/app/.cxx/Debug/5u6s682f/x86_64/CMakeFiles/edit_cache.dir
+/home/abuuamar_/abuAmar/kegiatan/projectFlutter/mobile-londri/android/app/.cxx/Debug/5u6s682f/x86_64/CMakeFiles/rebuild_cache.dir

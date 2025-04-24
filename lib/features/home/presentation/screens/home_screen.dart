@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         title: Text(
-          'Home',
+          appText.home_screen_title,
           style: AppTextstyle.title,
         ),
       ),
@@ -80,13 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(
               Icons.home,
             ),
-            label: 'Home',
+            label: appText.home_screen_title,
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.settings,
             ),
-            label: 'Setting',
+            label: appText.setting_screen_title,
           ),
         ],
         currentIndex: _selectedIndex,
