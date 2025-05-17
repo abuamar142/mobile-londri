@@ -19,12 +19,12 @@ Future<void> showConfirmationDialog({
           alignment: Alignment.center,
           child: Text(
             title,
-            style: AppTextstyle.title,
+            style: AppTextStyle.title,
           ),
         ),
         content: Text(
           content,
-          style: AppTextstyle.body,
+          style: AppTextStyle.body,
           textAlign: TextAlign.center,
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -35,7 +35,7 @@ Future<void> showConfirmationDialog({
               TextButton(
                 child: Text(
                   appText.button_cancel,
-                  style: AppTextstyle.body,
+                  style: AppTextStyle.body,
                 ),
                 onPressed: () {
                   context.pop();

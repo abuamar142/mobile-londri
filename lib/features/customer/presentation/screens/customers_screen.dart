@@ -51,7 +51,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
       appBar: AppBar(
         title: Text(
           appText.customer_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<CustomerBloc, CustomerState>(
@@ -82,19 +82,19 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     key: ValueKey(customer.id),
                     title: Text(
                       customer.name!,
-                      style: AppTextstyle.tileTitle.copyWith(
+                      style: AppTextStyle.tileTitle.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
                     subtitle: Text(
                       customer.description ?? '-',
-                      style: AppTextstyle.tileSubtitle.copyWith(
+                      style: AppTextStyle.tileSubtitle.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
                     trailing: Text(
                       customer.phone.toString(),
-                      style: AppTextstyle.tileTrailing.copyWith(
+                      style: AppTextStyle.tileTrailing.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
@@ -126,7 +126,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
             return Center(
               child: Text(
                 appText.customer_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }
@@ -208,7 +208,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title, style: AppTextstyle.title),
+                  Text(title, style: AppTextStyle.title),
                   SizedBox(height: 8),
                   WidgetTextFormField(
                     label: appText.form_name_label,

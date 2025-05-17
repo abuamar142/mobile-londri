@@ -9,6 +9,10 @@ import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../bloc/auth_bloc.dart';
 
+void pushRegister(BuildContext context) {
+  context.pushNamed('register');
+}
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -68,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           appBar: AppBar(
             title: Text(
               'Register',
-              style: AppTextstyle.title,
+              style: AppTextStyle.title,
             ),
           ),
           body: SafeArea(
@@ -81,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   TextField(
                     controller: _nameController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     enabled: state is! AuthStateLoading,
                     decoration: const InputDecoration(
                       labelText: 'Name',
@@ -90,7 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: _emailController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     enabled: state is! AuthStateLoading,
                     decoration: const InputDecoration(
                       labelText: 'Email',
@@ -99,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: _passwordController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     enabled: state is! AuthStateLoading,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -121,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   TextField(
                     controller: _passwordAgainController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     enabled: state is! AuthStateLoading,
                     decoration: InputDecoration(
                       labelText: 'Password Again',

@@ -1,7 +1,21 @@
 {
+  "app_name": "Londri",  
+
   "splash_screen_text": "Kelola Bisnis Laundry Anda dengan Mudah",
 
+  "auth_login_screen_title": "Masuk",
+  "auth_login_screen_text_title": "Selamat Datang di Aplikasi Londri",
+  "auth_login_screen_text_subtitle": "Silakan masuk untuk melanjutkan",
+  "auth_login_screen_rich_text_text": "Belum punya akun? ",
+  "auth_login_screen_rich_text_button": "Daftar di sini",
+
+  "auth_login_form_email_required_message": "Email tidak boleh kosong",
+  "auth_login_form_email_invalid_message": "Email tidak valid",
+  "auth_login_form_password_required_message": "Kata sandi tidak boleh kosong",
+  "auth_login_form_password_min_length_message": "Kata sandi minimal 8 karakter",
+  "auth_login_error_message": "Gagal masuk, silakan periksa email dan kata sandi Anda",
   "auth_login_success_message": "Berhasil masuk",
+  "auth_register_screen_title": "Daftar",
   "auth_register_success_message": "Berhasil mendaftar",
   "auth_logout_success_message": "Berhasil keluar",
 
@@ -93,6 +107,9 @@
   "form_description_label": "Deskripsi",
   "form_price_label": "Harga",
   "form_name_hint": "Silakan masukkan nama Anda",
+  "form_email_hint": "Silakan masukkan email Anda",
+  "form_password_hint": "Silakan masukkan kata sandi Anda",
+  "form_confirm_password_hint": "Silakan masukkan kata sandi Anda lagi",
   "form_phone_hint": "Silakan masukkan nomor telepon",
   "form_price_hint": "Silakan masukkan harga",
 

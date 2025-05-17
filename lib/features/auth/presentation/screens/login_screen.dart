@@ -1,13 +1,26 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/textstyle/app_colors.dart';
+import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
-import '../../../../core/widgets/widget_text_button.dart';
+import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
+import '../../../home/presentation/screens/home_screen.dart';
 import '../bloc/auth_bloc.dart';
+import 'register_screen.dart';
+
+void pushReplacementLogin(BuildContext context) {
+  context.pushReplacementNamed('login');
+}
+
+void pushLogin(BuildContext context) {
+  context.pushNamed('login');
+}
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,26 +30,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  void _login() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isPasswordVisible = false;
 
-    context.read<AuthBloc>().add(
-          AuthEventLogin(
-            email: email,
-            password: password,
-          ),
-        );
+  void togglePasswordVisibility() {
+    setState(() {
+      isPasswordVisible = !isPasswordVisible;
+    });
+  }
+
+  void onLogin() {
+    if (formKey.currentState?.validate() ?? false) {
+      final email = emailController.text;
+      final password = passwordController.text;
+
+      context.read<AuthBloc>().add(
+            AuthEventLogin(
+              email: email,
+              password: password,
+            ),
+          );
+    }
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
@@ -47,77 +70,124 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthStateFailure) {
-          showSnackbar(context, state.message.toString());
+          if (state.message == 'Invalid login credentials') {
+            showSnackbar(context, appText.auth_login_error_message);
+          } else {
+            showSnackbar(context, state.message.toString());
+          }
         } else if (state is AuthStateSuccessLogin) {
           showSnackbar(context, appText.auth_login_success_message);
-          context.pushReplacementNamed('home');
+          pushReplacementHome(context);
         }
       },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              'Login',
-              style: AppTextstyle.title,
+              appText.auth_login_screen_title,
+              style: AppTextStyle.heading3,
             ),
+            centerTitle: true,
           ),
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-              ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSizes.size16),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextField(
-                    controller: _emailController,
-                    style: AppTextstyle.textField,
-                    enabled: state is! AuthStateLoading,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: AppTextstyle.label,
-                    ),
+                  Text(
+                    appText.auth_login_screen_text_title,
+                    style: AppTextStyle.heading1
+                        .copyWith(color: AppColors.primary),
+                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _passwordController,
-                    style: AppTextstyle.textField,
-                    enabled: state is! AuthStateLoading,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: AppTextstyle.label,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          size: 18,
+                  AppSizes.spaceHeight12,
+                  Text(
+                    appText.auth_login_screen_text_subtitle,
+                    style: AppTextStyle.body2,
+                    textAlign: TextAlign.center,
+                  ),
+                  AppSizes.spaceHeight24,
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        WidgetTextFormField(
+                          controller: emailController,
+                          label: appText.form_email_label,
+                          hint: appText.form_email_hint,
+                          keyboardType: TextInputType.emailAddress,
+                          isLoading: state is AuthStateLoading,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return appText
+                                  .auth_login_form_email_required_message;
+                            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                .hasMatch(value)) {
+                              return appText
+                                  .auth_login_form_email_invalid_message;
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                      ),
+                        AppSizes.spaceHeight12,
+                        WidgetTextFormField(
+                          controller: passwordController,
+                          label: appText.form_password_label,
+                          hint: appText.form_password_hint,
+                          keyboardType: TextInputType.visiblePassword,
+                          isLoading: state is AuthStateLoading,
+                          obscureText: !isPasswordVisible,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: togglePasswordVisibility,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return appText
+                                  .auth_login_form_password_required_message;
+                            }
+                            if (value.length < 8) {
+                              return appText
+                                  .auth_login_form_password_min_length_message;
+                            }
+                            return null;
+                          },
+                        ),
+                        AppSizes.spaceHeight24,
+                        WidgetButton(
+                          label: appText.button_login,
+                          isLoading: state is AuthStateLoading,
+                          onPressed: onLogin,
+                        ),
+                        AppSizes.spaceHeight12,
+                      ],
                     ),
-                    obscureText: !_isPasswordVisible,
                   ),
-                  const SizedBox(height: 24),
-                  WidgetButton(
-                    label: 'Login',
-                    isLoading: state is AuthStateLoading,
-                    onPressed: _login,
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      WidgetTextButton(
-                        label: 'Register',
-                        isLoading: state is AuthStateLoading,
-                        onPressed: () => context.pushNamed('register'),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: appText.auth_login_screen_rich_text_text,
+                      style: AppTextStyle.caption.copyWith(
+                        color: AppColors.onSecondary,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: appText.auth_login_screen_rich_text_button,
+                          style: AppTextStyle.caption.copyWith(
+                            color: AppColors.primary,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              pushRegister(context);
+                            },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

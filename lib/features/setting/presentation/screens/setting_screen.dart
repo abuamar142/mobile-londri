@@ -91,7 +91,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           SettingsTile(
                             title: Text(
                               appText.setting_language_label,
-                              style: AppTextstyle.label,
+                              style: AppTextStyle.label,
                             ),
                             trailing: SizedBox(
                               width: 200,
@@ -121,7 +121,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                             locale.languageCode == 'en'
                                                 ? appText.setting_language_en
                                                 : appText.setting_language_id,
-                                            style: AppTextstyle.body,
+                                            style: AppTextStyle.body,
                                           ),
                                         ),
                                       ),
@@ -133,7 +133,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           SettingsTile(
                             title: Text(
                               appText.setting_transaction_status_label,
-                              style: AppTextstyle.label,
+                              style: AppTextStyle.label,
                             ),
                             trailing: SizedBox(
                               width: 200,
@@ -165,7 +165,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
                                         status.status.toString(),
-                                        style: AppTextstyle.body,
+                                        style: AppTextStyle.body,
                                       ),
                                     ),
                                   );

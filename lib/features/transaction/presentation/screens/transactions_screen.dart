@@ -63,7 +63,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: Text(
           appText.transaction_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<TransactionBloc, TransactionState>(
@@ -85,7 +85,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             return Center(
               child: Text(
                 appText.transaction_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }
@@ -159,14 +159,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title, style: AppTextstyle.title),
+                  Text(title, style: AppTextStyle.title),
                   SizedBox(height: 8),
                   TextFormField(
                     decoration: InputDecoration(
                       label: Text('Customer'),
                     ),
                     readOnly: true,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     controller: _customerNameController,
                     onTap: () async {
                       final customer = await context.pushNamed<Customer>(
@@ -232,21 +232,21 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       labelText: 'Weight',
                     ),
                     controller: _weightController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Amount',
                     ),
                     controller: _amountController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                   ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: 'Start Date',
                     ),
                     controller: _startDateController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
@@ -281,7 +281,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       labelText: 'End Date',
                     ),
                     controller: _endDateController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                     readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
@@ -316,7 +316,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       labelText: 'Status',
                     ),
                     controller: _statusController,
-                    style: AppTextstyle.textField,
+                    style: AppTextStyle.textField,
                   ),
                   const SizedBox(height: 16),
                   WidgetButton(

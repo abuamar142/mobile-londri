@@ -20,7 +20,7 @@ class WidgetTextButton extends StatelessWidget {
       onPressed: isLoading ? null : onPressed,
       child: Text(
         label,
-        style: AppTextstyle.body,
+        style: AppTextStyle.body,
       ),
     );
   }

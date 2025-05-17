@@ -40,7 +40,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
         appBar: AppBar(
           title: Text(
             appText.user_role_screen_title,
-            style: AppTextstyle.title,
+            style: AppTextStyle.title,
           ),
         ),
         body: SafeArea(
@@ -55,7 +55,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
                   return Center(
                     child: Text(
                       appText.user_role_empty_message,
-                      style: AppTextstyle.body,
+                      style: AppTextStyle.body,
                     ),
                   );
                 }
@@ -103,7 +103,7 @@ class _UserRolesScreenState extends State<UserRolesScreen> {
                 return Center(
                   child: Text(
                     appText.error_occurred_message,
-                    style: AppTextstyle.body,
+                    style: AppTextStyle.body,
                   ),
                 );
               }

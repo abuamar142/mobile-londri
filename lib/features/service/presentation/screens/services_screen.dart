@@ -52,7 +52,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       appBar: AppBar(
         title: Text(
           appText.service_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<ServiceBloc, ServiceState>(
@@ -79,14 +79,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
                   return ListTile(
                     key: ValueKey(service.id),
-                    title: Text(service.name!, style: AppTextstyle.tileTitle),
+                    title: Text(service.name!, style: AppTextStyle.tileTitle),
                     subtitle: Text(
                       service.description ?? '-',
-                      style: AppTextstyle.tileSubtitle,
+                      style: AppTextStyle.tileSubtitle,
                     ),
                     trailing: Text(
                       service.price!.formatNumber(),
-                      style: AppTextstyle.tileTrailing,
+                      style: AppTextStyle.tileTrailing,
                     ),
                     onTap: () => editService(
                       service: service,
@@ -100,7 +100,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             return Center(
               child: Text(
                 appText.service_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }
@@ -182,7 +182,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title, style: AppTextstyle.title),
+                  Text(title, style: AppTextStyle.title),
                   SizedBox(height: 8),
                   WidgetTextFormField(
                     label: appText.form_name_label,

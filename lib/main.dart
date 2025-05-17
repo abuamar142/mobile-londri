@@ -51,9 +51,8 @@ class MainApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Londri',
             routerConfig: AppRoutes.routes,
-            themeMode: ThemeMode.system,
+            themeMode: ThemeMode.light,
             theme: AppThemes.lightTheme,
-            darkTheme: AppThemes.darkTheme,
             locale: locale,
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: [

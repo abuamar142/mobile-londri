@@ -1,12 +1,63 @@
 {
+  "app_name": "Londri",
+  "@app_name": {
+    "description": "Name of the application"
+  },
+  
   "splash_screen_text": "Manage your Laundry Business Easily",
   "@splash_screen_text": {
     "description": "Text displayed on the splash screen"
   },
 
+  "auth_login_screen_title": "Login",
+  "@auth_login_screen_title": {
+    "description": "Title for the login screen"
+  },
+  "auth_login_screen_text_title": "Welcome to Londri Application",
+  "@auth_login_screen_text_title": {
+    "description": "Text displayed on the login screen"
+  },
+  "auth_login_screen_text_subtitle": "Please login to continue",
+  "@auth_login_screen_text_subtitle": {
+    "description": "Subtitle text displayed on the login screen"
+  },
+  "auth_login_screen_rich_text_text": "Don't have an account? ",
+  "@auth_login_screen_rich_text_text": {
+    "description": "Rich text displayed on the login screen"
+  },
+  "auth_login_screen_rich_text_button": "Register here",
+  "@auth_login_screen_rich_text_button": {
+    "description": "Button text for registration on the login screen"
+  },
+
+  "auth_login_form_email_required_message": "Email is required",
+  "@auth_login_form_email_required_message": {
+    "description": "Message displayed when email is required"
+  },
+  "auth_login_form_email_invalid_message": "Invalid email format",
+  "@auth_login_form_email_invalid_message": {
+    "description": "Message displayed when email format is invalid"
+  },
+  "auth_login_form_password_required_message": "Password is required",
+  "@auth_login_form_password_required_message": {
+    "description": "Message displayed when password is required"
+  },
+  "auth_login_form_password_min_length_message": "Password must be at least 8 characters",
+  "@auth_login_form_password_min_length_message": {
+    "description": "Message displayed when password is less than 8 characters"
+  },
+  "auth_login_error_message": "Login failed, please check your email and password",
+  "@auth_login_error_message": {
+    "description": "Message displayed when login fails"
+  },
   "auth_login_success_message": "Login successful",
   "@auth_login_success_message": {
     "description": "Message displayed when login is successful"
+  },
+
+  "auth_register_screen_title": "Register",
+  "@auth_register_screen_title": {
+    "description": "Title for the register screen"
   },
   "auth_register_success_message": "Register successful",
   "@auth_register_success_message": {
@@ -341,6 +392,18 @@
   "form_name_hint": "Please enter your name",
   "@form_name_hint": {
     "description": "Hint text for the name input field"
+  },
+  "form_email_hint": "Please enter your email",
+  "@form_email_hint": {
+    "description": "Hint text for the email input field"
+  },
+  "form_password_hint": "Please enter your password",
+  "@form_password_hint": {
+    "description": "Hint text for the password input field"
+  },
+  "form_confirm_password_hint": "Please confirm your password",
+  "@form_confirm_password_hint": {
+    "description": "Hint text for the confirm password input field"
   },
   "form_phone_hint": "Please enter your phone number",
   "@form_phone_hint": {

@@ -25,13 +25,13 @@ class TransactionItemTitle extends StatelessWidget {
                 appText.transaction_item_empty_customer_name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppTextstyle.tileTitle,
+            style: AppTextStyle.tileTitle,
           ),
         ),
         SizedBox(width: 8),
         Text(
           'Rp ${transaction.amount?.toStringAsFixed(0) ?? '0'}',
-          style: AppTextstyle.tileTitle.copyWith(
+          style: AppTextStyle.tileTitle.copyWith(
             color: Colors.green,
           ),
         ),

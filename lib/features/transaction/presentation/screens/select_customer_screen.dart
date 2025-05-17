@@ -33,7 +33,7 @@ class _SelectCustomerScreenState extends State<SelectCustomerScreen> {
       appBar: AppBar(
         title: Text(
           appText.customer_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<CustomerBloc, CustomerState>(
@@ -56,19 +56,19 @@ class _SelectCustomerScreenState extends State<SelectCustomerScreen> {
                     key: ValueKey(customer.id),
                     title: Text(
                       customer.name!,
-                      style: AppTextstyle.tileTitle.copyWith(
+                      style: AppTextStyle.tileTitle.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
                     subtitle: Text(
                       customer.description ?? '-',
-                      style: AppTextstyle.tileSubtitle.copyWith(
+                      style: AppTextStyle.tileSubtitle.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
                     trailing: Text(
                       customer.phone.toString(),
-                      style: AppTextstyle.tileTrailing.copyWith(
+                      style: AppTextStyle.tileTrailing.copyWith(
                         color: customer.isActive! ? null : Colors.grey,
                       ),
                     ),
@@ -90,7 +90,7 @@ class _SelectCustomerScreenState extends State<SelectCustomerScreen> {
             return Center(
               child: Text(
                 appText.customer_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }

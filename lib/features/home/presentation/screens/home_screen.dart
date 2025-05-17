@@ -10,6 +10,14 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../setting/presentation/screens/setting_screen.dart';
 import 'main_screen.dart';
 
+void pushReplacementHome(BuildContext context) {
+  context.pushReplacementNamed('home');
+}
+
+void pushHome(BuildContext context) {
+  context.pushNamed('home');
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -67,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: Text(
           'Home',
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: Padding(
