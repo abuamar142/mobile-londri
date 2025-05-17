@@ -119,12 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           isLoading: state is AuthStateLoading,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return appText
-                                  .auth_login_form_email_required_message;
+                              return appText.form_email_required_message;
                             } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
                                 .hasMatch(value)) {
-                              return appText
-                                  .auth_login_form_email_invalid_message;
+                              return appText.form_email_invalid_message;
                             } else {
                               return null;
                             }
@@ -148,12 +146,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return appText
-                                  .auth_login_form_password_required_message;
+                              return appText.form_password_required_message;
                             }
                             if (value.length < 8) {
-                              return appText
-                                  .auth_login_form_password_min_length_message;
+                              return appText.form_password_min_length_message;
                             }
                             return null;
                           },

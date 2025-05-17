@@ -9,13 +9,15 @@
   "auth_login_screen_rich_text_text": "Belum punya akun? ",
   "auth_login_screen_rich_text_button": "Daftar di sini",
 
-  "auth_login_form_email_required_message": "Email tidak boleh kosong",
-  "auth_login_form_email_invalid_message": "Email tidak valid",
-  "auth_login_form_password_required_message": "Kata sandi tidak boleh kosong",
-  "auth_login_form_password_min_length_message": "Kata sandi minimal 8 karakter",
   "auth_login_error_message": "Gagal masuk, silakan periksa email dan kata sandi Anda",
   "auth_login_success_message": "Berhasil masuk",
+  
   "auth_register_screen_title": "Daftar",
+  "auth_register_screen_text_title": "Buat Akun Baru",
+  "auth_register_screen_text_subtitle": "Silakan isi kolom di bawah ini untuk mendaftar",
+  "auth_register_screen_rich_text_text": "Sudah punya akun? ",
+  "auth_register_screen_rich_text_button": "Masuk di sini",
+  
   "auth_register_success_message": "Berhasil mendaftar",
   "auth_logout_success_message": "Berhasil keluar",
 
@@ -99,6 +101,8 @@
 
   "error_occurred_message": "Terjadi kesalahan",
 
+  "@_FORM_LABEL": {},
+
   "form_name_label": "Nama",
   "form_email_label": "Email",
   "form_password_label": "Kata Sandi",
@@ -106,12 +110,29 @@
   "form_phone_label": "Telepon",
   "form_description_label": "Deskripsi",
   "form_price_label": "Harga",
+
+  "@_FORM_HINT": {},
+
   "form_name_hint": "Silakan masukkan nama Anda",
   "form_email_hint": "Silakan masukkan email Anda",
   "form_password_hint": "Silakan masukkan kata sandi Anda",
   "form_confirm_password_hint": "Silakan masukkan kata sandi Anda lagi",
   "form_phone_hint": "Silakan masukkan nomor telepon",
   "form_price_hint": "Silakan masukkan harga",
+
+  "@_FORM_MESSAGE": {},
+  
+  "form_name_required_message": "Nama tidak boleh kosong",
+  "form_name_min_length_message": "Nama minimal 3 karakter",
+  "form_name_max_length_message": "Nama maksimal 100 karakter",
+  "form_email_required_message": "Email tidak boleh kosong",
+  "form_email_invalid_message": "Email tidak valid",
+  "form_password_required_message": "Kata sandi tidak boleh kosong",
+  "form_password_min_length_message": "Kata sandi minimal 8 karakter",
+  "form_confirm_password_required_message": "Konfirmasi kata sandi tidak boleh kosong",
+  "form_confirm_password_match_message": "Kata sandi tidak cocok",
+
+  "@_BUTTON": {},
 
   "button_submit": "Kirim",
   "button_cancel": "Batal",

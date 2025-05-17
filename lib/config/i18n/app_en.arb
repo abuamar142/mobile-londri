@@ -30,22 +30,6 @@
     "description": "Button text for registration on the login screen"
   },
 
-  "auth_login_form_email_required_message": "Email is required",
-  "@auth_login_form_email_required_message": {
-    "description": "Message displayed when email is required"
-  },
-  "auth_login_form_email_invalid_message": "Invalid email format",
-  "@auth_login_form_email_invalid_message": {
-    "description": "Message displayed when email format is invalid"
-  },
-  "auth_login_form_password_required_message": "Password is required",
-  "@auth_login_form_password_required_message": {
-    "description": "Message displayed when password is required"
-  },
-  "auth_login_form_password_min_length_message": "Password must be at least 8 characters",
-  "@auth_login_form_password_min_length_message": {
-    "description": "Message displayed when password is less than 8 characters"
-  },
   "auth_login_error_message": "Login failed, please check your email and password",
   "@auth_login_error_message": {
     "description": "Message displayed when login fails"
@@ -59,6 +43,23 @@
   "@auth_register_screen_title": {
     "description": "Title for the register screen"
   },
+  "auth_register_screen_text_title": "Create an Account",
+  "@auth_register_screen_text_title": {
+    "description": "Text displayed on the register screen"
+  },
+  "auth_register_screen_text_subtitle": "Please fill in the form to create an account",
+  "@auth_register_screen_text_subtitle": {
+    "description": "Subtitle text displayed on the register screen"
+  },
+  "auth_register_screen_rich_text_text": "Already have an account? ",
+  "@auth_register_screen_rich_text_text": {
+    "description": "Rich text displayed on the register screen"
+  },
+  "auth_register_screen_rich_text_button": "Login here",
+  "@auth_register_screen_rich_text_button": {
+    "description": "Button text for login on the register screen"
+  },
+
   "auth_register_success_message": "Register successful",
   "@auth_register_success_message": {
     "description": "Message displayed when register is successful"
@@ -361,6 +362,8 @@
     "description": "Generic error message"
   },
 
+  "@_FORM_LABEL": {},
+
   "form_name_label": "Name",
   "@form_name_label": {
     "description": "Label for the name input field"
@@ -389,6 +392,9 @@
   "@form_price_label": {
     "description": "Label for the price input field"
   },
+
+  "@_FORM_HINT": {},
+
   "form_name_hint": "Please enter your name",
   "@form_name_hint": {
     "description": "Hint text for the name input field"
@@ -413,6 +419,47 @@
   "@form_price_hint": {
     "description": "Hint text for the price input field"
   },
+
+  "@_FORM_MESSAGE": {},
+
+  "form_name_required_message": "Name cannot be empty",
+  "@form_name_required_message": {
+    "description": "Error message for empty name field"
+  },
+  "form_name_min_length_message": "Name must be at least 3 characters",
+  "@form_name_min_length_message": {
+    "description": "Message displayed when name is less than 3 characters"
+  },
+  "form_name_max_length_message": "Name must be less than 100 characters",
+  "@form_name_max_length_message": {
+    "description": "Message displayed when name is more than 100 characters"
+  },
+  "form_email_required_message": "Email is required",
+  "@form_email_required_message": {
+    "description": "Message displayed when email is required"
+  },
+  "form_email_invalid_message": "Invalid email format",
+  "@form_email_invalid_message": {
+    "description": "Message displayed when email format is invalid"
+  },
+  "form_password_required_message": "Password is required",
+  "@form_password_required_message": {
+    "description": "Message displayed when password is required"
+  },
+  "form_password_min_length_message": "Password must be at least 8 characters",
+  "@form_password_min_length_message": {
+    "description": "Message displayed when password is less than 8 characters"
+  },
+  "form_confirm_password_required_message": "Confirm password is required",
+  "@form_confirm_password_required_message": {
+    "description": "Message displayed when confirm password is required"
+  },
+  "form_confirm_password_match_message": "Passwords do not match",
+  "@form_confirm_password_match_message": {
+    "description": "Message displayed when passwords do not match"
+  },
+
+  "@_BUTTON": {},
 
   "button_submit": "Submit",
   "@button_submit": {
