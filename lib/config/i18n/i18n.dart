@@ -9,7 +9,7 @@ class AppLocales {
   });
 
   static final ValueNotifier<Locale> _localeNotifier = ValueNotifier<Locale>(
-    Locale('en'),
+    Locale('id'),
   );
 
   void loadLocale() {

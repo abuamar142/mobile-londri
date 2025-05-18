@@ -8,7 +8,7 @@ abstract class AuthRemoteDatasource {
     String email,
     String password,
   );
-  Future<AuthModel> register(
+  Future<void> register(
     String email,
     String password,
     String name,
@@ -42,32 +42,25 @@ class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
         name: response.user!.userMetadata!['name'] ?? '',
       );
     } on AuthException catch (e) {
-      throw ServerException(message: e.message);
+      throw ServerException(message: e.code.toString());
     } catch (e) {
       throw ServerException(message: e.toString());
     }
   }
 
   @override
-  Future<AuthModel> register(
+  Future<void> register(
     String email,
     String password,
     String name,
   ) async {
     try {
-      final AuthResponse response = await supabaseClient.auth.signUp(
+      await supabaseClient.auth.signUp(
         email: email,
         password: password,
         data: {
           'name': name,
         },
-      );
-
-      return AuthModel(
-        id: response.user!.id,
-        accessToken: response.session!.accessToken,
-        email: response.user!.email ?? '',
-        name: response.user!.userMetadata!['name'] ?? '',
       );
     } on AuthException catch (e) {
       throw ServerException(message: e.message);

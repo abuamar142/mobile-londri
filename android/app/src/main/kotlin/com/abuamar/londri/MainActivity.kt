@@ -1,4 +1,4 @@
-package com.example.londri
+package com.abuamar.londri
 
 import io.flutter.embedding.android.FlutterActivity
 

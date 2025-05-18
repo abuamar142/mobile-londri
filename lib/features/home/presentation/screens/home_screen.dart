@@ -9,6 +9,7 @@ import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../setting/presentation/screens/setting_screen.dart';
 import 'main_screen.dart';
+import 'splash_screen.dart';
 
 void pushReplacementHome(BuildContext context) {
   context.pushReplacementNamed('home');
@@ -57,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               showSnackbar(context, state.message.toString());
             } else if (state is AuthStateSuccessLogout) {
               showSnackbar(context, appText.auth_logout_success_message);
-              context.pushReplacementNamed('splash');
+              pushReplacementSplash(context);
             }
           },
           builder: (context, state) {

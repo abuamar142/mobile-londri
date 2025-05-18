@@ -10,6 +10,7 @@
   "auth_login_screen_rich_text_button": "Daftar di sini",
 
   "auth_login_error_message": "Gagal masuk, silakan periksa email dan kata sandi Anda",
+  "auth_login_error_email_not_confirmed": "Email Anda belum terkonfirmasi, silakan periksa email Anda",
   "auth_login_success_message": "Berhasil masuk",
   
   "auth_register_screen_title": "Daftar",
@@ -18,7 +19,7 @@
   "auth_register_screen_rich_text_text": "Sudah punya akun? ",
   "auth_register_screen_rich_text_button": "Masuk di sini",
   
-  "auth_register_success_message": "Berhasil mendaftar",
+  "auth_register_success_message": "Berhasil mendaftar, silakan periksa email Anda untuk mengonfirmasi akun Anda",
   "auth_logout_success_message": "Berhasil keluar",
 
   "user_role_screen_title": "Peran Pengguna",

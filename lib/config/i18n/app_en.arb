@@ -34,6 +34,10 @@
   "@auth_login_error_message": {
     "description": "Message displayed when login fails"
   },
+  "auth_login_error_email_not_confirmed": "Email not confirmed, please check your email",
+  "@auth_login_error_email_not_confirmed": {
+    "description": "Message displayed when email is not confirmed"
+  },
   "auth_login_success_message": "Login successful",
   "@auth_login_success_message": {
     "description": "Message displayed when login is successful"
@@ -60,9 +64,9 @@
     "description": "Button text for login on the register screen"
   },
 
-  "auth_register_success_message": "Register successful",
+  "auth_register_success_message": "Register successful, please check your email to confirm",
   "@auth_register_success_message": {
-    "description": "Message displayed when register is successful"
+    "description": "Message displayed when registration is successful"
   },
   "auth_logout_success_message": "Logout successful",
   "@auth_logout_success_message": {

@@ -70,8 +70,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthStateFailure) {
-          if (state.message == 'Invalid login credentials') {
+          if (state.message == 'invalid_credentials') {
             showSnackbar(context, appText.auth_login_error_message);
+          } else if (state.message == 'email_not_confirmed') {
+            showSnackbar(context, appText.auth_login_error_email_not_confirmed);
           } else {
             showSnackbar(context, state.message.toString());
           }
