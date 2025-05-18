@@ -22,67 +22,40 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.authLogout,
   }) : super(AuthStateInitial()) {
     on<AuthEventLogin>((event, emit) async {
-      if (event.email.isEmpty || event.password.isEmpty) {
-        emit(const AuthStateFailure(
-          message: 'Email and password are required',
+      emit(AuthStateLoading());
+
+      Either<Failure, Auth> result = await authLogin.call(
+        event.email,
+        event.password,
+      );
+
+      result.fold((left) {
+        emit(AuthStateFailure(
+          message: left.message.toString(),
         ));
-        emit(AuthStateInitial());
-        return;
-      } else {
-        emit(AuthStateLoading());
-
-        Either<Failure, Auth> result = await authLogin.call(
-          event.email,
-          event.password,
-        );
-
-        result.fold((left) {
-          emit(AuthStateFailure(
-            message: left.message.toString(),
-          ));
-        }, (right) {
-          emit(AuthStateSuccessLogin(
-            auth: right,
-          ));
-        });
-      }
+      }, (right) {
+        emit(AuthStateSuccessLogin(
+          auth: right,
+        ));
+      });
     });
 
     on<AuthEventRegister>((event, emit) async {
-      if (event.name.isEmpty ||
-          event.email.isEmpty ||
-          event.password.isEmpty ||
-          event.passwordAgain.isEmpty) {
-        emit(const AuthStateFailure(
-          message: 'All fields are required',
-        ));
-        emit(AuthStateInitial());
-        return;
-      } else if (event.password != event.passwordAgain) {
-        emit(const AuthStateFailure(
-          message: 'Passwords do not match',
-        ));
-        emit(AuthStateInitial());
-        return;
-      } else {
-        emit(AuthStateLoading());
+      emit(AuthStateLoading());
 
-        Either<Failure, Auth> result = await authRegister.call(
-          event.email,
-          event.password,
-          event.name,
-        );
+      Either<Failure, void> result = await authRegister.call(
+        event.email,
+        event.password,
+        event.name,
+      );
 
-        result.fold((left) {
-          emit(AuthStateFailure(
-            message: left.message.toString(),
-          ));
-        }, (right) {
-          emit(AuthStateSuccessRegister(
-            auth: right,
-          ));
-        });
-      }
+      result.fold((left) {
+        emit(AuthStateFailure(
+          message: left.message.toString(),
+        ));
+      }, (right) {
+        emit(AuthStateSuccessRegister());
+      });
     });
 
     on<AuthEventLogout>((event, emit) async {

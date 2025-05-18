@@ -1,7 +1,7 @@
 name: londri
 description: "An application to manage laundry business"
 publish_to: "none"
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: ^3.6.1
@@ -23,14 +23,49 @@ dependencies:
 
   # Dotenv
   flutter_dotenv: ^5.2.1
+
+  # Google Fonts
   google_fonts: ^6.2.1
+
+  # Localizations
+  intl: ^0.19.0
+  flutter_localizations:
+    sdk: flutter
+
+  # UUID
+  uuid: ^4.5.1
+
+  # Flutter Launcher Icons
+  flutter_launcher_icons: ^0.14.3
+
+  # Timezone
+  timezone: ^0.10.0
+  flutter_timezone: ^4.1.0
+
+  # Autocomplete Field
+  flutter_typeahead: ^5.2.0
+
+  # Shared Preferences
+  shared_preferences: ^2.5.2
+
+  # JWT Decoder
+  jwt_decoder: ^2.0.1
+
+  # Settings UI
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+
 flutter:
+  generate: true
   uses-material-design: true
 
   assets:

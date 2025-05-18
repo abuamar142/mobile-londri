@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:londri/config/theme/app_bar.dart';
+
+import '../textstyle/app_colors.dart';
 
 class AppThemes {
   AppThemes._();
 
-  static ThemeData darkTheme = ThemeData.dark().copyWith(
-    scaffoldBackgroundColor: Colors.black,
-    primaryColor: Colors.blue,
-    appBarTheme: darkAppBarTheme(),
-  );
-
   static ThemeData lightTheme = ThemeData.light().copyWith(
-    scaffoldBackgroundColor: Colors.blue.shade50,
-    primaryColor: Colors.blue,
-    appBarTheme: lightAppBarTheme(),
+    scaffoldBackgroundColor: AppColors.background,
+    primaryColor: AppColors.primary,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.transparent,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: AppColors.primary,
+    ),
   );
 }
