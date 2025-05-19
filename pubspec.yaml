@@ -35,9 +35,6 @@ dependencies:
   # UUID
   uuid: ^4.5.1
 
-  # Flutter Launcher Icons
-  flutter_launcher_icons: ^0.14.3
-
   # Timezone
   timezone: ^0.10.0
   flutter_timezone: ^4.1.0
