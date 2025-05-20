@@ -290,9 +290,15 @@
     "description": "Default status for transaction"
   },
 
+  "@_CUSTOMER": {},
+
   "customer_screen_title": "Customer",
   "@customer_screen_title": {
     "description": "Title for the customer screen"
+  },
+  "customer_search_hint": "Search name, phone, or description",
+  "@customer_search_hint": {
+    "description": "Hint text for the customer search input"
   },
   "customer_empty_message": "No customer found",
   "@customer_empty_message": {

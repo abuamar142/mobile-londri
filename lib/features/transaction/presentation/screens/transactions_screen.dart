@@ -179,7 +179,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       if (customer != null) {
                         setState(
                           () {
-                            _customerNameController.text = customer.id!;
+                            _customerNameController.text =
+                                customer.id.toString();
                           },
                         );
                       }

@@ -80,7 +80,10 @@
   "transaction_status_delayed": "Tertunda",
   "transaction_status_default": "Status tidak ditemukan",
 
+  "@_CUSTOMER": {},
+
   "customer_screen_title": "Pelanggan",
+  "customer_search_hint": "Cari nama, telepon, atau deskripsi",
   "customer_empty_message": "Tidak ada pelanggan ditemukan",
   "customer_add_dialog_title": "Tambah Pelanggan",
   "customer_edit_dialog_title": "Edit Pelanggan",
