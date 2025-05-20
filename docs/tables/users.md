@@ -17,6 +17,8 @@
 - [Authentication Hooks](#authentication-hooks)
 - [Triggers & Functions](#triggers--functions)
 - [Deep Link Implementation](#deep-link-implementation)
+- [Implement RLS](#implement-rls)
+- [Related Documentation](#related-documentation)
 
 ## 🔍 Overview
 
@@ -280,7 +282,126 @@ To enable authentication flows with mobile app deep links:
 
 This allows authentication redirects back to your mobile application.
 
----
+## 🔒 Implement RLS (Row Level Security)
+
+This section explains how **Row Level Security (RLS)** is enforced on RBAC-related tables: `users`, `user_roles`, and `role_permissions`. RLS ensures that only authorized users can perform specific operations, depending on their assigned roles and permissions.
+
+### ✅ Enable RLS on Tables
+
+```sql
+-- Enable RLS for each table
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.role_permissions ENABLE ROW LEVEL SECURITY;
+```
+
+### 🛡️ Create RLS Policies
+
+#### Users Table Policies
+
+```sql
+CREATE POLICY "Allow authorized select access" ON public.users
+  FOR SELECT TO authenticated
+  USING (SELECT authorize('users.select'));
+
+CREATE POLICY "Allow authorized insert access" ON public.users
+  FOR INSERT TO authenticated
+  WITH CHECK (SELECT authorize('users.insert'));
+
+CREATE POLICY "Allow authorized update access" ON public.users
+  FOR UPDATE TO authenticated
+  USING (SELECT authorize('users.update'));
+
+CREATE POLICY "Allow authorized delete access" ON public.users
+  FOR DELETE TO authenticated
+  USING (SELECT authorize('users.delete'));
+```
+
+#### User Roles Table Policies
+
+```sql
+CREATE POLICY "Allow authorized select access" ON public.user_roles
+  FOR SELECT TO authenticated
+  USING (SELECT authorize('user_roles.select'));
+
+CREATE POLICY "Allow authorized insert access" ON public.user_roles
+  FOR INSERT TO authenticated
+  WITH CHECK (SELECT authorize('user_roles.insert'));
+
+CREATE POLICY "Allow authorized update access" ON public.user_roles
+  FOR UPDATE TO authenticated
+  USING (SELECT authorize('user_roles.update'));
+
+CREATE POLICY "Allow authorized delete access" ON public.user_roles
+  FOR DELETE TO authenticated
+  USING (SELECT authorize('user_roles.delete'));
+```
+
+#### Role Permissions Table Policies
+
+Before applying policies to `role_permissions`, ensure all required permissions are present in the enum:
+
+```sql
+-- Add missing permissions to the app_permission enum
+BEGIN;
+
+ALTER TYPE public.app_permission ADD VALUE IF NOT EXISTS 'role_permissions.select';
+ALTER TYPE public.app_permission ADD VALUE IF NOT EXISTS 'role_permissions.insert';
+ALTER TYPE public.app_permission ADD VALUE IF NOT EXISTS 'role_permissions.update';
+ALTER TYPE public.app_permission ADD VALUE IF NOT EXISTS 'role_permissions.delete';
+
+COMMIT;
+```
+
+```sql
+CREATE POLICY "Allow authorized select access" ON public.role_permissions
+  FOR SELECT TO authenticated
+  USING (SELECT authorize('role_permissions.select'));
+
+CREATE POLICY "Allow authorized insert access" ON public.role_permissions
+  FOR INSERT TO authenticated
+  WITH CHECK (SELECT authorize('role_permissions.insert'));
+
+CREATE POLICY "Allow authorized update access" ON public.role_permissions
+  FOR UPDATE TO authenticated
+  USING (SELECT authorize('role_permissions.update'));
+
+CREATE POLICY "Allow authorized delete access" ON public.role_permissions
+  FOR DELETE TO authenticated
+  USING (SELECT authorize('role_permissions.delete'));
+```
+
+### 🧾 Assign Role Permissions
+
+Insert the required permissions into the `role_permissions` table to define which roles are allowed to perform actions:
+
+```sql
+-- Permissions for users table
+INSERT INTO public.role_permissions (role, permission) VALUES
+  ('super_admin', 'users.select'),
+  ('super_admin', 'users.insert'),
+  ('super_admin', 'users.update'),
+  ('super_admin', 'users.delete'),
+  ('admin',       'users.select'),
+  ('admin',       'users.insert'),
+  ('admin',       'users.update'),
+  ('user',        'users.select'),
+  ('user',        'users.update');
+
+-- Permissions for user_roles table
+INSERT INTO public.role_permissions (role, permission) VALUES
+  ('super_admin', 'user_roles.select'),
+  ('super_admin', 'user_roles.insert'),
+  ('super_admin', 'user_roles.update'),
+  ('super_admin', 'user_roles.delete');
+
+-- Permissions for role_permissions table
+INSERT INTO public.role_permissions (role, permission) VALUES
+  ('super_admin', 'role_permissions.select'),
+  ('super_admin', 'role_permissions.insert'),
+  ('super_admin', 'role_permissions.update'),
+  ('super_admin', 'role_permissions.delete');
+```
 
 ## 🔄 Related Documentation
 
