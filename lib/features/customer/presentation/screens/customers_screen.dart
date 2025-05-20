@@ -13,6 +13,10 @@ import '../../../service/presentation/widgets/widget_text_form_field.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
 
+void pushCustomers(BuildContext context) {
+  context.pushNamed('customers');
+}
+
 class CustomersScreen extends StatefulWidget {
   const CustomersScreen({super.key});
 

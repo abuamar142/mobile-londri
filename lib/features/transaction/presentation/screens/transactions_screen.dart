@@ -17,6 +17,10 @@ import '../../domain/usecases/transaction_get_transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/transaction_item.dart';
 
+void pushTransactions(BuildContext context) {
+  context.pushNamed('transactions');
+}
+
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
 

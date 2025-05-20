@@ -8,6 +8,7 @@ import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/select_customer_screen.dart';
+import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 
 class AppRoutes {
@@ -80,6 +81,13 @@ class AppRoutes {
           )
         ],
       ),
+      GoRoute(
+        path: '/track-transactions',
+        name: 'track-transactions',
+        builder: (context, state) {
+          return const TrackTransactionsScreen();
+        },
+      )
     ],
   );
 }

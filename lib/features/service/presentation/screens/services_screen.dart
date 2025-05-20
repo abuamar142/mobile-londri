@@ -14,6 +14,10 @@ import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
 
+void pushServices(BuildContext context) {
+  context.pushNamed('services');
+}
+
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key});
 

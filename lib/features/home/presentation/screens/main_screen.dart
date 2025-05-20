@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/role_manager.dart';
+import '../../../customer/presentation/screens/customers_screen.dart';
 import '../../../manage_employee/presentation/screens/manage_employee_screen.dart';
+import '../../../service/presentation/screens/services_screen.dart';
+import '../../../transaction/presentation/screens/track_transaction_screen.dart';
+import '../../../transaction/presentation/screens/transactions_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -20,31 +24,35 @@ class MainScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (RoleManager.hasPermission(
-                Permission.manageUserRoles,
-              ))
+              if (RoleManager.hasPermission(Permission.manageEmployees))
                 WidgetButton(
                   label: appText.button_manage_employee,
                   onPressed: () => pushManageEmployee(context),
                 ),
-              SizedBox(height: 16),
-              if (RoleManager.hasPermission(
-                Permission.manageServices,
-              ))
+              AppSizes.spaceHeight12,
+              if (RoleManager.hasPermission(Permission.manageServices))
                 WidgetButton(
                   label: 'Services',
-                  onPressed: () => context.pushNamed('services'),
+                  onPressed: () => pushServices(context),
                 ),
-              SizedBox(height: 16),
-              WidgetButton(
-                label: 'Customers',
-                onPressed: () => context.pushNamed('customers'),
-              ),
-              SizedBox(height: 16),
-              WidgetButton(
-                label: 'Transactions',
-                onPressed: () => context.pushNamed('transactions'),
-              ),
+              AppSizes.spaceHeight12,
+              if (RoleManager.hasPermission(Permission.manageCustomers))
+                WidgetButton(
+                  label: 'Customers',
+                  onPressed: () => pushCustomers(context),
+                ),
+              AppSizes.spaceHeight12,
+              if (RoleManager.hasPermission(Permission.manageTransactions))
+                WidgetButton(
+                  label: 'Transactions',
+                  onPressed: () => pushTransactions(context),
+                ),
+              AppSizes.spaceHeight12,
+              if (RoleManager.hasPermission(Permission.trackTransactions))
+                WidgetButton(
+                  label: 'Track Transactions',
+                  onPressed: () => pushTrackTransactionsScreen(context),
+                ),
             ],
           ),
         ),
