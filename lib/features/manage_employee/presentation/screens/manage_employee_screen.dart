@@ -169,6 +169,13 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
                       isAdmin ? Icons.admin_panel_settings : Icons.person,
                   tileColor:
                       isAdmin ? AppColors.success.withValues(alpha: 0.2) : null,
+                  onTap: () => isAdmin
+                      ? showSnackbar(context,
+                          appText.manage_employee_active_tap_info(user.name))
+                      : showSnackbar(
+                          context,
+                          appText
+                              .manage_employee_non_active_tap_info(user.name)),
                   onLongPress: () {
                     isAdmin
                         ? deactivateEmployee(

@@ -33,6 +33,8 @@
   "manage_employee_deactivate_dialog_confirm_message": "Apakah Anda yakin ingin menonaktifkan {employeeName}?",
   "manage_employee_success_activate_message": "Berhasil mengaktifkan {employeeName}",
   "manage_employee_success_deactivate_message": "Berhasil menonaktifkan {employeeName}",
+  "manage_employee_active_tap_info": "{employeeName} adalah Pegawai, tekan lama untuk menonaktifkan",
+  "manage_employee_non_active_tap_info": "{employeeName} adalah User biasa, tekan lama untuk mengaktifkan sebagai Pegawai",
 
   "service_screen_title": "Layanan",
   "service_empty_message": "Tidak ada layanan ditemukan",

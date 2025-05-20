@@ -110,7 +110,15 @@
   "manage_employee_success_deactivate_message": "Success deactivated {employeeName}",
   "@manage_employee_success_deactivate_message": {
     "description": "Message displayed when employee is deactivated successfully"
-  }, 
+  },
+  "manage_employee_active_tap_info": "{employeeName} is Employee, long press to deactivate",
+  "@manage_employee_active_tap_info": {
+    "description": "Info message for active employee"
+  },
+  "manage_employee_non_active_tap_info": "{employeeName} is Non Active Employee, long press to activate",
+  "@manage_employee_non_active_tap_info": {
+    "description": "Info message for non-active employee"
+  },
 
   "service_screen_title": "Service",
   "@service_screen_title": {

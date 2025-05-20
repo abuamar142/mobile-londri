@@ -11,6 +11,7 @@ class WidgetListTile extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onLongPress;
   final Color? tileColor;
+  final VoidCallback? onTap;
 
   const WidgetListTile({
     super.key,
@@ -20,6 +21,7 @@ class WidgetListTile extends StatelessWidget {
     this.trailing,
     this.onLongPress,
     this.tileColor = AppColors.background,
+    this.onTap,
   });
 
   @override
@@ -62,6 +64,7 @@ class WidgetListTile extends StatelessWidget {
       ),
       trailing: trailing,
       onLongPress: onLongPress,
+      onTap: onTap,
     );
   }
 }
