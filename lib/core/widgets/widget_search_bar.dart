@@ -43,6 +43,9 @@ class WidgetSearchBar extends StatelessWidget {
           hintStyle: AppTextStyle.body.copyWith(color: Colors.grey),
         ),
         onChanged: (value) => onChanged(value),
+        onTapOutside: (PointerDownEvent event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
       ),
     );
   }
