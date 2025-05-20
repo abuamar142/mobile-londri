@@ -260,8 +260,6 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
                       'email', currentSortField, isAscending),
                   _buildSortOption(AppLocalizations.of(context)!.sort_by_role,
                       'role', currentSortField, isAscending),
-                  _buildSortOption(
-                      'Status', 'status', currentSortField, isAscending),
                 ],
               ),
             ),

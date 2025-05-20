@@ -135,11 +135,6 @@ class ManageEmployeeBloc
         case 'role':
           result = a.role!.compareTo(b.role!);
           break;
-        case 'status':
-          final aStatus = a.role == 'admin' ? 1 : 0;
-          final bStatus = b.role == 'admin' ? 1 : 0;
-          result = aStatus.compareTo(bStatus);
-          break;
         default:
           result = a.name.compareTo(b.name);
       }
