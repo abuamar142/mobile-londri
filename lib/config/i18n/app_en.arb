@@ -569,6 +569,10 @@
   "@button_refresh": {
     "description": "Text for the refresh button"
   },
+  "button_clear": "Clear",
+  "@button_clear": {
+    "description": "Text for the clear button"
+  },
   "button_manage_employee": "Manage Employee",
   "@button_manage_employee": {
     "description": "Text for the manage employee button"

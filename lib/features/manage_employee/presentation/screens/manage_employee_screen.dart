@@ -10,6 +10,7 @@ import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_search_bar.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/user.dart';
@@ -85,50 +86,7 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
               ),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          style: AppTextStyle.body,
-                          decoration: InputDecoration(
-                            hintText: appText.manage_employee_search_hint,
-                            suffixIcon: _searchController.text.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      _employeeBloc.add(
-                                        ManageEmployeeEventSearchUser(
-                                          query: '',
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : null,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(AppSizes.size8),
-                            ),
-                            hintStyle:
-                                AppTextStyle.body.copyWith(color: Colors.grey),
-                          ),
-                          onChanged: (value) {
-                            _employeeBloc.add(
-                              ManageEmployeeEventSearchUser(
-                                query: value,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      AppSizes.spaceWidth8,
-                      IconButton(
-                        icon: Icon(Icons.sort, size: AppSizes.size24),
-                        onPressed: () => _showSortOptions(context),
-                      ),
-                    ],
-                  ),
+                  _buildHeader(appText, context),
                   AppSizes.spaceHeight16,
                   Expanded(
                     child: _buildEmployeeList(appText),
@@ -139,6 +97,38 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildHeader(AppLocalizations appText, BuildContext context) {
+    return Row(
+      children: [
+        WidgetSearchBar(
+          controller: _searchController,
+          hintText: appText.manage_employee_search_hint,
+          onChanged: (value) {
+            setState(() {
+              _employeeBloc.add(
+                ManageEmployeeEventSearchUser(
+                  query: value,
+                ),
+              );
+            });
+          },
+          onClear: () {
+            _employeeBloc.add(
+              ManageEmployeeEventSearchUser(
+                query: '',
+              ),
+            );
+          },
+        ),
+        AppSizes.spaceWidth8,
+        IconButton(
+          icon: Icon(Icons.sort, size: AppSizes.size24),
+          onPressed: () => _showSortOptions(context),
+        ),
+      ],
     );
   }
 

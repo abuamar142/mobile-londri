@@ -164,5 +164,6 @@
   "button_register": "Daftar",
   "button_logout": "Keluar",
   "button_refresh": "Segarkan",
+  "button_clear": "Bersihkan",
   "button_manage_employee": "Kelola Pegawai"
 }
