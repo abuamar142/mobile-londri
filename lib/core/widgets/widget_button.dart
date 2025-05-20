@@ -9,12 +9,14 @@ class WidgetButton extends StatelessWidget {
   final String label;
   final void Function() onPressed;
   final bool isLoading;
+  final Color? backgroundColor;
 
   const WidgetButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
+    this.backgroundColor,
   });
 
   @override
@@ -22,7 +24,7 @@ class WidgetButton extends StatelessWidget {
     return ElevatedButton(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(
-          isLoading ? AppColors.gray : AppColors.primary,
+          isLoading ? AppColors.gray : backgroundColor ?? AppColors.primary,
         ),
         minimumSize: WidgetStateProperty.all(
           const Size(double.infinity, AppSizes.size56),

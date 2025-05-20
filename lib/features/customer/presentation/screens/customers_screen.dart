@@ -6,18 +6,14 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/launch_whatsapp.dart';
-import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_search_bar.dart';
-import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
-import '../../../service/presentation/widgets/widget_text_form_field.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
 
@@ -33,13 +29,7 @@ class CustomersScreen extends StatefulWidget {
 }
 
 class _CustomersScreenState extends State<CustomersScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-
   late final CustomerBloc _customerBloc;
 
   @override
@@ -51,9 +41,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _descriptionController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -72,12 +59,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
         listener: (context, state) {
           if (state is CustomerStateFailure) {
             showSnackbar(context, state.message);
-          } else if (state is CustomerStateSuccessCreateCustomer) {
-            showSnackbar(context, appText.customer_add_success_message);
-          } else if (state is CustomerStateSuccessUpdateCustomer) {
-            showSnackbar(context, appText.customer_update_success_message);
-          } else if (state is CustomerStateSuccessDeleteCustomer) {
-            showSnackbar(context, appText.customer_delete_success_message);
           } else if (state is CustomerStateSuccessActivateCustomer) {
             showSnackbar(context, appText.customer_activate_success_message);
           }
@@ -109,7 +90,13 @@ class _CustomersScreenState extends State<CustomersScreen> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => addCustomer(appText: appText),
+            onPressed: () async {
+              final result = await context.pushNamed('add-customer');
+
+              if (result == true) {
+                _getCustomers();
+              }
+            },
             child: const Icon(
               Icons.add,
               color: Colors.white,
@@ -123,27 +110,21 @@ class _CustomersScreenState extends State<CustomersScreen> {
   Row _buildHeader(AppLocalizations appText, BuildContext context) {
     return Row(
       children: [
-        WidgetSearchBar(
-          controller: _searchController,
-          hintText: appText.customer_search_hint,
-          onChanged: (value) {
-            setState(() {
+        Expanded(
+          child: WidgetSearchBar(
+            controller: _searchController,
+            hintText: appText.customer_search_hint,
+            onChanged: (value) {
               _customerBloc.add(
-                CustomerEventSearchCustomer(
-                  query: value,
-                ),
+                CustomerEventSearchCustomer(query: value),
               );
-            });
-          },
-          onClear: () {
-            setState(() {
+            },
+            onClear: () {
               _customerBloc.add(
-                CustomerEventSearchCustomer(
-                  query: '',
-                ),
+                CustomerEventSearchCustomer(query: ''),
               );
-            });
-          },
+            },
+          ),
         ),
         AppSizes.spaceWidth8,
         IconButton(
@@ -184,27 +165,31 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
                 return WidgetListTile(
                   title: customer.name ?? '',
-                  subtitle: customer.description ?? '-',
+                  subtitle: _getCustomerSubtitle(customer),
                   trailing: customer.phone != null
                       ? IconButton(
-                          icon: Icon(Icons.send),
+                          icon: Icon(Icons.message),
                           onPressed: () {
-                            launchWhatsapp(phone: customer.phone!, message: '');
+                            _contactCustomer(customer);
                           },
                         )
                       : null,
-                  leadingIcon: isActive ? Icons.person : Icons.person_off,
+                  leadingIcon: _getLeadingIcon(customer),
                   tileColor: isActive
                       ? null
                       : Colors.grey.withValues(
-                          alpha: 0.2,
+                          alpha: 0.1,
                         ),
-                  onTap: () {
+                  onTap: () async {
                     if (isActive) {
-                      editCustomer(
-                        customer: customer,
-                        appText: appText,
+                      final result = await context.pushNamed(
+                        'view-customer',
+                        pathParameters: {'id': customer.id!.toString()},
                       );
+
+                      if (result == true) {
+                        _getCustomers();
+                      }
                     } else {
                       showSnackbar(context, appText.customer_info_activate);
                     }
@@ -213,7 +198,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     if (isActive) {
                       showSnackbar(context, appText.customer_info_active);
                     } else {
-                      activateCustomer(
+                      _activateCustomer(
                         customer: customer,
                         appText: appText,
                       );
@@ -231,6 +216,42 @@ class _CustomersScreenState extends State<CustomersScreen> {
         }
       },
     );
+  }
+
+  String _getCustomerSubtitle(Customer customer) {
+    final List<String> parts = [];
+
+    if (customer.phone != null && customer.phone!.isNotEmpty) {
+      parts.add(customer.phone!);
+    }
+
+    if (customer.description != null && customer.description!.isNotEmpty) {
+      parts.add(customer.description!);
+    }
+
+    return parts.isEmpty ? '-' : parts.join(' • ');
+  }
+
+  IconData _getLeadingIcon(Customer customer) {
+    if (!(customer.isActive ?? true)) {
+      return Icons.person_off;
+    }
+
+    switch (customer.gender) {
+      case Gender.male:
+        return Icons.man;
+      case Gender.female:
+        return Icons.woman;
+      case Gender.other:
+      default:
+        return Icons.person;
+    }
+  }
+
+  void _contactCustomer(Customer customer) {
+    if (customer.phone != null && customer.phone!.isNotEmpty) {
+      launchWhatsapp(phone: customer.phone!, message: '');
+    }
   }
 
   void _showSortOptions(BuildContext context) {
@@ -345,163 +366,14 @@ class _CustomersScreenState extends State<CustomersScreen> {
     );
   }
 
-  void addCustomer({
-    required AppLocalizations appText,
-  }) {
-    _showCustomerDialog(
-      context: context,
-      appText: appText,
-      title: appText.customer_add_dialog_title,
-      onSubmit: (Customer customer) {
-        _customerBloc.add(CustomerEventCreateCustomer(customer: customer));
-        context.pop();
-      },
-    );
-  }
-
-  void editCustomer({
+  void _activateCustomer({
     required Customer customer,
     required AppLocalizations appText,
   }) {
-    _showCustomerDialog(
-      context: context,
-      appText: appText,
-      title: appText.customer_edit_dialog_title,
-      customer: customer,
-      showDeleteButton: true,
-      onSubmit: (Customer newCustomer) {
-        _customerBloc.add(CustomerEventUpdateCustomer(customer: newCustomer));
-        context.pop();
-      },
-    );
-  }
-
-  void _showCustomerDialog({
-    required BuildContext context,
-    required AppLocalizations appText,
-    required String title,
-    Customer? customer,
-    required Function(Customer) onSubmit,
-    bool showDeleteButton = false,
-  }) {
-    if (customer != null) {
-      _nameController.text = customer.name ?? '';
-      _phoneController.text = customer.phone ?? '';
-      _descriptionController.text = customer.description ?? '';
-    } else {
-      _nameController.clear();
-      _phoneController.clear();
-      _descriptionController.clear();
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        content: Form(
-          key: _formKey,
-          child: BlocBuilder<CustomerBloc, CustomerState>(
-            builder: (context, state) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(title, style: AppTextStyle.title),
-                  SizedBox(height: 8),
-                  WidgetTextFormField(
-                    label: appText.form_name_label,
-                    enabled: state is! CustomerStateLoading,
-                    controller: _nameController,
-                    validator: (value) =>
-                        value?.isEmpty ?? true ? appText.form_name_hint : null,
-                  ),
-                  WidgetTextFormField(
-                    label: appText.form_phone_label,
-                    enabled: state is! CustomerStateLoading,
-                    controller: _phoneController,
-                    textInputType: TextInputType.phone,
-                    validator: (value) =>
-                        value?.isEmpty ?? true ? appText.form_phone_hint : null,
-                  ),
-                  WidgetTextFormField(
-                    label: appText.form_description_label,
-                    enabled: state is! CustomerStateLoading,
-                    maxLines: 3,
-                    controller: _descriptionController,
-                  ),
-                  const SizedBox(height: 4),
-                  WidgetButton(
-                    label: appText.button_submit,
-                    isLoading: state is CustomerStateLoading,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final newCustomer = Customer(
-                          id: customer?.id,
-                          name: _nameController.text,
-                          description: _descriptionController.text,
-                          phone: _phoneController.text,
-                          isActive: customer?.isActive ?? true,
-                        );
-
-                        onSubmit(newCustomer);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  if (showDeleteButton)
-                    WidgetTextButton(
-                      label: appText.button_delete,
-                      isLoading: state is CustomerStateLoading,
-                      onPressed: () => deleteCustomer(
-                        customer: customer!,
-                        appText: appText,
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-        ),
+    _customerBloc.add(
+      CustomerEventActivateCustomer(
+        customerId: customer.id.toString(),
       ),
-    );
-  }
-
-  void deleteCustomer({
-    required Customer customer,
-    required AppLocalizations appText,
-  }) {
-    context.pop();
-
-    showConfirmationDialog(
-      context: context,
-      title: appText.customer_delete_dialog_title,
-      content: appText.customer_delete_confirm_message,
-      onConfirm: () {
-        _customerBloc.add(
-          CustomerEventDeleteCustomer(
-            customerId: customer.id.toString(),
-          ),
-        );
-        context.pop();
-      },
-    );
-  }
-
-  void activateCustomer({
-    required Customer customer,
-    required AppLocalizations appText,
-  }) {
-    showConfirmationDialog(
-      context: context,
-      title: appText.customer_activate_dialog_title,
-      content: appText.customer_activate_confirm_message,
-      onConfirm: () {
-        _customerBloc.add(
-          CustomerEventActivateCustomer(
-            customerId: customer.id.toString(),
-          ),
-        );
-        context.pop();
-      },
     );
   }
 }

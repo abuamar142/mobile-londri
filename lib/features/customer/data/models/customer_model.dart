@@ -9,6 +9,7 @@ class CustomerModel extends Customer {
     super.id,
     super.name,
     super.phone,
+    super.gender,
     super.description,
     this.createdAt,
     required this.updatedAt,
@@ -19,9 +20,15 @@ class CustomerModel extends Customer {
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(
-      id: json['id'],
+      id: json['id'] ?? 0,
       name: json['name'],
       phone: json['phone'],
+      gender: json['gender'] != null
+          ? Gender.values.firstWhere(
+              (e) => e.name == json['gender'],
+              orElse: () => Gender.other,
+            )
+          : Gender.other,
       description: json['description'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -33,9 +40,10 @@ class CustomerModel extends Customer {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id ?? 0,
+      'id': id,
       'name': name,
       'phone': phone,
+      'gender': gender?.name ?? 'other',
       'description': description,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -43,11 +51,11 @@ class CustomerModel extends Customer {
     };
   }
 
-  Map<String, dynamic> toUpdateJson(CustomerModel customer) {
-    Map<String, dynamic> data = customer.toJson();
+  // Map<String, dynamic> toUpdateJson(CustomerModel customer) {
+  //   Map<String, dynamic> data = customer.toJson();
 
-    data.removeWhere((key, value) => value == null);
+  //   data.removeWhere((key, value) => value == null);
 
-    return data;
-  }
+  //   return data;
+  // }
 }

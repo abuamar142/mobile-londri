@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/utils/clean_json.dart';
 import '../models/customer_model.dart';
 
 abstract class CustomerRemoteDatasource {
@@ -45,7 +46,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
           .from(
             'customers',
           )
-          .insert(customer.toJson());
+          .insert(customer.toJson().cleanNulls());
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -60,7 +61,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
           .from(
             'customers',
           )
-          .update(customer.toUpdateJson(customer))
+          .update(customer.toJson().cleanNulls())
           .eq('id', customer.id!);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);

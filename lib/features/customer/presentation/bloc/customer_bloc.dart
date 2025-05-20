@@ -169,7 +169,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessCreateCustomer());
-      add(CustomerEventGetCustomers());
     });
   }
 

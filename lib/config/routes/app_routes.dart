@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/customer/presentation/screens/customers_screen.dart';
+import '../../features/customer/presentation/screens/manage_customer_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
@@ -64,6 +65,37 @@ class AppRoutes {
         builder: (context, state) {
           return const CustomersScreen();
         },
+        routes: [
+          GoRoute(
+            path: 'add',
+            name: 'add-customer',
+            builder: (context, state) {
+              return const ManageCustomerScreen(mode: ManageCustomerMode.add);
+            },
+          ),
+          GoRoute(
+            path: 'view/:id',
+            name: 'view-customer',
+            builder: (context, state) {
+              final customerId = state.pathParameters['id']!;
+              return ManageCustomerScreen(
+                mode: ManageCustomerMode.view,
+                customerId: customerId,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'edit/:id',
+            name: 'edit-customer',
+            builder: (context, state) {
+              final customerId = state.pathParameters['id']!;
+              return ManageCustomerScreen(
+                mode: ManageCustomerMode.edit,
+                customerId: customerId,
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/transactions',
@@ -73,7 +105,7 @@ class AppRoutes {
         },
         routes: [
           GoRoute(
-            path: '/select-customer',
+            path: 'select-customer',
             name: 'select-customer',
             builder: (context, state) {
               return const SelectCustomerScreen();
