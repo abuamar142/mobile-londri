@@ -19,9 +19,20 @@ class CustomerStateSuccessGetCustomers extends CustomerState {
   });
 
   @override
-  List<Object> get props => [
-        customers,
-      ];
+  List<Object> get props => [customers];
+}
+
+class CustomerStateWithFilteredCustomers extends CustomerState {
+  final List<Customer> allCustomers;
+  final List<Customer> filteredCustomers;
+
+  const CustomerStateWithFilteredCustomers({
+    required this.allCustomers,
+    required this.filteredCustomers,
+  });
+
+  @override
+  List<Object> get props => [allCustomers, filteredCustomers];
 }
 
 class CustomerStateSuccessCreateCustomer extends CustomerState {}
@@ -40,7 +51,5 @@ class CustomerStateFailure extends CustomerState {
   });
 
   @override
-  List<Object> get props => [
-        message,
-      ];
+  List<Object> get props => [message];
 }

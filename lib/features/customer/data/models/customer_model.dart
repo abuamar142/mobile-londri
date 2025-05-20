@@ -1,5 +1,3 @@
-import 'package:uuid/uuid.dart';
-
 import '../../domain/entities/customer.dart';
 
 class CustomerModel extends Customer {
@@ -8,7 +6,7 @@ class CustomerModel extends Customer {
   final DateTime? deletedAt;
 
   const CustomerModel({
-    required super.id,
+    super.id,
     super.name,
     super.phone,
     super.description,
@@ -35,7 +33,7 @@ class CustomerModel extends Customer {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id ?? Uuid().v4(),
+      'id': id ?? 0,
       'name': name,
       'phone': phone,
       'description': description,

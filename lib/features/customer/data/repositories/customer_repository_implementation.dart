@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
@@ -36,7 +35,6 @@ class CustomerRepositoryImplementation extends CustomerRepository {
   Future<Either<Failure, void>> createCustomer(Customer customer) async {
     try {
       await customerRemoteDatasource.createCustomer(CustomerModel(
-        id: Uuid().v4(),
         name: customer.name,
         phone: customer.phone,
         description: customer.description,

@@ -25,7 +25,9 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
           .from(
             'customers',
           )
-          .select()
+          .select(
+            'id, name, phone, gender, description, created_at, updated_at, deleted_at',
+          )
           .order('created_at', ascending: false);
 
       return response.map((e) => CustomerModel.fromJson(e)).toList();
