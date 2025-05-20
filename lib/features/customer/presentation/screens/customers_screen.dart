@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
+import '../../../../core/utils/launch_whatsapp.dart';
 import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
@@ -126,18 +127,22 @@ class _CustomersScreenState extends State<CustomersScreen> {
           controller: _searchController,
           hintText: appText.customer_search_hint,
           onChanged: (value) {
-            _customerBloc.add(
-              CustomerEventSearchCustomer(
-                query: value,
-              ),
-            );
+            setState(() {
+              _customerBloc.add(
+                CustomerEventSearchCustomer(
+                  query: value,
+                ),
+              );
+            });
           },
           onClear: () {
-            _customerBloc.add(
-              CustomerEventSearchCustomer(
-                query: '',
-              ),
-            );
+            setState(() {
+              _customerBloc.add(
+                CustomerEventSearchCustomer(
+                  query: '',
+                ),
+              );
+            });
           },
         ),
         AppSizes.spaceWidth8,
@@ -180,12 +185,14 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 return WidgetListTile(
                   title: customer.name ?? '',
                   subtitle: customer.description ?? '-',
-                  trailing: Text(
-                    customer.phone ?? '-',
-                    style: AppTextStyle.tileTrailing.copyWith(
-                      color: isActive ? null : Colors.grey,
-                    ),
-                  ),
+                  trailing: customer.phone != null
+                      ? IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: () {
+                            launchWhatsapp(phone: customer.phone!, message: '');
+                          },
+                        )
+                      : null,
                   leadingIcon: isActive ? Icons.person : Icons.person_off,
                   tileColor: isActive
                       ? null

@@ -3,13 +3,15 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 Future<void> launchWhatsapp({
   required String phone,
-  required String message,
+  required String? message,
 }) async {
+  phone = phone.replaceFirst('0', '62');
+
   String url() {
     if (isMobile) {
-      return "https://api.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message)}";
+      return "https://api.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message ?? '')}";
     } else {
-      return "https://web.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message)}";
+      return "https://web.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message ?? '')}";
     }
   }
 
@@ -17,7 +19,7 @@ Future<void> launchWhatsapp({
     await launchUrlString(url());
   } else {
     await launchUrlString(
-      "https://web.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message)}",
+      "https://web.whatsapp.com/send?phone=$phone&text=${Uri.encodeComponent(message ?? '')}",
     );
   }
 }
