@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
@@ -10,9 +9,14 @@ import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_button.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
 import '../widgets/widget_text_form_field.dart';
+
+void pushServices(BuildContext context) {
+  context.pushNamed('services');
+}
 
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key});
@@ -38,10 +42,10 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
     _priceController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,7 +56,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       appBar: AppBar(
         title: Text(
           appText.service_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<ServiceBloc, ServiceState>(
@@ -79,14 +83,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
                   return ListTile(
                     key: ValueKey(service.id),
-                    title: Text(service.name!, style: AppTextstyle.tileTitle),
+                    title: Text(service.name!, style: AppTextStyle.tileTitle),
                     subtitle: Text(
                       service.description ?? '-',
-                      style: AppTextstyle.tileSubtitle,
+                      style: AppTextStyle.tileSubtitle,
                     ),
                     trailing: Text(
                       service.price!.formatNumber(),
-                      style: AppTextstyle.tileTrailing,
+                      style: AppTextStyle.tileTrailing,
                     ),
                     onTap: () => editService(
                       service: service,
@@ -100,7 +104,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
             return Center(
               child: Text(
                 appText.service_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }
@@ -182,7 +186,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(title, style: AppTextstyle.title),
+                  Text(title, style: AppTextStyle.title),
                   SizedBox(height: 8),
                   WidgetTextFormField(
                     label: appText.form_name_label,
@@ -251,7 +255,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
     showConfirmationDialog(
       context: context,
       title: appText.service_delete_dialog_title,
-      appText: appText,
       content: appText.service_delete_confirm_message,
       onConfirm: () {
         context.read<ServiceBloc>().add(

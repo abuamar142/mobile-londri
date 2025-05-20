@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_text_button.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
+import '../../../customer/domain/entities/customer.dart';
+import '../../../service/domain/entities/service.dart';
+import '../../../service/presentation/bloc/service_bloc.dart';
+import '../../../transaction/domain/entities/transaction.dart';
+import '../../domain/usecases/transaction_get_transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/transaction_item.dart';
+
+void pushTransactions(BuildContext context) {
+  context.pushNamed('transactions');
+}
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
@@ -16,12 +29,34 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _customerNameController = TextEditingController();
+  final TextEditingController _serviceController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _startDateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     context.read<TransactionBloc>().add(
           TransactionEventGetTransactions(),
         );
+  }
+
+  @override
+  void dispose() {
+    _customerNameController.dispose();
+    _serviceController.dispose();
+    _weightController.dispose();
+    _amountController.dispose();
+    _startDateController.dispose();
+    _endDateController.dispose();
+    _statusController.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,7 +67,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       appBar: AppBar(
         title: Text(
           appText.transaction_screen_title,
-          style: AppTextstyle.title,
+          style: AppTextStyle.title,
         ),
       ),
       body: BlocConsumer<TransactionBloc, TransactionState>(
@@ -54,7 +89,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             return Center(
               child: Text(
                 appText.transaction_empty_message,
-                style: AppTextstyle.body,
+                style: AppTextStyle.body,
               ),
             );
           }
@@ -144,8 +179,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       if (customer != null) {
                         setState(
                           () {
-                            _customerNameController.text =
-                                customer.id.toString();
+                            _customerNameController.text = customer.id!;
                           },
                         );
                       }

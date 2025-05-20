@@ -44,4 +44,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Env file
 .env
+
+# Generated files
+lib/src/generated/*

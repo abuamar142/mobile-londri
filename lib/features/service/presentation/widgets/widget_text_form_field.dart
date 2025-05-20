@@ -27,9 +27,9 @@ class WidgetTextFormField extends StatelessWidget {
       child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: AppTextstyle.label,
+          labelStyle: AppTextStyle.label,
         ),
-        style: AppTextstyle.textField,
+        style: AppTextStyle.textField,
         enabled: enabled,
         controller: controller,
         keyboardType: textInputType,

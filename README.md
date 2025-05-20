@@ -1,6 +1,9 @@
 # LONDRI Mobile Application
 
-LONDRI is a Flutter app that simplifies laundry management. It offers secure authentication with RBAC, efficient transaction recording, report generation, and customer information management. Suitable for Super Admins, Admins, and Users, LONDRI ensures an organized laundry management experience.
+LONDRI is a Flutter app that simplifies laundry management. It offers secure authentication with
+RBAC, efficient transaction recording, report generation, and customer information management.
+Suitable for Super Admins, Admins, and Users, LONDRI ensures an organized laundry management
+experience.
 
 ## Features
 
@@ -17,7 +20,8 @@ LONDRI is a Flutter app that simplifies laundry management. It offers secure aut
 
 ## Project Structure
 
-This project follows the Clean Architecture principles and uses BLoC for state management. Below is the folder structure:
+This project follows the Clean Architecture principles and uses BLoC for state management. Below is
+the folder structure:
 
 ```
 lib/
@@ -45,34 +49,41 @@ lib/
 
 - `configs/`: Contains configuration files such as assets, routes, text styles, and themes.
 - `core/`: Contains core functionalities such as error handling, use cases, and utility functions.
-- `features/`: Contains the different features of the application, each feature is divided into `data`, `domain`, and `presentation` layers.
+- `features/`: Contains the different features of the application, each feature is divided into
+  `data`, `domain`, and `presentation` layers.
 - `injection_container.dart`: Handles dependency injection.
 - `main.dart`: The entry point of the application.
 
 ## Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/mobile-londri.git
-    ```
+   ```bash
+   git clone https://github.com/yourusername/mobile-londri.git
+   ```
 2. Navigate to the project directory:
-    ```bash
-    cd mobile-londri
-    ```
+   ```bash
+   cd mobile-londri
+   ```
 3. Install dependencies:
-    ```bash
-    flutter pub get
-    ```
+   ```bash
+   flutter pub get
+   ```
 4. Run the application:
-    ```bash
-    flutter run
-    ```
+   ```bash
+   flutter run
+   ```
 
 ## Requirements
 
 - Flutter SDK
 - Dart SDK
 
+## Supabase Integration
+
+For details on how to set up auto-generated transaction IDs and other Supabase configurations, see
+the [Supabase Documentation](docs/supabase.md).
+
 ## Contact
 
-For any inquiries or issues, please contact [abuamar.albadawi@gmail.com](mailto:abuamar.albadawi@gmail.com).
+For any inquiries or issues, please contact
+[abuamar.albadawi@gmail.com](mailto:abuamar.albadawi@gmail.com).

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 
 class TransactionItemTitle extends StatelessWidget {
@@ -25,13 +25,13 @@ class TransactionItemTitle extends StatelessWidget {
                 appText.transaction_item_empty_customer_name,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: AppTextstyle.tileTitle,
+            style: AppTextStyle.tileTitle,
           ),
         ),
         SizedBox(width: 8),
         Text(
           'Rp ${transaction.amount?.toStringAsFixed(0) ?? '0'}',
-          style: AppTextstyle.tileTitle.copyWith(
+          style: AppTextStyle.tileTitle.copyWith(
             color: Colors.green,
           ),
         ),

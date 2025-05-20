@@ -8,7 +8,7 @@ void showSnackbar(BuildContext context, String message) {
       duration: const Duration(seconds: 2),
       content: Text(
         message,
-        style: AppTextstyle.body,
+        style: AppTextStyle.body,
       ),
     ),
   );

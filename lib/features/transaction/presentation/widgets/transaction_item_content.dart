@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/date_formatter.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 
@@ -40,14 +40,14 @@ class TransactionItemContent extends StatelessWidget {
                           transaction.serviceName ??
                               appText.transaction_item_empty_service_name,
                         ),
-                        style: AppTextstyle.tileSubtitle,
+                        style: AppTextStyle.tileSubtitle,
                       ),
                       SizedBox(height: 4),
                       Text(
                         appText.transaction_item_weight_label(
                           transaction.weight?.toStringAsFixed(2) ?? '0,00',
                         ),
-                        style: AppTextstyle.tileSubtitle,
+                        style: AppTextStyle.tileSubtitle,
                       ),
                     ],
                   ),
@@ -75,7 +75,7 @@ class TransactionItemContent extends StatelessWidget {
                     appText.transaction_item_start_date_label(
                       transaction.startDate?.formatDateTime() ?? '',
                     ),
-                    style: AppTextstyle.tileSubtitleSmall.copyWith(
+                    style: AppTextStyle.tileSubtitleSmall.copyWith(
                       color: Colors.grey,
                     ),
                   ),
@@ -84,7 +84,7 @@ class TransactionItemContent extends StatelessWidget {
                       appText.transaction_item_end_date_label(
                         transaction.endDate?.formatDateTime() ?? '',
                       ),
-                      style: AppTextstyle.tileSubtitleSmall.copyWith(
+                      style: AppTextStyle.tileSubtitleSmall.copyWith(
                         color: Colors.grey,
                       ),
                     ),
@@ -92,7 +92,7 @@ class TransactionItemContent extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                status.status,
+                status.status!,
                 style: TextStyle(
                   fontSize: 12,
                   color: status.color,

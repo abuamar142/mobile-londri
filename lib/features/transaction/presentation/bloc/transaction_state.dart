@@ -24,6 +24,25 @@ class TransactionStateSuccessGetTransactions extends TransactionState {
       ];
 }
 
+class TransactionStateSuccessGetDefaultTransactionStatus
+    extends TransactionState {
+  final TransactionStatus transactionStatus;
+
+  const TransactionStateSuccessGetDefaultTransactionStatus({
+    required this.transactionStatus,
+  });
+
+  @override
+  List<Object> get props => [
+        transactionStatus,
+      ];
+}
+
+class TransactionStateSuccessCreateTransaction extends TransactionState {}
+
+class TransactionStateSuccessUpdateDefaultTransactionStatus
+    extends TransactionState {}
+
 class TransactionStateFailure extends TransactionState {
   final String message;
 

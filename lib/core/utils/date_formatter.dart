@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../config/l10n/l10n.dart';
+import '../../config/i18n/i18n.dart';
 
 extension DateFormatter on DateTime {
   String formatDateTime() {
@@ -12,7 +12,7 @@ extension DateFormatter on DateTime {
 
     return DateFormat(
       'EEEE, dd MMM, HH:mm',
-      AppLocales.getLocale.toString(),
+      AppLocales.localeNotifier.value.toString(),
     ).format(
       localTime,
     );

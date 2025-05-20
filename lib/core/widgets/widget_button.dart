@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../config/textstyle/app_colors.dart';
+import '../../config/textstyle/app_sizes.dart';
 import '../../config/textstyle/app_textstyle.dart';
 import 'widget_loading.dart';
 
@@ -19,8 +21,11 @@ class WidgetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(
+          isLoading ? AppColors.gray : AppColors.primary,
+        ),
         minimumSize: WidgetStateProperty.all(
-          const Size(double.infinity, 54),
+          const Size(double.infinity, AppSizes.size56),
         ),
       ),
       onPressed: isLoading ? null : onPressed,
@@ -28,7 +33,9 @@ class WidgetButton extends StatelessWidget {
           ? WidgetLoading()
           : Text(
               label,
-              style: AppTextstyle.body,
+              style: AppTextStyle.button.copyWith(
+                color: AppColors.onPrimary,
+              ),
             ),
     );
   }

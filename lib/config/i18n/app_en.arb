@@ -1,0 +1,588 @@
+{
+  "app_name": "Londri",
+  "@app_name": {
+    "description": "Name of the application"
+  },
+  
+  "splash_screen_text": "Manage your Laundry Business Easily",
+  "@splash_screen_text": {
+    "description": "Text displayed on the splash screen"
+  },
+
+  "auth_login_screen_title": "Login",
+  "@auth_login_screen_title": {
+    "description": "Title for the login screen"
+  },
+  "auth_login_screen_text_title": "Welcome to Londri Application",
+  "@auth_login_screen_text_title": {
+    "description": "Text displayed on the login screen"
+  },
+  "auth_login_screen_text_subtitle": "Please login to continue",
+  "@auth_login_screen_text_subtitle": {
+    "description": "Subtitle text displayed on the login screen"
+  },
+  "auth_login_screen_rich_text_text": "Don't have an account? ",
+  "@auth_login_screen_rich_text_text": {
+    "description": "Rich text displayed on the login screen"
+  },
+  "auth_login_screen_rich_text_button": "Register here",
+  "@auth_login_screen_rich_text_button": {
+    "description": "Button text for registration on the login screen"
+  },
+
+  "auth_login_error_message": "Login failed, please check your email and password",
+  "@auth_login_error_message": {
+    "description": "Message displayed when login fails"
+  },
+  "auth_login_error_email_not_confirmed": "Email not confirmed, please check your email",
+  "@auth_login_error_email_not_confirmed": {
+    "description": "Message displayed when email is not confirmed"
+  },
+  "auth_login_success_message": "Login successful",
+  "@auth_login_success_message": {
+    "description": "Message displayed when login is successful"
+  },
+
+  "auth_register_screen_title": "Register",
+  "@auth_register_screen_title": {
+    "description": "Title for the register screen"
+  },
+  "auth_register_screen_text_title": "Create an Account",
+  "@auth_register_screen_text_title": {
+    "description": "Text displayed on the register screen"
+  },
+  "auth_register_screen_text_subtitle": "Please fill in the form to create an account",
+  "@auth_register_screen_text_subtitle": {
+    "description": "Subtitle text displayed on the register screen"
+  },
+  "auth_register_screen_rich_text_text": "Already have an account? ",
+  "@auth_register_screen_rich_text_text": {
+    "description": "Rich text displayed on the register screen"
+  },
+  "auth_register_screen_rich_text_button": "Login here",
+  "@auth_register_screen_rich_text_button": {
+    "description": "Button text for login on the register screen"
+  },
+
+  "auth_register_success_message": "Register successful, please check your email to confirm",
+  "@auth_register_success_message": {
+    "description": "Message displayed when registration is successful"
+  },
+  "auth_logout_success_message": "Logout successful",
+  "@auth_logout_success_message": {
+    "description": "Message displayed when logout is successful"
+  },
+
+  "@_MANAGE_EMPLOYEE": {},
+
+  "manage_employee_screen_title": "Manage Employee",
+  "@manage_employee_screen_title": {
+    "description": "Title for the manage employee screen"
+  },
+  "manage_employee_empty_message": "No employee found",
+  "@manage_employee_empty_message": {
+    "description": "Message displayed when no employee is found"
+  },
+  "manage_employee_search_hint": "Search name or email",
+  "@manage_employee_search_hint": {
+    "description": "Hint text for the employee search input"
+  },
+  "manage_employee_activate_employee": "Activate Employee",
+  "@manage_employee_activate_employee": {
+    "description": "Text for activating employee"
+  },
+  "manage_employee_deactivate_employee": "Deactivate Employee",
+  "@manage_employee_deactivate_employee": {
+    "description": "Text for deactivating employee"
+  },
+  "manage_employee_activate_dialog_confirm_message": "Are you sure you want to activate {employeeName}?",
+  "@manage_employee_activate_dialog_confirm_message": {
+    "description": "Confirmation message for activating an employee"
+  },
+  "manage_employee_deactivate_dialog_confirm_message": "Are you sure you want to deactivate {employeeName}?",
+  "@manage_employee_deactivate_dialog_confirm_message": {
+    "description": "Confirmation message for deactivating an employee"
+  },
+  "manage_employee_success_activate_message": "Success activated {employeeName}",
+  "@manage_employee_success_activate_message": {
+    "description": "Message displayed when employee is activated successfully"
+  },
+  "manage_employee_success_deactivate_message": "Success deactivated {employeeName}",
+  "@manage_employee_success_deactivate_message": {
+    "description": "Message displayed when employee is deactivated successfully"
+  },
+  "manage_employee_active_tap_info": "{employeeName} is Employee, long press to deactivate",
+  "@manage_employee_active_tap_info": {
+    "description": "Info message for active employee"
+  },
+  "manage_employee_non_active_tap_info": "{employeeName} is Non Active Employee, long press to activate",
+  "@manage_employee_non_active_tap_info": {
+    "description": "Info message for non-active employee"
+  },
+
+  "service_screen_title": "Service",
+  "@service_screen_title": {
+    "description": "Title for the service screen"
+  },
+  "service_empty_message": "No service found",
+  "@service_empty_message": {
+    "description": "Message displayed when no service is found"
+  },
+  "service_add_dialog_title": "Add Service",
+  "@service_add_dialog_title": {
+    "description": "Title for the add service dialog"
+  },
+  "service_edit_dialog_title": "Edit Service",
+  "@service_edit_dialog_title": {
+    "description": "Title for the edit service dialog"
+  },
+  "service_delete_dialog_title": "Delete Service",
+  "@service_delete_dialog_title": {
+    "description": "Title for the delete service dialog"
+  },
+  "service_add_success_message": "Service added successfully",
+  "@service_add_success_message": {
+    "description": "Message displayed when service is added successfully"
+  },
+  "service_update_success_message": "Service updated successfully",
+  "@service_update_success_message": {
+    "description": "Message displayed when service is updated successfully"
+  },
+  "service_delete_success_message": "Service deleted successfully",
+  "@service_delete_success_message": {
+    "description": "Message displayed when service is deleted successfully"
+  },
+  "service_delete_confirm_message": "Are you sure you want to delete this service?",
+  "@service_delete_confirm_message": {
+    "description": "Confirmation message for deleting a service"
+  },
+  "service_add_failed_message": "Failed to add service",
+  "@service_add_failed_message": {
+    "description": "Message displayed when adding a service fails"
+  },
+  "service_edit_failed_message": "Failed to update service",
+  "@service_edit_failed_message": {
+    "description": "Message displayed when updating a service fails"
+  },
+  "service_delete_failed_message": "Failed to delete service",
+  "@service_delete_failed_message": {
+    "description": "Message displayed when deleting a service fails"
+  },
+
+  "transaction_screen_title": "Transaction",
+  "@transaction_screen_title": {
+    "description": "Title for the transaction screen"
+  },
+  "transaction_empty_message": "No transaction found",
+  "@transaction_empty_message": {
+    "description": "Message displayed when no transaction is found"
+  },
+  "transaction_add_dialog_title": "Add Transaction",
+  "@transaction_add_dialog_title": {
+    "description": "Title for the add transaction dialog"
+  },
+  "transaction_edit_dialog_title": "Edit Transaction",
+  "@transaction_edit_dialog_title": {
+    "description": "Title for the edit transaction dialog"
+  },
+  "transaction_delete_dialog_title": "Delete Transaction",
+  "@transaction_delete_dialog_title": {
+    "description": "Title for the delete transaction dialog"
+  },
+  "transaction_add_success_message": "Transaction added successfully",
+  "@transaction_add_success_message": {
+    "description": "Message displayed when transaction is added successfully"
+  },
+  "transaction_update_success_message": "Transaction updated successfully",
+  "@transaction_update_success_message": {
+    "description": "Message displayed when transaction is updated successfully"
+  },
+  "transaction_delete_success_message": "Transaction deleted successfully",
+  "@transaction_delete_success_message": {
+    "description": "Message displayed when transaction is deleted successfully"
+  },
+  "transaction_delete_confirm_message": "Are you sure you want to delete this transaction?",
+  "@transaction_delete_confirm_message": {
+    "description": "Confirmation message for deleting a transaction"
+  },
+  "transaction_add_failed_message": "Failed to add transaction",
+  "@transaction_add_failed_message": {
+    "description": "Message displayed when adding a transaction fails"
+  },
+  "transaction_edit_failed_message": "Failed to update transaction",
+  "@transaction_edit_failed_message": {
+    "description": "Message displayed when updating a transaction fails"
+  },
+  "transaction_delete_failed_message": "Failed to delete transaction",
+  "@transaction_delete_failed_message": {
+    "description": "Message displayed when deleting a transaction fails"
+  },
+  "transaction_item_service_label": "Service: {serviceName}",
+  "@transaction__item_service_label": {
+    "description": "Message displaying the service name in a transaction item"
+  },
+  "transaction_item_weight_label": "Weight: {weight} Kg",
+  "@transaction_item_weight_label": {
+    "description": "Message displaying the weight in a transaction item"
+  },
+  "transaction_item_amount_label": "Amount: {amount}",
+  "@transaction_item_amount_label": {
+    "description": "Message displaying the amount in a transaction item"
+  },
+  "transaction_item_start_date_label": "Start : {startDate}",
+  "@transaction_item_start_date_label": {
+    "description": "Message displaying the start date in a transaction item"
+  },
+  "transaction_item_end_date_label": "End : {endDate}",
+  "@transaction_item_end_date_label": {
+    "description": "Message displaying the end date in a transaction item"
+  },
+  "transaction_item_empty_customer_name": "Customer not found",
+  "@transaction_item_empty_customer_name": {
+    "description": "Message displayed when the customer name is empty in a transaction item"
+  },
+  "transaction_item_empty_service_name": "Service not found",
+  "@transaction_item_empty_service_name": {
+    "description": "Message displayed when the service name is empty in a transaction item"
+  },
+  "transaction_status_pending": "Pending",
+  "@transaction_status_pending": {
+    "description": "Status for pending transaction"
+  },
+  "transaction_status_received": "Received",
+  "@transaction_status_received": {
+    "description": "Status for received transaction"
+  },
+  "transaction_status_in_progress": "In Progress",
+  "@transaction_status_in_progress": {
+    "description": "Status for in-progress transaction"
+  },
+  "transaction_status_washing": "Washing",
+  "@transaction_status_washing": {
+    "description": "Status for washing transaction"
+  },
+  "transaction_status_drying": "Drying",
+  "@transaction_status_drying": {
+    "description": "Status for drying transaction"
+  },
+  "transaction_status_ironing": "Ironing",
+  "@transaction_status_ironing": {
+    "description": "Status for ironing transaction"
+  },
+  "transaction_status_ready_for_pickup": "Ready for Pickup",
+  "@transaction_status_ready_for_pickup": {
+    "description": "Status for ready for pickup transaction"
+  },
+  "transaction_status_picked_up": "Picked Up",
+  "@transaction_status_picked_up": {
+    "description": "Status for picked up transaction"
+  },
+  "transaction_status_cancelled": "Cancelled",
+  "@transaction_status_cancelled": {
+    "description": "Status for cancelled transaction"
+  },
+  "transaction_status_delayed": "Delayed",
+  "@transaction_status_delayed": {
+    "description": "Status for delayed transaction"
+  },
+  "transaction_status_default": "Status not found",
+  "@transaction_status_default": {
+    "description": "Default status for transaction"
+  },
+
+  "customer_screen_title": "Customer",
+  "@customer_screen_title": {
+    "description": "Title for the customer screen"
+  },
+  "customer_empty_message": "No customer found",
+  "@customer_empty_message": {
+    "description": "Message displayed when no customer is found"
+  },
+  "customer_add_dialog_title": "Add Customer",
+  "@customer_add_dialog_title": {
+    "description": "Title for the add customer dialog"
+  },
+  "customer_edit_dialog_title": "Edit Customer",
+  "@customer_edit_dialog_title": {
+    "description": "Title for the edit customer dialog"
+  },
+  "customer_delete_dialog_title": "Delete Customer",
+  "@customer_delete_dialog_title": {
+    "description": "Title for the delete customer dialog"
+  },
+  "customer_activate_dialog_title": "Activate Customer",
+  "@customer_activate_dialog_title": {
+    "description": "Title for the activate customer dialog"
+  },
+  "customer_add_success_message": "Customer added successfully",
+  "@customer_add_success_message": {
+    "description": "Message displayed when customer is added successfully"
+  },
+  "customer_update_success_message": "Customer updated successfully",
+  "@customer_update_success_message": {
+    "description": "Message displayed when customer is updated successfully"
+  },
+  "customer_delete_success_message": "Customer deleted successfully",
+  "@customer_delete_success_message": {
+    "description": "Message displayed when customer is deleted successfully"
+  },
+  "customer_activate_success_message": "Customer activated successfully",
+  "@customer_activate_success_message": {
+    "description": "Message displayed when customer is activated successfully"
+  },
+  "customer_delete_confirm_message": "Are you sure you want to delete this customer?",
+  "@customer_delete_confirm_message": {
+    "description": "Confirmation message for deleting a customer"
+  },
+  "customer_activate_confirm_message": "Are you sure you want to activate this customer?",
+  "@customer_activate_confirm_message": {
+    "description": "Confirmation message for activating a customer"
+  },
+  "customer_add_failed_message": "Failed to add customer",
+  "@customer_add_failed_message": {
+    "description": "Message displayed when adding a customer fails"
+  },
+  "customer_edit_failed_message": "Failed to update customer",
+  "@customer_edit_failed_message": {
+    "description": "Message displayed when updating a customer fails"
+  },
+  "customer_delete_failed_message": "Failed to delete customer",
+  "@customer_delete_failed_message": {
+    "description": "Message displayed when deleting a customer fails"
+  },
+  "customer_info_activate": "Long press to activate",
+  "@customer_info_activate": {
+    "description": "Info message for activating customer"
+  },
+  "customer_info_non_active": "This customer is not active",
+  "@customer_info_non_active": {
+    "description": "Info message for non-active customer"
+  },
+  "customer_info_active": "This customer is active",
+  "@customer_info_active": {
+    "description": "Info message for active customer"
+  },
+
+  "locale_change_success_message": "Language changed successfully",
+  "@locale_change_success_message": {
+    "description": "Message displayed when language is changed successfully"
+  },
+
+  "transaction_status_change_success_message": "Transaction status changed successfully",
+  "@transaction_status_change_success_message": {
+    "description": "Message displayed when transaction status is changed successfully"
+  },
+
+  "home_screen_title": "Home",
+  "@home_screen_title": {
+    "description": "Title for the home screen"
+  },
+
+  "setting_screen_title": "Setting",
+  "@setting_screen_title": {
+    "description": "Title for the setting screen"
+  },
+  "setting_language_label": "Language",
+  "@setting_language_label": {
+    "description": "Label for the language setting"
+  },
+  "setting_language_en": "English",
+  "@setting_language_en": {
+    "description": "English"
+  },
+  "setting_language_id": "Indonesian",
+  "@setting_language_id": {
+    "description": "Indonesian"
+  },
+  "setting_transaction_status_label": "Transaction Status",
+  "@setting_transaction_status_label": {
+    "description": "Label for the transaction status setting"
+  },
+
+  "error_occurred_message": "An error occurred",
+  "@error_occurred_message": {
+    "description": "Generic error message"
+  },
+
+  "@_SORT": {},
+  "sort_text": "Sort",
+  "@sort_text": {
+    "description": "Text for the sort option"
+  },
+  "sort_asc": "Ascending",
+  "@sort_asc": {
+    "description": "Ascending sort option"
+  },
+  "sort_desc": "Descending",
+  "@sort_desc": {
+    "description": "Descending sort option"
+  },
+  "sort_by_name": "Name",
+  "@sort_by_name": {
+    "description": "Sort by name option"
+  },
+  "sort_by_price": "Price",
+  "@sort_by_price": {
+    "description": "Sort by price option"
+  },
+  "sort_by_email": "Email",
+  "@sort_by_email": {
+    "description": "Sort by email option"
+  },
+  "sort_by_role": "Role",
+  "@sort_by_role": {
+    "description": "Sort by role option"
+  },
+  "sort_by_created_at": "Created At",
+  "@sort_by_created_at": {
+    "description": "Sort by created at option"
+  },
+  "sort_by_status": "Status",
+  "@sort_by_status": {
+    "description": "Sort by status option"
+  },
+
+  "@_FORM_LABEL": {},
+
+  "form_name_label": "Name",
+  "@form_name_label": {
+    "description": "Label for the name input field"
+  },
+  "form_email_label": "Email",
+  "@form_email_label": {
+    "description": "Label for the email input field"
+  },
+  "form_password_label": "Password",
+  "@form_password_label": {
+    "description": "Label for the password input field"
+  },
+  "form_confirm_password_label": "Confirm Password",
+  "@form_confirm_password_label": {
+    "description": "Label for the confirm password input field"
+  },
+  "form_phone_label": "Phone",
+  "@form_phone_label": {
+    "description": "Label for the phone input field"
+  },
+  "form_description_label": "Description",
+  "@form_description_label": {
+    "description": "Label for the description input field"
+  },
+  "form_price_label": "Price",
+  "@form_price_label": {
+    "description": "Label for the price input field"
+  },
+
+  "@_FORM_HINT": {},
+
+  "form_name_hint": "Please enter your name",
+  "@form_name_hint": {
+    "description": "Hint text for the name input field"
+  },
+  "form_email_hint": "Please enter your email",
+  "@form_email_hint": {
+    "description": "Hint text for the email input field"
+  },
+  "form_password_hint": "Please enter your password",
+  "@form_password_hint": {
+    "description": "Hint text for the password input field"
+  },
+  "form_confirm_password_hint": "Please confirm your password",
+  "@form_confirm_password_hint": {
+    "description": "Hint text for the confirm password input field"
+  },
+  "form_phone_hint": "Please enter your phone number",
+  "@form_phone_hint": {
+    "description": "Hint text for the phone input field"
+  },
+  "form_price_hint": "Please enter the price",
+  "@form_price_hint": {
+    "description": "Hint text for the price input field"
+  },
+
+  "@_FORM_MESSAGE": {},
+
+  "form_name_required_message": "Name cannot be empty",
+  "@form_name_required_message": {
+    "description": "Error message for empty name field"
+  },
+  "form_name_min_length_message": "Name must be at least 3 characters",
+  "@form_name_min_length_message": {
+    "description": "Message displayed when name is less than 3 characters"
+  },
+  "form_name_max_length_message": "Name must be less than 100 characters",
+  "@form_name_max_length_message": {
+    "description": "Message displayed when name is more than 100 characters"
+  },
+  "form_email_required_message": "Email is required",
+  "@form_email_required_message": {
+    "description": "Message displayed when email is required"
+  },
+  "form_email_invalid_message": "Invalid email format",
+  "@form_email_invalid_message": {
+    "description": "Message displayed when email format is invalid"
+  },
+  "form_password_required_message": "Password is required",
+  "@form_password_required_message": {
+    "description": "Message displayed when password is required"
+  },
+  "form_password_min_length_message": "Password must be at least 8 characters",
+  "@form_password_min_length_message": {
+    "description": "Message displayed when password is less than 8 characters"
+  },
+  "form_confirm_password_required_message": "Confirm password is required",
+  "@form_confirm_password_required_message": {
+    "description": "Message displayed when confirm password is required"
+  },
+  "form_confirm_password_match_message": "Passwords do not match",
+  "@form_confirm_password_match_message": {
+    "description": "Message displayed when passwords do not match"
+  },
+
+  "@_BUTTON": {},
+
+  "button_submit": "Submit",
+  "@button_submit": {
+    "description": "Text for the submit button"
+  },
+  "button_confirm": "Confirm",
+  "@button_confirm": {
+    "description": "Text for the confirm button"
+  },
+  "button_cancel": "Cancel",
+  "@button_cancel": {
+    "description": "Text for the cancel button"
+  },
+  "button_save": "Save",
+  "@button_save": {
+    "description": "Text for the save button"
+  },
+  "button_delete": "Delete",
+  "@button_delete": {
+    "description": "Text for the delete button"
+  },
+  "button_login": "Login",
+  "@button_login": {
+    "description": "Text for the login button"
+  },
+  "button_register": "Register",
+  "@button_register": {
+    "description": "Text for the register button"
+  },
+  "button_logout": "Logout",
+  "@button_logout": {
+    "description": "Text for the logout button"
+  },
+  "button_refresh": "Refresh",
+  "@button_refresh": {
+    "description": "Text for the refresh button"
+  },
+  "button_clear": "Clear",
+  "@button_clear": {
+    "description": "Text for the clear button"
+  },
+  "button_manage_employee": "Manage Employee",
+  "@button_manage_employee": {
+    "description": "Text for the manage employee button"
+  }
+}

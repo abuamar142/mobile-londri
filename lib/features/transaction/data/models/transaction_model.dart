@@ -1,4 +1,5 @@
 import '../../domain/entities/transaction.dart';
+import '../../domain/usecases/transaction_get_transaction_status.dart';
 
 class TransactionModel extends Transaction {
   final DateTime? createdAt;
@@ -7,6 +8,7 @@ class TransactionModel extends Transaction {
 
   const TransactionModel({
     super.id,
+    super.staffId,
     super.customerId,
     super.customerName,
     super.customerPhone,
@@ -25,6 +27,7 @@ class TransactionModel extends Transaction {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
+      staffId: json['staff_id'],
       customerId: json['customer_id'],
       customerName:
           json['customers'] != null ? json['customers']['name'] : null,
@@ -34,7 +37,9 @@ class TransactionModel extends Transaction {
       serviceName: json['services'] != null ? json['services']['name'] : null,
       weight: double.tryParse(json['weight'].toString()),
       amount: json['amount'],
-      status: json['status'],
+      status: TransactionStatusId.values.firstWhere(
+        (e) => e.name == json['status'],
+      ),
       startDate: json['start_date'] != null
           ? DateTime.parse(json['start_date'])
           : null,
@@ -53,6 +58,7 @@ class TransactionModel extends Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'staff_id': staffId,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,

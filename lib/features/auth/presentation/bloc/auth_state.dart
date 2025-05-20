@@ -37,17 +37,6 @@ class AuthStateSuccessLogin extends AuthState {
       ];
 }
 
-class AuthStateSuccessRegister extends AuthState {
-  final Auth auth;
-
-  const AuthStateSuccessRegister({
-    required this.auth,
-  });
-
-  @override
-  List<Object> get props => [
-        auth,
-      ];
-}
+class AuthStateSuccessRegister extends AuthState {}
 
 class AuthStateSuccessLogout extends AuthState {}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/launch_whatsapp.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/usecases/transaction_get_transaction_status.dart';
@@ -25,7 +24,7 @@ class TransactionItem extends StatelessWidget {
         final getTransactionStatus = GetTransactionStatus();
         final status = getTransactionStatus(
           context,
-          transaction.status ?? '',
+          transaction.status!,
         );
 
         return Card(
@@ -44,42 +43,14 @@ class TransactionItem extends StatelessWidget {
               transaction: transaction,
               status: status,
             ),
-            onLongPress: () async {
-              if (transaction.status != 'ready_for_pickup') {
-                showSnackbar(
-                  context,
-                  'Transaction not ready for pickup',
-                );
-              } else if (transaction.customerPhone == null) {
-                showSnackbar(
-                  context,
-                  'No phone number available',
-                );
-              } else {
-                final phone = transaction.customerPhone.toString();
-                final phonePattern = RegExp(r'^62\d{10,12}$');
-
-                if (!phonePattern.hasMatch(phone)) {
-                  showSnackbar(
-                    context,
-                    'Phone number must start with 62 and have 10-12 digits after it',
-                  );
-                } else {
-                  try {
-                    await launchWhatsapp(
-                      phone: phone,
-                      message:
-                          'Laundry atas nama ${transaction.customerName} sudah selesai dan bisa diambil',
-                    );
-                  } catch (e) {
-                    showSnackbar(
-                      context,
-                      'Failed to open WhatsApp',
-                    );
-                  }
-                }
-              }
-            },
+            onTap: () => showSnackbar(
+              context,
+              'Munculkan dialog ubah status',
+            ),
+            onLongPress: () => showSnackbar(
+              context,
+              'Munculkan dialog untuk edit atau hapus',
+            ),
           ),
         );
       },

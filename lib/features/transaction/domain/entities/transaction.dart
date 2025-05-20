@@ -1,7 +1,10 @@
 import 'package:equatable/equatable.dart';
 
+import '../usecases/transaction_get_transaction_status.dart';
+
 class Transaction extends Equatable {
   final String? id;
+  final String? staffId;
   final String? customerId;
   final String? customerName;
   final String? customerPhone;
@@ -9,12 +12,13 @@ class Transaction extends Equatable {
   final String? serviceName;
   final double? weight;
   final int? amount;
-  final String? status;
+  final TransactionStatusId? status;
   final DateTime? startDate;
   final DateTime? endDate;
 
   const Transaction({
     this.id,
+    this.staffId,
     this.customerId,
     this.customerName,
     this.customerPhone,
@@ -30,6 +34,7 @@ class Transaction extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        staffId,
         customerId,
         customerName,
         customerPhone,
