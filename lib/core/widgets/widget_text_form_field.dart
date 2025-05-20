@@ -38,6 +38,9 @@ class WidgetTextFormField extends StatelessWidget {
       style: AppTextStyle.textField,
       validator: validator,
       onChanged: onChanged,
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

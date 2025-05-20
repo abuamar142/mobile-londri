@@ -116,11 +116,13 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
             });
           },
           onClear: () {
-            _employeeBloc.add(
-              ManageEmployeeEventSearchUser(
-                query: '',
-              ),
-            );
+            setState(() {
+              _employeeBloc.add(
+                ManageEmployeeEventSearchUser(
+                  query: '',
+                ),
+              );
+            });
           },
         ),
         AppSizes.spaceWidth8,
