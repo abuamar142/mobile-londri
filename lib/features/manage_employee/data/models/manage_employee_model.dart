@@ -1,16 +1,16 @@
-class UserRoleModel {
+class ManageEmployeeModel {
   final int id;
   final String userId;
   final String role;
 
-  const UserRoleModel({
+  const ManageEmployeeModel({
     required this.id,
     required this.userId,
     required this.role,
   });
 
-  factory UserRoleModel.fromJson(Map<String, dynamic> json) {
-    return UserRoleModel(
+  factory ManageEmployeeModel.fromJson(Map<String, dynamic> json) {
+    return ManageEmployeeModel(
       id: json['id'] ?? 0,
       userId: json['user_id'] ?? '',
       role: json['role'] ?? '',

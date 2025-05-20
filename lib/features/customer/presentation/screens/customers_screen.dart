@@ -276,7 +276,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
     showConfirmationDialog(
       context: context,
       title: appText.customer_delete_dialog_title,
-      appText: appText,
       content: appText.customer_delete_confirm_message,
       onConfirm: () {
         context.read<CustomerBloc>().add(
@@ -296,7 +295,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
     showConfirmationDialog(
       context: context,
       title: appText.customer_activate_dialog_title,
-      appText: appText,
       content: appText.customer_activate_confirm_message,
       onConfirm: () {
         context.read<CustomerBloc>().add(

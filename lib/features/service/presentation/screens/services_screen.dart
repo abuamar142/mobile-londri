@@ -251,7 +251,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
     showConfirmationDialog(
       context: context,
       title: appText.service_delete_dialog_title,
-      appText: appText,
       content: appText.service_delete_confirm_message,
       onConfirm: () {
         context.read<ServiceBloc>().add(

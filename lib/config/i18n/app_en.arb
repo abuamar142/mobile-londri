@@ -73,14 +73,44 @@
     "description": "Message displayed when logout is successful"
   },
 
-  "user_role_screen_title": "User Role",
-  "@user_role_screen_title": {
-    "description": "Title for the user role screen"
+  "@_MANAGE_EMPLOYEE": {},
+
+  "manage_employee_screen_title": "Manage Employee",
+  "@manage_employee_screen_title": {
+    "description": "Title for the manage employee screen"
   },
-  "user_role_empty_message": "No user role found",
-  "@user_role_empty_message": {
-    "description": "Message displayed when no user role is found"
+  "manage_employee_empty_message": "No employee found",
+  "@manage_employee_empty_message": {
+    "description": "Message displayed when no employee is found"
   },
+  "manage_employee_search_hint": "Search name or email",
+  "@manage_employee_search_hint": {
+    "description": "Hint text for the employee search input"
+  },
+  "manage_employee_activate_employee": "Activate Employee",
+  "@manage_employee_activate_employee": {
+    "description": "Text for activating employee"
+  },
+  "manage_employee_deactivate_employee": "Deactivate Employee",
+  "@manage_employee_deactivate_employee": {
+    "description": "Text for deactivating employee"
+  },
+  "manage_employee_activate_dialog_confirm_message": "Are you sure you want to activate {employeeName}?",
+  "@manage_employee_activate_dialog_confirm_message": {
+    "description": "Confirmation message for activating an employee"
+  },
+  "manage_employee_deactivate_dialog_confirm_message": "Are you sure you want to deactivate {employeeName}?",
+  "@manage_employee_deactivate_dialog_confirm_message": {
+    "description": "Confirmation message for deactivating an employee"
+  },
+  "manage_employee_success_activate_message": "Success activated {employeeName}",
+  "@manage_employee_success_activate_message": {
+    "description": "Message displayed when employee is activated successfully"
+  },
+  "manage_employee_success_deactivate_message": "Success deactivated {employeeName}",
+  "@manage_employee_success_deactivate_message": {
+    "description": "Message displayed when employee is deactivated successfully"
+  }, 
 
   "service_screen_title": "Service",
   "@service_screen_title": {
@@ -366,6 +396,44 @@
     "description": "Generic error message"
   },
 
+  "@_SORT": {},
+  "sort_text": "Sort",
+  "@sort_text": {
+    "description": "Text for the sort option"
+  },
+  "sort_asc": "Ascending",
+  "@sort_asc": {
+    "description": "Ascending sort option"
+  },
+  "sort_desc": "Descending",
+  "@sort_desc": {
+    "description": "Descending sort option"
+  },
+  "sort_by_name": "Name",
+  "@sort_by_name": {
+    "description": "Sort by name option"
+  },
+  "sort_by_price": "Price",
+  "@sort_by_price": {
+    "description": "Sort by price option"
+  },
+  "sort_by_email": "Email",
+  "@sort_by_email": {
+    "description": "Sort by email option"
+  },
+  "sort_by_role": "Role",
+  "@sort_by_role": {
+    "description": "Sort by role option"
+  },
+  "sort_by_created_at": "Created At",
+  "@sort_by_created_at": {
+    "description": "Sort by created at option"
+  },
+  "sort_by_status": "Status",
+  "@sort_by_status": {
+    "description": "Sort by status option"
+  },
+
   "@_FORM_LABEL": {},
 
   "form_name_label": "Name",
@@ -469,6 +537,10 @@
   "@button_submit": {
     "description": "Text for the submit button"
   },
+  "button_confirm": "Confirm",
+  "@button_confirm": {
+    "description": "Text for the confirm button"
+  },
   "button_cancel": "Cancel",
   "@button_cancel": {
     "description": "Text for the cancel button"
@@ -488,5 +560,17 @@
   "button_register": "Register",
   "@button_register": {
     "description": "Text for the register button"
+  },
+  "button_logout": "Logout",
+  "@button_logout": {
+    "description": "Text for the logout button"
+  },
+  "button_refresh": "Refresh",
+  "@button_refresh": {
+    "description": "Text for the refresh button"
+  },
+  "button_manage_employee": "Manage Employee",
+  "@button_manage_employee": {
+    "description": "Text for the manage employee button"
   }
 }

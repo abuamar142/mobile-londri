@@ -1,10 +1,10 @@
-import '../../domain/entities/profile.dart';
+import '../../domain/entities/user.dart';
 
-class ProfileModel extends Profile {
+class UserModel extends User {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const ProfileModel({
+  const UserModel({
     required super.id,
     required super.email,
     required super.name,
@@ -13,12 +13,12 @@ class ProfileModel extends Profile {
     required this.updatedAt,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) {
-    return ProfileModel(
-      id: json['id'] ?? 0,
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['user_id'] ?? '',
       email: json['email'] ?? '',
       name: json['name'] ?? '',
-      role: json['role'] ?? '',
+      role: json['role_id']['role'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );

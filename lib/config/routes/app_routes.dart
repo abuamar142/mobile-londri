@@ -5,10 +5,10 @@ import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
+import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/select_customer_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
-import '../../features/user_role/presentation/screens/user_roles_screen.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -51,10 +51,10 @@ class AppRoutes {
         },
       ),
       GoRoute(
-        path: '/user-roles',
-        name: 'user-roles',
+        path: '/manage-employee',
+        name: 'manage-employee',
         builder: (context, state) {
-          return const UserRolesScreen();
+          return const ManageEmployeeScreen();
         },
       ),
       GoRoute(

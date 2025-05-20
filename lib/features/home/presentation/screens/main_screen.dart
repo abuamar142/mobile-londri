@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/widget_button.dart';
+import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/role_manager.dart';
+import '../../../manage_employee/presentation/screens/manage_employee_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appText = AppLocalizations.of(context)!;
+
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -20,8 +24,8 @@ class MainScreen extends StatelessWidget {
                 Permission.manageUserRoles,
               ))
                 WidgetButton(
-                  label: 'User Roles',
-                  onPressed: () => context.pushNamed('user-roles'),
+                  label: appText.button_manage_employee,
+                  onPressed: () => pushManageEmployee(context),
                 ),
               SizedBox(height: 16),
               if (RoleManager.hasPermission(

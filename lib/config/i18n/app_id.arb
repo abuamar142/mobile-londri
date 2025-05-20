@@ -22,8 +22,17 @@
   "auth_register_success_message": "Berhasil mendaftar, silakan periksa email Anda untuk mengonfirmasi akun Anda",
   "auth_logout_success_message": "Berhasil keluar",
 
-  "user_role_screen_title": "Peran Pengguna",
-  "user_role_empty_message": "Tidak ada peran pengguna ditemukan",
+  "@_MANAGE_EMPLOYEE": {},
+
+  "manage_employee_screen_title": "Kelola Pegawai",
+  "manage_employee_empty_message": "Tidak ada pegawai ditemukan",
+  "manage_employee_search_hint": "Cari nama atau email",
+  "manage_employee_activate_employee": "Aktifkan Pegawai",
+  "manage_employee_deactivate_employee": "Nonaktifkan Pegawai",
+  "manage_employee_activate_dialog_confirm_message": "Apakah Anda yakin ingin mengaktifkan {employeeName}?",
+  "manage_employee_deactivate_dialog_confirm_message": "Apakah Anda yakin ingin menonaktifkan {employeeName}?",
+  "manage_employee_success_activate_message": "Berhasil mengaktifkan {employeeName}",
+  "manage_employee_success_deactivate_message": "Berhasil menonaktifkan {employeeName}",
 
   "service_screen_title": "Layanan",
   "service_empty_message": "Tidak ada layanan ditemukan",
@@ -102,6 +111,17 @@
 
   "error_occurred_message": "Terjadi kesalahan",
 
+  "@_SORT": {},
+  "sort_text": "Urutkan",
+  "sort_asc": "Naik",
+  "sort_desc": "Turun",
+  "sort_by_name": "Nama",
+  "sort_by_price": "Harga",
+  "sort_by_email": "Email",
+  "sort_by_role": "Peran",
+  "sort_by_created_at": "Tanggal Dibuat",
+  "sort_by_status": "Status",
+
   "@_FORM_LABEL": {},
 
   "form_name_label": "Nama",
@@ -136,9 +156,13 @@
   "@_BUTTON": {},
 
   "button_submit": "Kirim",
+  "button_confirm": "Konfirmasi",
   "button_cancel": "Batal",
   "button_save": "Simpan",
   "button_delete": "Hapus",
   "button_login": "Masuk",
-  "button_register": "Daftar"
+  "button_register": "Daftar",
+  "button_logout": "Keluar",
+  "button_refresh": "Segarkan",
+  "button_manage_employee": "Kelola Pegawai"
 }

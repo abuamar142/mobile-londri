@@ -26,6 +26,13 @@ import 'features/customer/domain/usecases/customer_delete_customer.dart';
 import 'features/customer/domain/usecases/customer_get_customers.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
+import 'features/manage_employee/data/datasources/manage_employee_remote_datasource.dart';
+import 'features/manage_employee/data/repositories/manage_employee_repository_implementation.dart';
+import 'features/manage_employee/domain/repositories/manage_employee_repository.dart';
+import 'features/manage_employee/domain/usecases/manage_employee_activate_employee.dart';
+import 'features/manage_employee/domain/usecases/manage_employee_deactivate_employee.dart';
+import 'features/manage_employee/domain/usecases/manage_employee_get_users.dart';
+import 'features/manage_employee/presentation/bloc/manage_employee_bloc.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
@@ -44,13 +51,6 @@ import 'features/transaction/domain/usecases/transaction_get_default_transaction
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
 import 'features/transaction/domain/usecases/transaction_update_default_transaction_status.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
-import 'features/user_role/data/datasources/user_role_remote_datasource.dart';
-import 'features/user_role/data/repositories/user_role_repository_implementation.dart';
-import 'features/user_role/domain/repositories/user_role_repository.dart';
-import 'features/user_role/domain/usecases/user_role_activate_user.dart';
-import 'features/user_role/domain/usecases/user_role_deactivate_user.dart';
-import 'features/user_role/domain/usecases/user_role_get_profiles.dart';
-import 'features/user_role/presentation/bloc/user_role_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -145,42 +145,42 @@ Future<void> initializeDependencies() async {
 
     // Feature - User Role
     // DataSources
-    ..registerLazySingleton<UserRoleRemoteDatasource>(
-      () => UserRoleRemoteDataSourceImplementation(
+    ..registerLazySingleton<ManageEmployeeRemoteDatasource>(
+      () => ManageEmployeeRemoteDataSourceImplementation(
         supabaseClient: serviceLocator(),
       ),
     )
 
     // Repositories
-    ..registerLazySingleton<UserRoleRepository>(
-      () => UserRoleRepositoryImplementation(
-        userRoleRemoteDatasource: serviceLocator(),
+    ..registerLazySingleton<ManageEmployeeRepository>(
+      () => ManageEmployeeRepositoryImplementation(
+        manageEmployeeRemoteDatasource: serviceLocator(),
       ),
     )
 
     // UseCases
-    ..registerLazySingleton<UserRoleGetProfiles>(
-      () => UserRoleGetProfiles(
-        userRoleRepository: serviceLocator(),
+    ..registerLazySingleton<ManageEmployeeGetUsers>(
+      () => ManageEmployeeGetUsers(
+        manageEmployeeRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<UserRoleActivateUser>(
-      () => UserRoleActivateUser(
-        userRoleRepository: serviceLocator(),
+    ..registerLazySingleton<ManageEmployeeActivateEmployee>(
+      () => ManageEmployeeActivateEmployee(
+        manageEmployeeRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<UserRoleDeactivateUser>(
-      () => UserRoleDeactivateUser(
-        userRoleRepository: serviceLocator(),
+    ..registerLazySingleton<ManageEmployeeDeactivateEmployee>(
+      () => ManageEmployeeDeactivateEmployee(
+        manageEmployeeRepository: serviceLocator(),
       ),
     )
 
     // Bloc
-    ..registerFactory<UserRoleBloc>(
-      () => UserRoleBloc(
-        userRoleGetProfiles: serviceLocator(),
-        userRoleActivateUser: serviceLocator(),
-        userRoleDeactivateUser: serviceLocator(),
+    ..registerFactory<ManageEmployeeBloc>(
+      () => ManageEmployeeBloc(
+        manageEmployeeGetUsers: serviceLocator(),
+        manageEmployeeActivateEmployee: serviceLocator(),
+        manageEmployeeDeactivateEmployee: serviceLocator(),
       ),
     )
 

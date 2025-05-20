@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return WidgetLoading(usingPadding: true);
             } else {
               return IconButton(
+                tooltip: appText.button_logout,
                 icon: const Icon(Icons.logout),
                 onPressed: () {
                   _logout();

@@ -2,21 +2,21 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
-import '../../domain/repositories/user_role_repository.dart';
-import '../datasources/user_role_remote_datasource.dart';
-import '../models/profile_model.dart';
+import '../../domain/repositories/manage_employee_repository.dart';
+import '../datasources/manage_employee_remote_datasource.dart';
+import '../models/user_model.dart';
 
-class UserRoleRepositoryImplementation extends UserRoleRepository {
-  final UserRoleRemoteDatasource userRoleRemoteDatasource;
+class ManageEmployeeRepositoryImplementation extends ManageEmployeeRepository {
+  final ManageEmployeeRemoteDatasource manageEmployeeRemoteDatasource;
 
-  UserRoleRepositoryImplementation({
-    required this.userRoleRemoteDatasource,
+  ManageEmployeeRepositoryImplementation({
+    required this.manageEmployeeRemoteDatasource,
   });
 
   @override
-  Future<Either<Failure, void>> activateUser(String userId) async {
+  Future<Either<Failure, void>> activateEmployee(String userId) async {
     try {
-      await userRoleRemoteDatasource.createUserRole(userId);
+      await manageEmployeeRemoteDatasource.updateRoleToAdmin(userId);
 
       return Right(null);
     } on ServerException catch (e) {
@@ -31,9 +31,9 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   }
 
   @override
-  Future<Either<Failure, List<ProfileModel>>> getProfiles() async {
+  Future<Either<Failure, List<UserModel>>> getUsers() async {
     try {
-      final response = await userRoleRemoteDatasource.readProfiles();
+      final response = await manageEmployeeRemoteDatasource.readUsers();
 
       return Right(response);
     } on ServerException catch (e) {
@@ -48,9 +48,9 @@ class UserRoleRepositoryImplementation extends UserRoleRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deactivateUser(String userId) async {
+  Future<Either<Failure, void>> deactivateEmployee(String userId) async {
     try {
-      await userRoleRemoteDatasource.deleteUserRole(userId);
+      await manageEmployeeRemoteDatasource.updateRoleToUser(userId);
 
       return Right(null);
     } on ServerException catch (e) {
