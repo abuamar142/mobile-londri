@@ -6,7 +6,6 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/launch_whatsapp.dart';
-import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
@@ -14,8 +13,10 @@ import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
+import '../../../auth/domain/entities/role_manager.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
+import '../widgets/widget_delete_customer.dart';
 
 enum ManageCustomerMode { add, edit, view }
 
@@ -92,7 +93,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
           } else if (state is CustomerStateSuccessDeleteCustomer) {
             showSnackbar(context, appText.customer_delete_success_message);
             context.pop(true);
-            context.pop(true);
           } else if (state is CustomerStateWithFilteredCustomers &&
               _currentCustomer == null) {
             _handleCustomerDataLoaded(state);
@@ -131,26 +131,12 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
       case ManageCustomerMode.edit:
         return appText.customer_edit_dialog_title;
       case ManageCustomerMode.view:
-        return 'Edit Customer';
+        return appText.customer_view_dialog_title;
     }
   }
 
   List<Widget> _buildAppBarActions(AppLocalizations appText) {
-    if (_isViewMode) {
-      return [
-        IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {
-            if (_currentCustomer != null) {
-              context.pushReplacementNamed(
-                'edit-customer',
-                pathParameters: {'id': _currentCustomer!.id!.toString()},
-              );
-            }
-          },
-        ),
-      ];
-    } else if (_isEditMode &&
+    if (_isEditMode &&
         _currentCustomer?.phone != null &&
         _currentCustomer!.phone!.isNotEmpty) {
       return [
@@ -166,21 +152,54 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   }
 
   Widget _buildViewModeBottomBar(
-      BuildContext context, AppLocalizations appText) {
+    BuildContext context,
+    AppLocalizations appText,
+  ) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSizes.size16),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: WidgetButton(
-                label: appText.button_delete,
-                backgroundColor: AppColors.error,
-                onPressed: () {
-                  _showDeleteConfirmation(appText);
-                },
+            if (_isViewMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label: appText.button_edit,
+                      onPressed: () {
+                        if (_currentCustomer != null) {
+                          context.pushReplacementNamed(
+                            'edit-customer',
+                            pathParameters: {
+                              'id': _currentCustomer!.id!.toString()
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
+            AppSizes.spaceHeight12,
+            if (RoleManager.hasPermission(Permission.deleteCustomer))
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label: appText.button_delete,
+                      backgroundColor: AppColors.error,
+                      onPressed: () {
+                        deleteCustomer(
+                          context: context,
+                          customer: _currentCustomer!,
+                          customerBloc: _customerBloc,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
@@ -240,9 +259,12 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
               padding: const EdgeInsets.only(top: AppSizes.size16),
               child: WidgetTextButton(
                 label: appText.button_delete,
-                backgroundColor: AppColors.error,
                 isLoading: state is CustomerStateLoading,
-                onPressed: () => _showDeleteConfirmation(appText),
+                onPressed: () => deleteCustomer(
+                  context: context,
+                  customer: _currentCustomer!,
+                  customerBloc: _customerBloc,
+                ),
               ),
             ),
         ],
@@ -305,8 +327,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   void _handleCustomerDataLoaded(CustomerStateWithFilteredCustomers state) {
     if (widget.customerId != null) {
       final customer = state.allCustomers.firstWhere(
-        (customer) => customer.id == widget.customerId,
-        orElse: () => const Customer(),
+        (customer) => customer.id.toString() == widget.customerId,
       );
 
       if (customer.id != null) {
@@ -346,25 +367,5 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
         _customerBloc.add(CustomerEventUpdateCustomer(customer: customer));
       }
     }
-  }
-
-  void _showDeleteConfirmation(AppLocalizations appText) {
-    if (_currentCustomer == null) return;
-
-    showConfirmationDialog(
-      context: context,
-      title: appText.customer_delete_dialog_title,
-      content: appText.customer_delete_confirm_message(
-        _currentCustomer!.name!,
-      ),
-      onConfirm: () {
-        _customerBloc.add(
-          CustomerEventDeleteCustomer(
-            customerId: _currentCustomer!.id.toString(),
-          ),
-        );
-        Navigator.pop(context); // Close the dialog
-      },
-    );
   }
 }

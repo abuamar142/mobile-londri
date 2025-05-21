@@ -304,6 +304,10 @@
   "@customer_empty_message": {
     "description": "Message displayed when no customer is found"
   },
+  "customer_view_dialog_title": "Customer Details",
+  "@customer_view_dialog_title": {
+    "description": "Title for the customer details dialog"
+  },
   "customer_add_dialog_title": "Add Customer",
   "@customer_add_dialog_title": {
     "description": "Title for the add customer dialog"
@@ -562,6 +566,10 @@
   "button_cancel": "Cancel",
   "@button_cancel": {
     "description": "Text for the cancel button"
+  },
+  "button_edit": "Edit",
+  "@button_edit": {
+    "description": "Text for the edit button"
   },
   "button_save": "Save",
   "@button_save": {
