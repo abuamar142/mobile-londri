@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../config/textstyle/app_sizes.dart';
 import '../../config/textstyle/app_textstyle.dart';
 import '../../src/generated/i18n/app_localizations.dart';
 
@@ -37,9 +36,7 @@ class WidgetSearchBar extends StatelessWidget {
                   },
                 )
               : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppSizes.size8),
-          ),
+          border: OutlineInputBorder(),
           hintStyle: AppTextStyle.body.copyWith(color: Colors.grey),
         ),
         onChanged: (value) => onChanged(value),

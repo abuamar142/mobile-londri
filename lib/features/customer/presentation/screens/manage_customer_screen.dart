@@ -286,7 +286,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
         ),
         decoration: BoxDecoration(
           border: Border.all(
-            color: AppColors.primary,
+            color: AppColors.onSecondary,
           ),
           borderRadius: BorderRadius.circular(AppSizes.size4),
         ),

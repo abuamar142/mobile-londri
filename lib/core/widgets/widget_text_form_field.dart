@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../config/textstyle/app_colors.dart';
 import '../../config/textstyle/app_sizes.dart';
 import '../../config/textstyle/app_textstyle.dart';
 
@@ -56,21 +55,7 @@ class WidgetTextFormField extends StatelessWidget {
           vertical: AppSizes.size20,
           horizontal: AppSizes.size16,
         ),
-        border: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-          ),
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: AppColors.primary,
-          ),
-        ),
+        border: OutlineInputBorder(),
       ),
     );
   }
