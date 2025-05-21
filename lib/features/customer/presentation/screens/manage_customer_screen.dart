@@ -258,7 +258,9 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             ),
             child: Text(
               appText.gender_label,
-              style: AppTextStyle.body1,
+              style: AppTextStyle.body1.copyWith(
+                color: isFormEnabled ? AppColors.onSecondary : AppColors.gray,
+              ),
             ),
           ),
           _buildGenderSelection(isFormEnabled),
@@ -281,14 +283,8 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.size16,
+          vertical: AppSizes.size12,
           horizontal: AppSizes.size16,
-        ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.onSecondary,
-          ),
-          borderRadius: BorderRadius.circular(AppSizes.size4),
         ),
         child: Row(
           children: [

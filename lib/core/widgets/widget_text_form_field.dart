@@ -52,7 +52,7 @@ class WidgetTextFormField extends StatelessWidget {
         hintStyle: AppTextStyle.body1,
         suffixIcon: suffixIcon,
         contentPadding: EdgeInsets.symmetric(
-          vertical: AppSizes.size20,
+          vertical: AppSizes.size16,
           horizontal: AppSizes.size16,
         ),
         border: OutlineInputBorder(),
