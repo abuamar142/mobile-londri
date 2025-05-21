@@ -315,8 +315,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     isAscending,
                   ),
                   _buildSortOption(
-                    'Phone',
-                    'phone',
+                    AppLocalizations.of(context)!.sort_by_created_at,
+                    'createdAt',
                     currentSortField,
                     isAscending,
                   ),

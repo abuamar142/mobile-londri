@@ -52,7 +52,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
   late List<Customer> _allCustomers;
   String _currentQuery = '';
-  String _currentSortField = 'name';
+  String _currentSortField = '';
   bool _isAscending = true;
 
   String get currentSortField => _currentSortField;
@@ -142,11 +142,13 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         case 'name':
           result = (a.name ?? '').compareTo(b.name ?? '');
           break;
-        case 'phone':
-          result = (a.phone ?? '').compareTo(b.phone ?? '');
+        case 'createdAt':
+          result = (a.createdAt ?? DateTime.now())
+              .compareTo(b.createdAt ?? DateTime.now());
           break;
         default:
-          result = (a.name ?? '').compareTo(b.name ?? '');
+          result = (b.createdAt ?? DateTime.now())
+              .compareTo(a.createdAt ?? DateTime.now());
       }
 
       return ascending ? result : -result;

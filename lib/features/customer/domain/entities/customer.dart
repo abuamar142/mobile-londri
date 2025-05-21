@@ -20,6 +20,7 @@ class Customer extends Equatable {
   final Gender? gender;
   final String? description;
   final bool? isActive;
+  final DateTime? createdAt;
 
   const Customer({
     this.id,
@@ -28,6 +29,7 @@ class Customer extends Equatable {
     this.gender = Gender.other,
     this.description,
     this.isActive,
+    this.createdAt,
   });
 
   @override
@@ -38,5 +40,6 @@ class Customer extends Equatable {
         gender,
         description,
         isActive,
+        createdAt,
       ];
 }

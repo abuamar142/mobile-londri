@@ -1,7 +1,6 @@
 import '../../domain/entities/customer.dart';
 
 class CustomerModel extends Customer {
-  final DateTime? createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
 
@@ -11,7 +10,7 @@ class CustomerModel extends Customer {
     super.phone,
     super.gender,
     super.description,
-    this.createdAt,
+    super.createdAt,
     required this.updatedAt,
     this.deletedAt,
   }) : super(
@@ -50,12 +49,4 @@ class CustomerModel extends Customer {
       'deleted_at': deletedAt?.toIso8601String(),
     };
   }
-
-  // Map<String, dynamic> toUpdateJson(CustomerModel customer) {
-  //   Map<String, dynamic> data = customer.toJson();
-
-  //   data.removeWhere((key, value) => value == null);
-
-  //   return data;
-  // }
 }
