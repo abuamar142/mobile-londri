@@ -89,6 +89,7 @@
   "customer_edit_dialog_title": "Edit Pelanggan",
   "customer_delete_dialog_title": "Hapus Pelanggan",
   "customer_activate_dialog_title": "Aktifkan Pelanggan",
+  "customer_ask_super_admin_to_activate": "Silakan hubungi super admin untuk mengaktifkan pelanggan",
   "customer_add_success_message": "Pelanggan berhasil ditambahkan",
   "customer_update_success_message": "Pelanggan berhasil diperbarui",
   "customer_delete_success_message": "Pelanggan berhasil dihapus",
@@ -117,6 +118,7 @@
   "error_occurred_message": "Terjadi kesalahan",
 
   "@_SORT": {},
+
   "sort_text": "Urutkan",
   "sort_asc": "Naik",
   "sort_desc": "Turun",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:londri/features/auth/domain/entities/role_manager.dart';
 
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
@@ -198,10 +199,17 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     if (isActive) {
                       showSnackbar(context, appText.customer_info_active);
                     } else {
-                      _activateCustomer(
-                        customer: customer,
-                        appText: appText,
-                      );
+                      if (RoleManager.hasPermission(
+                          Permission.activateCustomer)) {
+                        _activateCustomer(
+                          customer: customer,
+                        );
+                      } else {
+                        showSnackbar(
+                          context,
+                          appText.customer_ask_super_admin_to_activate,
+                        );
+                      }
                     }
                   },
                 );
@@ -368,7 +376,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
   void _activateCustomer({
     required Customer customer,
-    required AppLocalizations appText,
   }) {
     _customerBloc.add(
       CustomerEventActivateCustomer(

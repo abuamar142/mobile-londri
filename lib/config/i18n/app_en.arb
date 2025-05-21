@@ -320,6 +320,10 @@
   "@customer_activate_dialog_title": {
     "description": "Title for the activate customer dialog"
   },
+  "customer_ask_super_admin_to_activate": "Please ask super admin to activate the customer",
+  "@customer_ask_super_admin_to_activate": {
+    "description": "Message asking super admin to activate the customer"
+  },
   "customer_add_success_message": "Customer added successfully",
   "@customer_add_success_message": {
     "description": "Message displayed when customer is added successfully"

@@ -10,6 +10,8 @@ class RoleManager {
       Permission.manageServices,
       Permission.manageTransactions,
       Permission.trackTransactions,
+      Permission.activateCustomer,
+
     ],
     UserRole.admin: [
       Permission.manageCustomers,
@@ -52,6 +54,7 @@ class RoleManager {
 enum Permission {
   manageEmployees,
   manageCustomers,
+  activateCustomer,
   manageServices,
   manageTransactions,
   trackTransactions,
