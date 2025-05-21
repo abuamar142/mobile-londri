@@ -505,13 +505,17 @@
   "@form_confirm_password_hint": {
     "description": "Hint text for the confirm password input field"
   },
-  "form_phone_hint": "Please enter your phone number",
+  "form_phone_hint": "Enter WhatsApp number with format 08xx",
   "@form_phone_hint": {
     "description": "Hint text for the phone input field"
   },
   "form_price_hint": "Please enter the price",
   "@form_price_hint": {
     "description": "Hint text for the price input field"
+  },
+  "form_description_hint": "Please enter the other details",
+  "@form_description_hint": {
+    "description": "Hint text for the description input field"
   },
 
   "@_FORM_MESSAGE": {},
@@ -552,8 +556,20 @@
   "@form_confirm_password_match_message": {
     "description": "Message displayed when passwords do not match"
   },
+  "form_phone_digit_length_message": "Phone number must be 10-13 digits",
+  "@form_phone_digit_length_message": {
+    "description": "Message displayed when phone number is not 10-13 digits"
+  },
+  "form_phone_digits_only_message": "Phone number must contain only digits",
+  "@form_phone_digits_only_message": {
+    "description": "Message displayed when phone number contains non-digit characters"
+  },
 
   "@_GENDER": {},
+  "gender_label": "Gender",
+  "@gender_label": {
+    "description": "Label for the gender selection"
+  },
   "gender_male": "Male",
   "@gender_male": {
     "description": "Text for the male gender option"

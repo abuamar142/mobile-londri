@@ -146,8 +146,9 @@
   "form_email_hint": "Silakan masukkan email Anda",
   "form_password_hint": "Silakan masukkan kata sandi Anda",
   "form_confirm_password_hint": "Silakan masukkan kata sandi Anda lagi",
-  "form_phone_hint": "Silakan masukkan nomor telepon",
+  "form_phone_hint": "Masukkan nomor WhatsApp format 08xx",
   "form_price_hint": "Silakan masukkan harga",
+  "form_description_hint": "Silakan tambahkan keterangan tambahan",
 
   "@_FORM_MESSAGE": {},
   
@@ -160,8 +161,11 @@
   "form_password_min_length_message": "Kata sandi minimal 8 karakter",
   "form_confirm_password_required_message": "Konfirmasi kata sandi tidak boleh kosong",
   "form_confirm_password_match_message": "Kata sandi tidak cocok",
+  "form_phone_digit_length_message": "Nomor telepon harus 10-13 digit",
+  "form_phone_digits_only_message": "Nomor telepon harus terdiri dari angka saja",
 
   "@_GENDER": {},
+  "gender_label": "Jenis Kelamin",
   "gender_male": "Laki-laki",
   "gender_female": "Perempuan",
   "gender_other": "Lainnya",

@@ -138,7 +138,10 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   ) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(AppSizes.size16),
+        padding: const EdgeInsets.only(
+          left: AppSizes.size16,
+          right: AppSizes.size16,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -214,10 +217,20 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             controller: _phoneController,
             keyboardType: TextInputType.phone,
             isEnabled: isFormEnabled,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return null;
+              } else if (value.length < 10 || value.length > 13) {
+                return appText.form_phone_digit_length_message;
+              } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                return appText.form_phone_digits_only_message;
+              }
+              return null;
+            },
           ),
           AppSizes.spaceHeight12,
           Text(
-            'Gender',
+            appText.gender_label,
             style: AppTextStyle.body1.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -227,7 +240,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
           AppSizes.spaceHeight12,
           WidgetTextFormField(
             label: appText.form_description_label,
-            hint: 'Enter additional notes about the customer',
+            hint: appText.form_description_hint,
             controller: _descriptionController,
             maxLines: 3,
             isEnabled: isFormEnabled,
