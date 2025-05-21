@@ -553,11 +553,29 @@
     "description": "Message displayed when passwords do not match"
   },
 
+  "@_GENDER": {},
+  "gender_male": "Male",
+  "@gender_male": {
+    "description": "Text for the male gender option"
+  },
+  "gender_female": "Female",
+  "@gender_female": {
+    "description": "Text for the female gender option"
+  },
+  "gender_other": "Other",
+  "@gender_other": {
+    "description": "Text for the other gender option"
+  },
+
   "@_BUTTON": {},
 
   "button_submit": "Submit",
   "@button_submit": {
     "description": "Text for the submit button"
+  },
+  "button_add": "Add",
+  "@button_add": {
+    "description": "Text for the add button"
   },
   "button_confirm": "Confirm",
   "@button_confirm": {

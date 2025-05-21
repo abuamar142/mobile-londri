@@ -161,9 +161,15 @@
   "form_confirm_password_required_message": "Konfirmasi kata sandi tidak boleh kosong",
   "form_confirm_password_match_message": "Kata sandi tidak cocok",
 
+  "@_GENDER": {},
+  "gender_male": "Laki-laki",
+  "gender_female": "Perempuan",
+  "gender_other": "Lainnya",
+
   "@_BUTTON": {},
 
   "button_submit": "Kirim",
+  "button_add": "Tambah",
   "button_confirm": "Konfirmasi",
   "button_cancel": "Batal",
   "button_edit": "Ubah",

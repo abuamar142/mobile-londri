@@ -188,7 +188,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessUpdateCustomer());
-      add(CustomerEventGetCustomers());
     });
   }
 
@@ -208,7 +207,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessDeleteCustomer());
-      add(CustomerEventGetCustomers());
     });
   }
 
@@ -228,7 +226,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessActivateCustomer());
-      add(CustomerEventGetCustomers());
     });
   }
 }

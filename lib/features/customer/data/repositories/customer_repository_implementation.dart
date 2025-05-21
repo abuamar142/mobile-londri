@@ -61,6 +61,7 @@ class CustomerRepositoryImplementation extends CustomerRepository {
         id: customer.id,
         name: customer.name,
         phone: customer.phone,
+        gender: customer.gender,
         description: customer.description,
         updatedAt: DateTime.now(),
       ));

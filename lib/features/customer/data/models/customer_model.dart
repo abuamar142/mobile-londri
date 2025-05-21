@@ -39,10 +39,9 @@ class CustomerModel extends Customer {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'phone': phone,
-      'gender': gender?.name ?? 'other',
+      'gender': gender?.name,
       'description': description,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),

@@ -168,14 +168,15 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 return WidgetListTile(
                   title: customer.name ?? '',
                   subtitle: _getCustomerSubtitle(customer),
-                  trailing: customer.phone != null
-                      ? IconButton(
-                          icon: Icon(Icons.message),
-                          onPressed: () {
-                            _contactCustomer(customer);
-                          },
-                        )
-                      : null,
+                  trailing:
+                      (customer.phone != null && customer.phone!.isNotEmpty)
+                          ? IconButton(
+                              icon: Icon(Icons.message),
+                              onPressed: () {
+                                _contactCustomer(customer);
+                              },
+                            )
+                          : null,
                   leadingIcon: _getLeadingIcon(customer),
                   tileColor: isActive
                       ? null

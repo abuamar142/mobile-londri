@@ -5,11 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/utils/launch_whatsapp.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
@@ -106,7 +104,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                 style: AppTextStyle.heading3,
               ),
               centerTitle: true,
-              actions: _buildAppBarActions(appText),
             ),
             body: _isLoading && !_isAddMode
                 ? const WidgetLoading(usingPadding: true)
@@ -135,22 +132,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
     }
   }
 
-  List<Widget> _buildAppBarActions(AppLocalizations appText) {
-    if (_isEditMode &&
-        _currentCustomer?.phone != null &&
-        _currentCustomer!.phone!.isNotEmpty) {
-      return [
-        IconButton(
-          icon: const Icon(Icons.message),
-          onPressed: () {
-            launchWhatsapp(phone: _currentCustomer!.phone!, message: '');
-          },
-        ),
-      ];
-    }
-    return [];
-  }
-
   Widget _buildViewModeBottomBar(
     BuildContext context,
     AppLocalizations appText,
@@ -167,14 +148,18 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   Expanded(
                     child: WidgetButton(
                       label: appText.button_edit,
-                      onPressed: () {
+                      onPressed: () async {
                         if (_currentCustomer != null) {
-                          context.pushReplacementNamed(
+                          final result = await context.pushNamed(
                             'edit-customer',
                             pathParameters: {
                               'id': _currentCustomer!.id!.toString()
                             },
                           );
+
+                          if (result == true && context.mounted) {
+                            context.pop(true);
+                          }
                         }
                       },
                     ),
@@ -222,7 +207,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             validator: (value) =>
                 value?.isEmpty ?? true ? appText.form_name_hint : null,
           ),
-          const SizedBox(height: AppSizes.size16),
+          AppSizes.spaceHeight12,
           WidgetTextFormField(
             label: appText.form_phone_label,
             hint: appText.form_phone_hint,
@@ -230,16 +215,16 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             keyboardType: TextInputType.phone,
             isEnabled: isFormEnabled,
           ),
-          const SizedBox(height: AppSizes.size16),
+          AppSizes.spaceHeight12,
           Text(
             'Gender',
             style: AppTextStyle.body1.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: AppSizes.size8),
+          AppSizes.spaceHeight8,
           _buildGenderSelection(isFormEnabled),
-          const SizedBox(height: AppSizes.size16),
+          AppSizes.spaceHeight12,
           WidgetTextFormField(
             label: appText.form_description_label,
             hint: 'Enter additional notes about the customer',
@@ -247,25 +232,12 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             maxLines: 3,
             isEnabled: isFormEnabled,
           ),
-          const SizedBox(height: AppSizes.size24),
+          AppSizes.spaceHeight16,
           if (!_isViewMode)
             WidgetButton(
-              label: _isAddMode ? 'Add' : 'Update',
+              label: _isAddMode ? appText.button_add : appText.button_save,
               isLoading: state is CustomerStateLoading,
               onPressed: _submitForm,
-            ),
-          if (_isEditMode)
-            Padding(
-              padding: const EdgeInsets.only(top: AppSizes.size16),
-              child: WidgetTextButton(
-                label: appText.button_delete,
-                isLoading: state is CustomerStateLoading,
-                onPressed: () => deleteCustomer(
-                  context: context,
-                  customer: _currentCustomer!,
-                  customerBloc: _customerBloc,
-                ),
-              ),
             ),
         ],
       ),
@@ -273,54 +245,51 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   }
 
   Widget _buildGenderSelection(bool enabled) {
-    return Column(
-      children: [
-        DropdownButtonFormField<Gender>(
-          value: _selectedGender,
-          isExpanded: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.size8),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: AppSizes.size16,
-              vertical: AppSizes.size12,
-            ),
-            filled: !enabled,
-            fillColor: enabled
-                ? null
-                : Colors.grey.withValues(
-                    alpha: 0.1,
-                  ),
+    return DropdownButtonFormField<Gender>(
+      value: _selectedGender,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(
+            AppSizes.size8,
           ),
-          items: Gender.values.map((gender) {
-            return DropdownMenuItem(
-              value: gender,
-              child: Text(_getGenderName(gender)),
-            );
-          }).toList(),
-          onChanged: enabled
-              ? (Gender? value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedGender = value;
-                    });
-                  }
-                }
-              : null,
         ),
-      ],
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.size16,
+          vertical: AppSizes.size12,
+        ),
+        filled: !enabled,
+        fillColor: enabled
+            ? null
+            : Colors.grey.withValues(
+                alpha: 0.1,
+              ),
+      ),
+      items: Gender.values.map((gender) {
+        return DropdownMenuItem(
+          value: gender,
+          child: Text(_getGenderName(gender)),
+        );
+      }).toList(),
+      onChanged: enabled
+          ? (Gender? value) {
+              if (value != null) {
+                setState(() {
+                  _selectedGender = value;
+                });
+              }
+            }
+          : null,
     );
   }
 
   String _getGenderName(Gender gender) {
     switch (gender) {
       case Gender.male:
-        return 'Male';
+        return AppLocalizations.of(context)!.gender_male;
       case Gender.female:
-        return 'Female';
+        return AppLocalizations.of(context)!.gender_female;
       default:
-        return 'Other';
+        return AppLocalizations.of(context)!.gender_other;
     }
   }
 
