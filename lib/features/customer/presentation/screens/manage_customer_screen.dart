@@ -229,13 +229,16 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             },
           ),
           AppSizes.spaceHeight12,
-          Text(
-            appText.gender_label,
-            style: AppTextStyle.body1.copyWith(
-              fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSizes.size4,
+              bottom: AppSizes.size8,
+            ),
+            child: Text(
+              appText.gender_label,
+              style: AppTextStyle.body1,
             ),
           ),
-          AppSizes.spaceHeight8,
           _buildGenderSelection(isFormEnabled),
           AppSizes.spaceHeight12,
           WidgetTextFormField(
@@ -258,41 +261,143 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   }
 
   Widget _buildGenderSelection(bool enabled) {
-    return DropdownButtonFormField<Gender>(
-      value: _selectedGender,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            AppSizes.size8,
+    return GestureDetector(
+      onTap: enabled ? () => _showGenderBottomSheet(context) : null,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSizes.size16,
+          horizontal: AppSizes.size16,
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.primary,
+          ),
+          borderRadius:
+              BorderRadius.circular(4), // Match TextFormField border radius
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _getGenderIcon(_selectedGender),
+              size: AppSizes.size24,
+              color: enabled ? AppColors.onSecondary : Colors.grey,
+            ),
+            SizedBox(width: AppSizes.size12),
+            Expanded(
+              child: Text(
+                _getGenderName(_selectedGender),
+                style: AppTextStyle.textField.copyWith(
+                  color: enabled ? AppColors.onSecondary : Colors.grey,
+                ),
+              ),
+            ),
+            if (enabled)
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: AppColors.onSecondary,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showGenderBottomSheet(BuildContext context) {
+    final appText = AppLocalizations.of(context)!;
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.size16),
+        ),
+      ),
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: AppSizes.size16,
+              left: AppSizes.size16,
+              right: AppSizes.size16,
+              bottom: AppSizes.size8,
+            ),
+            child: Row(
+              children: [
+                Text(
+                  appText.gender_label,
+                  style: AppTextStyle.heading3.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+          const Divider(thickness: 1),
+          _buildGenderOption(Gender.male),
+          _buildGenderOption(Gender.female),
+          _buildGenderOption(Gender.other),
+          SizedBox(height: AppSizes.size16),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGenderOption(Gender gender) {
+    final bool isSelected = _selectedGender == gender;
+
+    return ListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isSelected
+              ? AppColors.primary.withValues(
+                  alpha: 0.1,
+                )
+              : Colors.transparent,
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey,
+            width: isSelected ? 2 : 1,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.size16,
-          vertical: AppSizes.size12,
+        child: Icon(
+          _getGenderIcon(gender),
+          color: isSelected ? AppColors.primary : Colors.grey,
         ),
-        filled: !enabled,
-        fillColor: enabled
-            ? null
-            : Colors.grey.withValues(
-                alpha: 0.1,
-              ),
       ),
-      items: Gender.values.map((gender) {
-        return DropdownMenuItem(
-          value: gender,
-          child: Text(_getGenderName(gender)),
-        );
-      }).toList(),
-      onChanged: enabled
-          ? (Gender? value) {
-              if (value != null) {
-                setState(() {
-                  _selectedGender = value;
-                });
-              }
-            }
-          : null,
+      title: Text(
+        _getGenderName(gender),
+        style: AppTextStyle.body1.copyWith(
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          color: isSelected ? AppColors.primary : AppColors.onSecondary,
+        ),
+      ),
+      onTap: () {
+        setState(() {
+          _selectedGender = gender;
+        });
+        Navigator.pop(context);
+      },
     );
+  }
+
+  IconData _getGenderIcon(Gender gender) {
+    switch (gender) {
+      case Gender.male:
+        return Icons.man;
+      case Gender.female:
+        return Icons.woman;
+      default:
+        return Icons.person;
+    }
   }
 
   String _getGenderName(Gender gender) {
@@ -345,7 +450,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
 
       if (_isAddMode) {
         _customerBloc.add(CustomerEventCreateCustomer(customer: customer));
-      } else {
+      } else if (_isEditMode) {
         _customerBloc.add(CustomerEventUpdateCustomer(customer: customer));
       }
     }

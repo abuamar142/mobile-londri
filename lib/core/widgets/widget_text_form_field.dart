@@ -58,10 +58,15 @@ class WidgetTextFormField extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderSide: const BorderSide(
-            color: AppColors.onSecondary,
+            color: AppColors.primary,
           ),
         ),
         focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: AppColors.primary,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: AppColors.primary,
           ),
