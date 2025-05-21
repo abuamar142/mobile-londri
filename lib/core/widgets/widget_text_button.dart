@@ -7,14 +7,14 @@ class WidgetTextButton extends StatelessWidget {
   final String label;
   final bool isLoading;
   final void Function() onPressed;
-  final Color? backgroundColor;
+  final Color? color;
 
   const WidgetTextButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
-    this.backgroundColor,
+    this.color,
   });
 
   @override
@@ -24,7 +24,7 @@ class WidgetTextButton extends StatelessWidget {
       child: Text(
         label,
         style: AppTextStyle.body.copyWith(
-          color: backgroundColor ?? AppColors.onPrimary,
+          color: color ?? AppColors.onPrimary,
         ),
       ),
     );

@@ -376,6 +376,26 @@
   "@customer_info_active": {
     "description": "Info message for active customer"
   },
+  "customer_information_card_label": "Information",
+  "@customer_information_card_label": {
+    "description": "Label for the customer information card"
+  },
+  "customer_note_card_label": "Note",
+  "@customer_note_card_label": {
+    "description": "Label for the customer note card"
+  },
+  "customer_transaction_card_label": "Transaction",
+  "@customer_transaction_card_label": {
+    "description": "Label for the customer transaction card"
+  },
+  "customer_redirect_to_transaction_screen": "See Transaction",
+  "@customer_redirect_to_transaction_screen": {
+    "description": "Text for redirecting to the transaction screen"
+  },
+  "customer_send_whatsapp_message": "Send WhatsApp message",
+  "@customer_send_whatsapp_message": {
+    "description": "Text for sending a WhatsApp message"
+  },
 
   "locale_change_success_message": "Language changed successfully",
   "@locale_change_success_message": {

@@ -180,7 +180,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   leadingIcon: _getLeadingIcon(customer),
                   tileColor: isActive
                       ? null
-                      : Colors.grey.withValues(
+                      : AppColors.gray.withValues(
                           alpha: 0.1,
                         ),
                   onTap: () async {
@@ -354,7 +354,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
         isSelected
             ? (isAscending ? Icons.arrow_upward : Icons.arrow_downward)
             : Icons.sort,
-        color: isSelected ? AppColors.primary : Colors.grey,
+        color: isSelected ? AppColors.primary : AppColors.gray,
       ),
       title: Text(
         title,
