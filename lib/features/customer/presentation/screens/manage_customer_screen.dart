@@ -113,8 +113,11 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                       child: _buildCustomerForm(state, appText),
                     ),
                   ),
-            bottomNavigationBar:
-                _isViewMode ? _buildViewModeBottomBar(context, appText) : null,
+            bottomNavigationBar: _buildBottomBar(
+              context,
+              appText,
+              state,
+            ),
           );
         },
       ),
@@ -132,15 +135,17 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
     }
   }
 
-  Widget _buildViewModeBottomBar(
+  Widget _buildBottomBar(
     BuildContext context,
     AppLocalizations appText,
+    CustomerState state,
   ) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(
           left: AppSizes.size16,
           right: AppSizes.size16,
+          bottom: AppSizes.size16,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -169,8 +174,25 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   ),
                 ],
               ),
-            AppSizes.spaceHeight12,
-            if (RoleManager.hasPermission(Permission.deleteCustomer))
+            if (_isAddMode || _isEditMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label:
+                          _isAddMode ? appText.button_add : appText.button_save,
+                      isLoading: state is CustomerStateLoading,
+                      onPressed: _submitForm,
+                    ),
+                  ),
+                ],
+              ),
+            if ((_isViewMode &&
+                    RoleManager.hasPermission(Permission.deleteCustomer)) ||
+                _isEditMode)
+              AppSizes.spaceHeight12,
+            if ((_isViewMode &&
+                RoleManager.hasPermission(Permission.deleteCustomer)))
               Row(
                 children: [
                   Expanded(
@@ -248,13 +270,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
             maxLines: 3,
             isEnabled: isFormEnabled,
           ),
-          AppSizes.spaceHeight16,
-          if (!_isViewMode)
-            WidgetButton(
-              label: _isAddMode ? appText.button_add : appText.button_save,
-              isLoading: state is CustomerStateLoading,
-              onPressed: _submitForm,
-            ),
         ],
       ),
     );
@@ -273,8 +288,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
           border: Border.all(
             color: AppColors.primary,
           ),
-          borderRadius:
-              BorderRadius.circular(4), // Match TextFormField border radius
+          borderRadius: BorderRadius.circular(AppSizes.size4),
         ),
         child: Row(
           children: [
@@ -321,7 +335,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
               top: AppSizes.size16,
               left: AppSizes.size16,
               right: AppSizes.size16,
-              bottom: AppSizes.size8,
             ),
             child: Row(
               children: [
@@ -353,25 +366,9 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
     final bool isSelected = _selectedGender == gender;
 
     return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: isSelected
-              ? AppColors.primary.withValues(
-                  alpha: 0.1,
-                )
-              : Colors.transparent,
-          border: Border.all(
-            color: isSelected ? AppColors.primary : Colors.grey,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Icon(
-          _getGenderIcon(gender),
-          color: isSelected ? AppColors.primary : Colors.grey,
-        ),
+      leading: Icon(
+        _getGenderIcon(gender),
+        color: isSelected ? AppColors.primary : Colors.grey,
       ),
       title: Text(
         _getGenderName(gender),
