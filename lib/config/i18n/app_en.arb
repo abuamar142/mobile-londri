@@ -340,11 +340,11 @@
   "@customer_activate_success_message": {
     "description": "Message displayed when customer is activated successfully"
   },
-  "customer_delete_confirm_message": "Are you sure you want to delete this customer?",
+  "customer_delete_confirm_message": "Are you sure you want to delete {customerName}?",
   "@customer_delete_confirm_message": {
     "description": "Confirmation message for deleting a customer"
   },
-  "customer_activate_confirm_message": "Are you sure you want to activate this customer?",
+  "customer_activate_confirm_message": "Are you sure you want to activate {customerName}?",
   "@customer_activate_confirm_message": {
     "description": "Confirmation message for activating a customer"
   },

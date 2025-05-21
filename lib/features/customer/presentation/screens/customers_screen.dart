@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:londri/features/auth/domain/entities/role_manager.dart';
 
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
@@ -15,8 +14,10 @@ import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_search_bar.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
+import '../../../auth/domain/entities/role_manager.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
+import '../widgets/widget_activate_customer.dart';
 
 void pushCustomers(BuildContext context) {
   context.pushNamed('customers');
@@ -201,8 +202,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
                     } else {
                       if (RoleManager.hasPermission(
                           Permission.activateCustomer)) {
-                        _activateCustomer(
+                        activateCustomer(
+                          context: context,
                           customer: customer,
+                          customerBloc: _customerBloc,
                         );
                       } else {
                         showSnackbar(
@@ -371,16 +374,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
 
         Navigator.pop(context);
       },
-    );
-  }
-
-  void _activateCustomer({
-    required Customer customer,
-  }) {
-    _customerBloc.add(
-      CustomerEventActivateCustomer(
-        customerId: customer.id.toString(),
-      ),
     );
   }
 }

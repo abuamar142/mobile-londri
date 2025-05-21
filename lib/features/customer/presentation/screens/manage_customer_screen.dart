@@ -354,7 +354,9 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
     showConfirmationDialog(
       context: context,
       title: appText.customer_delete_dialog_title,
-      content: appText.customer_delete_confirm_message,
+      content: appText.customer_delete_confirm_message(
+        _currentCustomer!.name!,
+      ),
       onConfirm: () {
         _customerBloc.add(
           CustomerEventDeleteCustomer(
