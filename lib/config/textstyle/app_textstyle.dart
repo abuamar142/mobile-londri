@@ -67,7 +67,7 @@ class AppTextStyle {
   );
 
   static final body1 = _baseTextStyle.copyWith(
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.normal,
   );
 

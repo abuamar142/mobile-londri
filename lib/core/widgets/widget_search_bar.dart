@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../config/textstyle/app_colors.dart';
 import '../../config/textstyle/app_textstyle.dart';
 import '../../src/generated/i18n/app_localizations.dart';
 
@@ -37,7 +38,9 @@ class WidgetSearchBar extends StatelessWidget {
                 )
               : null,
           border: OutlineInputBorder(),
-          hintStyle: AppTextStyle.body.copyWith(color: Colors.grey),
+          hintStyle: AppTextStyle.body1.copyWith(
+            color: AppColors.gray,
+          ),
         ),
         onChanged: (value) => onChanged(value),
         onTapOutside: (PointerDownEvent event) {
