@@ -22,6 +22,8 @@ import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_delete_transaction.dart';
+import '../widgets/widget_payment_status_badge.dart';
+import '../widgets/widget_transaction_status_badge.dart';
 
 enum ManageTransactionMode { add, edit, view }
 
@@ -559,10 +561,13 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TransactionStatusBadge(
-                      status: _currentTransaction!.transactionStatus!),
+                  WidgetTransactionStatusBadge(
+                    status: _currentTransaction!.transactionStatus!,
+                  ),
                   SizedBox(width: AppSizes.size8),
-                  _buildPaymentStatusBadge(_currentTransaction!.paymentStatus!),
+                  WidgetPaymentStatusBadge(
+                    status: _currentTransaction!.paymentStatus!,
+                  ),
                 ],
               ),
               SizedBox(height: AppSizes.size8),
@@ -655,40 +660,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildPaymentStatusBadge(PaymentStatus status) {
-    Color backgroundColor;
-    Color textColor = Colors.white;
-
-    switch (status) {
-      case PaymentStatus.paid:
-        backgroundColor = AppColors.success;
-        break;
-      case PaymentStatus.notPaidYet:
-        backgroundColor = AppColors.warning;
-        break;
-      default:
-        backgroundColor = AppColors.gray;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.size8,
-        vertical: AppSizes.size4,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(AppSizes.size16),
-      ),
-      child: Text(
-        status.value,
-        style: AppTextStyle.caption.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 
@@ -1067,52 +1038,5 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             .add(TransactionEventUpdateTransaction(transaction: transaction));
       }
     }
-  }
-}
-
-class TransactionStatusBadge extends StatelessWidget {
-  final TransactionStatus status;
-
-  const TransactionStatusBadge({
-    super.key,
-    required this.status,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Color backgroundColor;
-    Color textColor = Colors.white;
-
-    switch (status) {
-      case TransactionStatus.onProgress:
-        backgroundColor = AppColors.gray;
-        break;
-      case TransactionStatus.readyForPickup:
-        backgroundColor = AppColors.warning;
-        break;
-      case TransactionStatus.pickedUp:
-        backgroundColor = AppColors.success;
-        break;
-      default:
-        backgroundColor = AppColors.error;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSizes.size8,
-        vertical: AppSizes.size4,
-      ),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(AppSizes.size16),
-      ),
-      child: Text(
-        status.value,
-        style: AppTextStyle.caption.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
   }
 }

@@ -19,7 +19,7 @@ import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_activate_transaction.dart';
-import 'manage_transaction_screen.dart';
+import '../widgets/widget_transaction_status_badge.dart';
 
 void pushTransactions(BuildContext context) {
   context.pushNamed('transactions');
@@ -188,9 +188,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       SizedBox(
                         height: 2,
                       ),
-                      TransactionStatusBadge(
-                          status: transaction.transactionStatus ??
-                              TransactionStatus.onProgress),
+                      WidgetTransactionStatusBadge(
+                        status: transaction.transactionStatus ??
+                            TransactionStatus.onProgress,
+                      ),
                     ],
                   ),
                   tileColor: isActive
