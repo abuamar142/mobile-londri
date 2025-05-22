@@ -117,14 +117,18 @@ class _CustomersScreenState extends State<CustomersScreen> {
             controller: _searchController,
             hintText: appText.customer_search_hint,
             onChanged: (value) {
-              _customerBloc.add(
-                CustomerEventSearchCustomer(query: value),
-              );
+              setState(() {
+                _customerBloc.add(
+                  CustomerEventSearchCustomer(query: value),
+                );
+              });
             },
             onClear: () {
-              _customerBloc.add(
-                CustomerEventSearchCustomer(query: ''),
-              );
+              setState(() {
+                _customerBloc.add(
+                  CustomerEventSearchCustomer(query: ''),
+                );
+              });
             },
           ),
         ),
