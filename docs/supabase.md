@@ -59,8 +59,8 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 | ------------ | ---------------------------------------- | ---------------------------------------------- |
 | Users        | User accounts, roles, and permissions    | [Users Table](./tables/users.md)               |
 | Transactions | Laundry transactions and status tracking | [Transactions Table](./tables/transactions.md) |
-| Customers    | _Coming soon_                            | [Customers Table](./tables/customers.md)       |
-| Services     | _Coming soon_                            | [Services Table](./tables/services.md)         |
+| Customers    | Customer information and contact details | [Customers Table](./tables/customers.md)       |
+| Services     | Laundry services offered and pricing     | [Services Table](./tables/services.md)         |
 
 ## 📚 Additional Resources
 
