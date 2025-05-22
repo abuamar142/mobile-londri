@@ -9,4 +9,5 @@ abstract class ServiceRepository {
   Future<Either<Failure, void>> createService(Service service);
   Future<Either<Failure, void>> updateService(Service service);
   Future<Either<Failure, void>> deleteService(String id);
+  Future<Either<Failure, void>> activateService(String id);
 }

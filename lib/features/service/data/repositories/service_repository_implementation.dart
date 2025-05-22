@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
@@ -19,16 +18,11 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   Future<Either<Failure, List<Service>>> getServices() async {
     try {
       final response = await serviceRemoteDatasource.readServices();
-
       return Right(response);
     } on ServerException catch (e) {
-      return Left(
-        Failure(message: e.message),
-      );
+      return Left(Failure(message: e.message));
     } catch (e) {
-      return Left(
-        Failure(message: e.toString()),
-      );
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -36,16 +30,11 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   Future<Either<Failure, Service>> getServiceById(String id) async {
     try {
       final response = await serviceRemoteDatasource.readServiceById(id);
-
       return Right(response);
     } on ServerException catch (e) {
-      return Left(
-        Failure(message: e.message),
-      );
+      return Left(Failure(message: e.message));
     } catch (e) {
-      return Left(
-        Failure(message: e.toString()),
-      );
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -53,7 +42,6 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   Future<Either<Failure, void>> createService(Service service) async {
     try {
       await serviceRemoteDatasource.createService(ServiceModel(
-        id: Uuid().v4(),
         name: service.name,
         description: service.description,
         price: service.price,
@@ -63,13 +51,9 @@ class ServiceRepositoryImplementation extends ServiceRepository {
 
       return Right(null);
     } on ServerException catch (e) {
-      return Left(
-        Failure(message: e.message),
-      );
+      return Left(Failure(message: e.message));
     } catch (e) {
-      return Left(
-        Failure(message: e.toString()),
-      );
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -86,13 +70,9 @@ class ServiceRepositoryImplementation extends ServiceRepository {
 
       return Right(null);
     } on ServerException catch (e) {
-      return Left(
-        Failure(message: e.message),
-      );
+      return Left(Failure(message: e.message));
     } catch (e) {
-      return Left(
-        Failure(message: e.toString()),
-      );
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -100,16 +80,23 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   Future<Either<Failure, void>> deleteService(String id) async {
     try {
       await serviceRemoteDatasource.deleteService(id);
-
       return Right(null);
     } on ServerException catch (e) {
-      return Left(
-        Failure(message: e.message),
-      );
+      return Left(Failure(message: e.message));
     } catch (e) {
-      return Left(
-        Failure(message: e.toString()),
-      );
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> activateService(String id) async {
+    try {
+      await serviceRemoteDatasource.activateService(id);
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
     }
   }
 }

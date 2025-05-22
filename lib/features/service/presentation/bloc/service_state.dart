@@ -11,6 +11,19 @@ class ServiceStateInitial extends ServiceState {}
 
 class ServiceStateLoading extends ServiceState {}
 
+class ServiceStateWithFilteredServices extends ServiceState {
+  final List<Service> allServices;
+  final List<Service> filteredServices;
+
+  const ServiceStateWithFilteredServices({
+    required this.allServices,
+    required this.filteredServices,
+  });
+
+  @override
+  List<Object> get props => [allServices, filteredServices];
+}
+
 class ServiceStateSuccessGetServices extends ServiceState {
   final List<Service> services;
 
@@ -19,9 +32,7 @@ class ServiceStateSuccessGetServices extends ServiceState {
   });
 
   @override
-  List<Object> get props => [
-        services,
-      ];
+  List<Object> get props => [services];
 }
 
 class ServiceStateSuccessGetServiceById extends ServiceState {
@@ -32,9 +43,7 @@ class ServiceStateSuccessGetServiceById extends ServiceState {
   });
 
   @override
-  List<Object> get props => [
-        service,
-      ];
+  List<Object> get props => [service];
 }
 
 class ServiceStateSuccessCreateService extends ServiceState {}
@@ -42,6 +51,8 @@ class ServiceStateSuccessCreateService extends ServiceState {}
 class ServiceStateSuccessUpdateService extends ServiceState {}
 
 class ServiceStateSuccessDeleteService extends ServiceState {}
+
+class ServiceStateSuccessActivateService extends ServiceState {}
 
 class ServiceStateFailure extends ServiceState {
   final String message;
@@ -51,7 +62,5 @@ class ServiceStateFailure extends ServiceState {
   });
 
   @override
-  List<Object> get props => [
-        message,
-      ];
+  List<Object> get props => [message];
 }

@@ -1,9 +1,6 @@
-import 'package:uuid/uuid.dart';
-
 import '../../domain/entities/service.dart';
 
 class ServiceModel extends Service {
-  final DateTime? createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
 
@@ -12,10 +9,12 @@ class ServiceModel extends Service {
     super.name,
     super.description,
     super.price,
-    this.createdAt,
+    super.createdAt,
     required this.updatedAt,
     this.deletedAt,
-  });
+  }) : super(
+          isActive: deletedAt == null,
+        );
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
@@ -23,7 +22,9 @@ class ServiceModel extends Service {
       name: json['name'],
       description: json['description'],
       price: json['price'],
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
       updatedAt: DateTime.parse(json['updated_at']),
       deletedAt: json['deleted_at'] != null
           ? DateTime.parse(json['deleted_at'])
@@ -33,7 +34,6 @@ class ServiceModel extends Service {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id ?? Uuid().v4(),
       'name': name,
       'description': description,
       'price': price,
@@ -41,13 +41,5 @@ class ServiceModel extends Service {
       'updated_at': updatedAt.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
     };
-  }
-
-  Map<String, dynamic> toUpdateJson(ServiceModel service) {
-    Map<String, dynamic> data = service.toJson();
-
-    data.removeWhere((key, value) => value == null);
-
-    return data;
   }
 }

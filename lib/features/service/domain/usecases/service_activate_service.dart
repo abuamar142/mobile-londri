@@ -1,17 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
-import '../entities/service.dart';
 import '../repositories/service_repository.dart';
 
-class ServiceCreateService {
+class ServiceActivateService {
   final ServiceRepository serviceRepository;
 
-  ServiceCreateService({
+  ServiceActivateService({
     required this.serviceRepository,
   });
 
-  Future<Either<Failure, void>> call(Service service) async {
-    return await serviceRepository.createService(service);
+  Future<Either<Failure, void>> call(String id) async {
+    return serviceRepository.activateService(id);
   }
 }

@@ -7,6 +7,7 @@ import '../../features/customer/presentation/screens/manage_customer_screen.dart
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
+import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/select_customer_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
@@ -119,7 +120,30 @@ class AppRoutes {
         builder: (context, state) {
           return const TrackTransactionsScreen();
         },
-      )
+      ),
+      GoRoute(
+        path: '/services/add',
+        name: 'add-service',
+        builder: (context, state) => const ManageServiceScreen(
+          mode: ManageServiceMode.add,
+        ),
+      ),
+      GoRoute(
+        path: '/services/:id',
+        name: 'view-service',
+        builder: (context, state) => ManageServiceScreen(
+          mode: ManageServiceMode.view,
+          serviceId: state.pathParameters['id'],
+        ),
+      ),
+      GoRoute(
+        path: '/services/:id/edit',
+        name: 'edit-service',
+        builder: (context, state) => ManageServiceScreen(
+          mode: ManageServiceMode.edit,
+          serviceId: state.pathParameters['id'],
+        ),
+      ),
     ],
   );
 }

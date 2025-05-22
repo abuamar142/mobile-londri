@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/utils/clean_json.dart';
 import '../models/service_model.dart';
 
 abstract class ServiceRemoteDatasource {
@@ -9,6 +10,7 @@ abstract class ServiceRemoteDatasource {
   Future<void> createService(ServiceModel service);
   Future<void> updateService(ServiceModel service);
   Future<void> deleteService(String id);
+  Future<void> activateService(String id);
 }
 
 class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
@@ -22,11 +24,9 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   Future<List<ServiceModel>> readServices() async {
     try {
       final List<Map<String, dynamic>> response = await supabaseClient
-          .from(
-            'services',
-          )
-          .select()
-          .filter('deleted_at', 'is', null)
+          .from('services')
+          .select(
+              'id, name, description, price, created_at, updated_at, deleted_at')
           .order('created_at', ascending: false);
 
       return response.map((e) => ServiceModel.fromJson(e)).toList();
@@ -40,13 +40,8 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   @override
   Future<ServiceModel> readServiceById(String id) async {
     try {
-      final Map<String, dynamic> response = await supabaseClient
-          .from(
-            'services',
-          )
-          .select()
-          .eq('id', id)
-          .single();
+      final Map<String, dynamic> response =
+          await supabaseClient.from('services').select().eq('id', id).single();
 
       return ServiceModel.fromJson(response);
     } on PostgrestException catch (e) {
@@ -60,10 +55,8 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   Future<void> createService(ServiceModel service) async {
     try {
       await supabaseClient
-          .from(
-            'services',
-          )
-          .insert(service.toJson());
+          .from('services')
+          .insert(service.toJson().cleanNulls());
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -75,10 +68,8 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   Future<void> updateService(ServiceModel service) async {
     try {
       await supabaseClient
-          .from(
-            'services',
-          )
-          .update(service.toUpdateJson(service))
+          .from('services')
+          .update(service.toJson().cleanNulls())
           .eq('id', service.id!);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
@@ -90,15 +81,22 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   @override
   Future<void> deleteService(String id) {
     try {
-      return supabaseClient
-          .from(
-        'services',
-      )
-          .update(
-        {
-          'deleted_at': DateTime.now().toIso8601String(),
-        },
-      ).eq('id', id);
+      return supabaseClient.from('services').update({
+        'deleted_at': DateTime.now().toIso8601String(),
+      }).eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> activateService(String id) {
+    try {
+      return supabaseClient.from('services').update({
+        'deleted_at': null,
+      }).eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

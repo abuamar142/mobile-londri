@@ -36,6 +36,7 @@ import 'features/manage_employee/presentation/bloc/manage_employee_bloc.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
+import 'features/service/domain/usecases/service_activate_service.dart';
 import 'features/service/domain/usecases/service_create_service.dart';
 import 'features/service/domain/usecases/service_delete_service.dart';
 import 'features/service/domain/usecases/service_get_service_by_id.dart';
@@ -225,6 +226,11 @@ Future<void> initializeDependencies() async {
         serviceRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<ServiceActivateService>(
+      () => ServiceActivateService(
+        serviceRepository: serviceLocator(),
+      ),
+    )
 
     // Bloc
     ..registerFactory(
@@ -234,6 +240,7 @@ Future<void> initializeDependencies() async {
         serviceCreateService: serviceLocator(),
         serviceUpdateService: serviceLocator(),
         serviceDeleteService: serviceLocator(),
+        serviceActivateService: serviceLocator(),
       ),
     )
 

@@ -17,9 +17,7 @@ class ServiceEventGetServiceById extends ServiceEvent {
   });
 
   @override
-  List<Object> get props => [
-        id,
-      ];
+  List<Object> get props => [id];
 }
 
 class ServiceEventCreateService extends ServiceEvent {
@@ -30,9 +28,7 @@ class ServiceEventCreateService extends ServiceEvent {
   });
 
   @override
-  List<Object> get props => [
-        service,
-      ];
+  List<Object> get props => [service];
 }
 
 class ServiceEventUpdateService extends ServiceEvent {
@@ -43,9 +39,7 @@ class ServiceEventUpdateService extends ServiceEvent {
   });
 
   @override
-  List<Object> get props => [
-        service,
-      ];
+  List<Object> get props => [service];
 }
 
 class ServiceEventDeleteService extends ServiceEvent {
@@ -56,7 +50,40 @@ class ServiceEventDeleteService extends ServiceEvent {
   });
 
   @override
-  List<Object> get props => [
-        id,
-      ];
+  List<Object> get props => [id];
+}
+
+class ServiceEventActivateService extends ServiceEvent {
+  final String id;
+
+  const ServiceEventActivateService({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
+
+class ServiceEventSearchService extends ServiceEvent {
+  final String query;
+
+  const ServiceEventSearchService({
+    required this.query,
+  });
+
+  @override
+  List<Object> get props => [query];
+}
+
+class ServiceEventSortServices extends ServiceEvent {
+  final String sortBy;
+  final bool ascending;
+
+  const ServiceEventSortServices({
+    required this.sortBy,
+    required this.ascending,
+  });
+
+  @override
+  List<Object> get props => [sortBy, ascending];
 }

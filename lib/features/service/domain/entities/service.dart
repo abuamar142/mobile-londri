@@ -1,16 +1,20 @@
 import 'package:equatable/equatable.dart';
 
 class Service extends Equatable {
-  final String? id;
+  final int? id;
   final String? name;
   final String? description;
   final int? price;
+  final DateTime? createdAt;
+  final bool? isActive;
 
   const Service({
     this.id,
     this.name,
     this.description,
     this.price,
+    this.createdAt,
+    this.isActive,
   });
 
   @override
@@ -19,5 +23,7 @@ class Service extends Equatable {
         name,
         description,
         price,
+        createdAt,
+        isActive,
       ];
 }

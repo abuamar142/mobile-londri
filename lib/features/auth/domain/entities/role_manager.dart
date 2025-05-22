@@ -12,11 +12,9 @@ class RoleManager {
       Permission.trackTransactions,
       Permission.activateCustomer,
       Permission.deleteCustomer,
-
     ],
     UserRole.admin: [
       Permission.manageCustomers,
-      Permission.manageServices,
       Permission.manageTransactions,
       Permission.trackTransactions,
     ],

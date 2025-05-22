@@ -120,25 +120,43 @@
     "description": "Info message for non-active employee"
   },
 
-  "service_screen_title": "Service",
+  "@_SERVICE": {},
+
+  "service_screen_title": "Services",
   "@service_screen_title": {
-    "description": "Title for the service screen"
+    "description": "Title for the services screen"
   },
-  "service_empty_message": "No service found",
+  "service_search_hint": "Search name or description",
+  "@service_search_hint": {
+    "description": "Hint text for the service search input"
+  },
+  "service_empty_message": "No services found",
   "@service_empty_message": {
-    "description": "Message displayed when no service is found"
+    "description": "Message displayed when no services are found"
   },
-  "service_add_dialog_title": "Add Service",
-  "@service_add_dialog_title": {
-    "description": "Title for the add service dialog"
+  "service_add_screen_title": "Add Service",
+  "@service_add_screen_title": {
+    "description": "Title for the add service screen"
   },
-  "service_edit_dialog_title": "Edit Service",
-  "@service_edit_dialog_title": {
-    "description": "Title for the edit service dialog"
+  "service_edit_screen_title": "Edit Service",
+  "@service_edit_screen_title": {
+    "description": "Title for the edit service screen"
+  },
+  "service_view_screen_title": "Service Details",
+  "@service_view_screen_title": {
+    "description": "Title for the view service screen"
   },
   "service_delete_dialog_title": "Delete Service",
   "@service_delete_dialog_title": {
     "description": "Title for the delete service dialog"
+  },
+  "service_activate_dialog_title": "Activate Service",
+  "@service_activate_dialog_title": {
+    "description": "Title for the activate service dialog"
+  },
+  "service_ask_super_admin_to_activate": "Please contact super admin to activate this service",
+  "@service_ask_super_admin_to_activate": {
+    "description": "Message asking user to contact super admin to activate service"
   },
   "service_add_success_message": "Service added successfully",
   "@service_add_success_message": {
@@ -152,21 +170,33 @@
   "@service_delete_success_message": {
     "description": "Message displayed when service is deleted successfully"
   },
-  "service_delete_confirm_message": "Are you sure you want to delete this service?",
+  "service_activate_success_message": "Service activated successfully",
+  "@service_activate_success_message": {
+    "description": "Message displayed when service is activated successfully"
+  },
+  "service_delete_confirm_message": "Are you sure you want to delete {serviceName}?",
   "@service_delete_confirm_message": {
     "description": "Confirmation message for deleting a service"
   },
-  "service_add_failed_message": "Failed to add service",
-  "@service_add_failed_message": {
-    "description": "Message displayed when adding a service fails"
+  "service_activate_confirm_message": "Are you sure you want to activate {serviceName}?",
+  "@service_activate_confirm_message": {
+    "description": "Confirmation message for activating a service"
   },
-  "service_edit_failed_message": "Failed to update service",
-  "@service_edit_failed_message": {
-    "description": "Message displayed when updating a service fails"
+  "service_info_activate": "Long press to activate this service",
+  "@service_info_activate": {
+    "description": "Info message for activating service"
   },
-  "service_delete_failed_message": "Failed to delete service",
-  "@service_delete_failed_message": {
-    "description": "Message displayed when deleting a service fails"
+  "service_info_active": "This service is active",
+  "@service_info_active": {
+    "description": "Info message for active service"
+  },
+  "service_information_card_label": "Information",
+  "@service_information_card_label": {
+    "description": "Label for the service information card"
+  },
+  "service_description_card_label": "Description",
+  "@service_description_card_label": {
+    "description": "Label for the service description card"
   },
 
   "transaction_screen_title": "Transaction",
@@ -583,6 +613,14 @@
   "form_phone_digits_only_message": "Phone number must contain only digits",
   "@form_phone_digits_only_message": {
     "description": "Message displayed when phone number contains non-digit characters"
+  },
+  "form_price_required_message": "Price can not be empty",
+  "@form_price_required_message": {
+    "description": "Message displayed when price is required"
+  },
+  "form_price_digits_only_message": "Price must contain only digits",
+  "@form_price_digits_only_message": {
+    "description": "Message displayed when price contains non-digit characters"
   },
 
   "@_GENDER": {},
