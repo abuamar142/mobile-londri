@@ -171,7 +171,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   title: service.name ?? '',
                   subtitle: service.description ?? '-',
                   trailing: Text(
-                    (service.price ?? 0).formatNumber(),
+                    '${(service.price ?? 0).formatNumber()}/Kg',
                     style: AppTextStyle.tileTrailing,
                   ),
                   leadingIcon:
