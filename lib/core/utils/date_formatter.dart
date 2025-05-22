@@ -17,4 +17,18 @@ extension DateFormatter on DateTime {
       localTime,
     );
   }
+
+  String formatDateOnly() {
+    final localTime = tz.TZDateTime.from(
+      this,
+      tz.local,
+    );
+
+    return DateFormat(
+      'EEEE, dd MMMM yyyy',
+      AppLocales.localeNotifier.value.toString(),
+    ).format(
+      localTime,
+    );
+  }
 }
