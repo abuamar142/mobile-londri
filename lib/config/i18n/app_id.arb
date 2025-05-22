@@ -200,5 +200,8 @@
   "button_logout": "Keluar",
   "button_refresh": "Segarkan",
   "button_clear": "Bersihkan",
-  "button_manage_employee": "Kelola Pegawai"
+  "button_manage_employee": "Kelola Pegawai",
+  "button_manage_customer": "Kelola Pelanggan",
+  "button_manage_transaction": "Kelola Transaksi",
+  "button_manage_service": "Kelola Layanan"
 }

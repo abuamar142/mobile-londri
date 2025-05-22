@@ -694,5 +694,17 @@
   "button_manage_employee": "Manage Employee",
   "@button_manage_employee": {
     "description": "Text for the manage employee button"
+  },
+  "button_manage_customer": "Manage Customer",
+  "@button_manage_customer": {
+    "description": "Text for the manage customer button"
+  },
+  "button_manage_transaction": "Manage Transaction",
+  "@button_manage_transaction": {
+    "description": "Text for the manage transaction button"
+  },
+  "button_manage_service": "Manage Service",
+  "@button_manage_service": {
+    "description": "Text for the manage service button"
   }
 }

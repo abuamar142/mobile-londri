@@ -32,27 +32,24 @@ class MainScreen extends StatelessWidget {
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageServices))
                 WidgetButton(
-                  label: 'Services',
+                  label: appText.button_manage_service,
                   onPressed: () => pushServices(context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageCustomers))
                 WidgetButton(
-                  label: 'Customers',
+                  label: appText.button_manage_customer,
                   onPressed: () => pushCustomers(context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageTransactions))
                 WidgetButton(
-                  label: 'Transactions',
+                  label: appText.button_manage_transaction,
                   onPressed: () => pushTransactions(context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.trackTransactions))
-                WidgetButton(
-                  label: 'Track Transactions',
-                  onPressed: () => pushTrackTransactionsScreen(context),
-                ),
+                TrackTransactionsScreen()
             ],
           ),
         ),

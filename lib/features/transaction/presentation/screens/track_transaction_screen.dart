@@ -12,15 +12,10 @@ class TrackTransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track Transactions'),
-      ),
-      body: Center(
-        child: Text(
-          'Track Transactions Screen',
-          style: AppTextStyle.heading3,
-        ),
+    return Center(
+      child: Text(
+        'Track Transactions Screen',
+        style: AppTextStyle.heading3,
       ),
     );
   }
