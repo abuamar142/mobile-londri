@@ -217,6 +217,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   Expanded(
                     child: WidgetButton(
                       label: appText.button_edit,
+                      isLoading: state is TransactionStateLoading,
                       onPressed: () async {
                         if (_currentTransaction != null) {
                           final result = await context.pushNamed(
