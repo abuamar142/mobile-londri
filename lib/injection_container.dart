@@ -43,14 +43,15 @@ import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
 import 'features/service/domain/usecases/service_update_service.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
-import 'features/transaction/data/datasources/transaction_local_datasource.dart';
 import 'features/transaction/data/datasources/transaction_remote_datasource.dart';
 import 'features/transaction/data/repositories/transaction_repository_implementation.dart';
 import 'features/transaction/domain/repositories/transaction_repository.dart';
+import 'features/transaction/domain/usecases/transaction_activate_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_create_transaction.dart';
-import 'features/transaction/domain/usecases/transaction_get_default_transaction_status.dart';
+import 'features/transaction/domain/usecases/transaction_delete_transaction.dart';
+import 'features/transaction/domain/usecases/transaction_get_transaction_by_id.dart';
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
-import 'features/transaction/domain/usecases/transaction_update_default_transaction_status.dart';
+import 'features/transaction/domain/usecases/transaction_update_transaction.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -304,17 +305,11 @@ Future<void> initializeDependencies() async {
         supabaseClient: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<TransactionLocalDatasource>(
-      () => TransactionLocalDatasourceImplementation(
-        sharedPreferences: serviceLocator(),
-      ),
-    )
 
     // Repositories
     ..registerLazySingleton<TransactionRepository>(
       () => TransactionRepositoryImplementation(
         transactionRemoteDatasource: serviceLocator(),
-        transactionLocalDatasource: serviceLocator(),
       ),
     )
 
@@ -324,8 +319,8 @@ Future<void> initializeDependencies() async {
         transactionRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<TransactionGetDefaultTransactionStatus>(
-      () => TransactionGetDefaultTransactionStatus(
+    ..registerLazySingleton<TransactionGetTransactionById>(
+      () => TransactionGetTransactionById(
         transactionRepository: serviceLocator(),
       ),
     )
@@ -334,8 +329,18 @@ Future<void> initializeDependencies() async {
         transactionRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<TransactionUpdateDefaultTransactionStatus>(
-      () => TransactionUpdateDefaultTransactionStatus(
+    ..registerLazySingleton<TransactionUpdateTransaction>(
+      () => TransactionUpdateTransaction(
+        transactionRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<TransactionActivateTransaction>(
+      () => TransactionActivateTransaction(
+        transactionRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<TransactionDeleteTransaction>(
+      () => TransactionDeleteTransaction(
         transactionRepository: serviceLocator(),
       ),
     )
@@ -344,9 +349,11 @@ Future<void> initializeDependencies() async {
     ..registerFactory(
       () => TransactionBloc(
         transactionGetTransactions: serviceLocator(),
-        transactionGetDefaultTransactionStatus: serviceLocator(),
+        transactionGetTransactionById: serviceLocator(),
         transactionCreateTransaction: serviceLocator(),
-        transactionUpdateDefaultTransactionStatus: serviceLocator(),
+        transactionUpdateTransaction: serviceLocator(),
+        transactionDeleteTransaction: serviceLocator(),
+        transactionActivateTransaction: serviceLocator(),
       ),
     );
 

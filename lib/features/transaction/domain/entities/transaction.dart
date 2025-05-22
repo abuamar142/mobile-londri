@@ -1,49 +1,58 @@
 import 'package:equatable/equatable.dart';
 
-import '../usecases/transaction_get_transaction_status.dart';
+import 'transaction_status.dart';
 
 class Transaction extends Equatable {
   final String? id;
-  final String? staffId;
-  final String? customerId;
+  final String? userId;
+  final int? customerId;
   final String? customerName;
-  final String? customerPhone;
-  final String? serviceId;
+  final int? serviceId;
   final String? serviceName;
   final double? weight;
   final int? amount;
-  final TransactionStatusId? status;
+  final String? description;
+  final TransactionStatus? transactionStatus;
+  final PaymentStatus? paymentStatus;
   final DateTime? startDate;
   final DateTime? endDate;
+  final DateTime? createdAt;
+  final bool? isActive;
 
   const Transaction({
     this.id,
-    this.staffId,
+    this.userId,
     this.customerId,
     this.customerName,
-    this.customerPhone,
     this.serviceId,
     this.serviceName,
     this.weight,
     this.amount,
-    this.status,
+    this.description,
+    this.transactionStatus,
+    this.paymentStatus,
     this.startDate,
     this.endDate,
+    this.createdAt,
+    this.isActive,
   });
 
   @override
   List<Object?> get props => [
         id,
-        staffId,
+        userId,
         customerId,
         customerName,
-        customerPhone,
         serviceId,
         serviceName,
         weight,
         amount,
-        status,
+        description,
+        transactionStatus,
+        paymentStatus,
         startDate,
         endDate,
+        createdAt,
+        isActive,
       ];
 }

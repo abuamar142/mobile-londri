@@ -1,45 +1,51 @@
 import '../../domain/entities/transaction.dart';
-import '../../domain/usecases/transaction_get_transaction_status.dart';
+import '../../domain/entities/transaction_status.dart';
 
 class TransactionModel extends Transaction {
-  final DateTime? createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
 
   const TransactionModel({
     super.id,
-    super.staffId,
+    super.userId,
     super.customerId,
     super.customerName,
-    super.customerPhone,
     super.serviceId,
     super.serviceName,
     super.weight,
     super.amount,
-    super.status,
+    super.description,
+    super.transactionStatus,
+    super.paymentStatus,
     super.startDate,
     super.endDate,
-    this.createdAt,
+    super.createdAt,
     required this.updatedAt,
     this.deletedAt,
-  });
+  }) : super(
+          isActive: deletedAt == null,
+        );
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
-      staffId: json['staff_id'],
+      userId: json['user_id'],
       customerId: json['customer_id'],
       customerName:
           json['customers'] != null ? json['customers']['name'] : null,
-      customerPhone:
-          json['customers'] != null ? json['customers']['phone'] : null,
       serviceId: json['service_id'],
       serviceName: json['services'] != null ? json['services']['name'] : null,
-      weight: double.tryParse(json['weight'].toString()),
+      weight: json['weight'] != null
+          ? double.parse(json['weight'].toString())
+          : null,
       amount: json['amount'],
-      status: TransactionStatusId.values.firstWhere(
-        (e) => e.name == json['status'],
-      ),
+      description: json['description'],
+      transactionStatus: json['transaction_status'] != null
+          ? TransactionStatus.fromString(json['transaction_status'])
+          : TransactionStatus.onProgress,
+      paymentStatus: json['payment_status'] != null
+          ? PaymentStatus.fromString(json['payment_status'])
+          : PaymentStatus.notPaidYet,
       startDate: json['start_date'] != null
           ? DateTime.parse(json['start_date'])
           : null,
@@ -48,7 +54,9 @@ class TransactionModel extends Transaction {
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
-      updatedAt: DateTime.parse(json['updated_at']),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : DateTime.now(),
       deletedAt: json['deleted_at'] != null
           ? DateTime.parse(json['deleted_at'])
           : null,
@@ -58,22 +66,25 @@ class TransactionModel extends Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'staff_id': staffId,
+      'user_id': userId,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,
       'amount': amount,
-      'status': status,
+      'description': description,
+      'transaction_status': transactionStatus?.value,
+      'payment_status': paymentStatus?.value,
       'start_date': startDate?.toIso8601String(),
       'end_date': endDate?.toIso8601String(),
+      'created_at': createdAt?.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
     };
   }
 
-  Map<String, dynamic> toUpdateJson(TransactionModel service) {
-    Map<String, dynamic> data = service.toJson();
-
+  Map<String, dynamic> toUpdateJson() {
+    Map<String, dynamic> data = toJson();
     data.removeWhere((key, value) => value == null);
-
     return data;
   }
 }

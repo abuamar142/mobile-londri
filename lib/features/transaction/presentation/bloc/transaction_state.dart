@@ -11,6 +11,19 @@ class TransactionStateInitial extends TransactionState {}
 
 class TransactionStateLoading extends TransactionState {}
 
+class TransactionStateWithFilteredTransactions extends TransactionState {
+  final List<Transaction> allTransactions;
+  final List<Transaction> filteredTransactions;
+
+  const TransactionStateWithFilteredTransactions({
+    required this.allTransactions,
+    required this.filteredTransactions,
+  });
+
+  @override
+  List<Object> get props => [allTransactions, filteredTransactions];
+}
+
 class TransactionStateSuccessGetTransactions extends TransactionState {
   final List<Transaction> transactions;
 
@@ -19,29 +32,27 @@ class TransactionStateSuccessGetTransactions extends TransactionState {
   });
 
   @override
-  List<Object> get props => [
-        transactions,
-      ];
+  List<Object> get props => [transactions];
 }
 
-class TransactionStateSuccessGetDefaultTransactionStatus
-    extends TransactionState {
-  final TransactionStatus transactionStatus;
+class TransactionStateSuccessGetTransactionById extends TransactionState {
+  final Transaction transaction;
 
-  const TransactionStateSuccessGetDefaultTransactionStatus({
-    required this.transactionStatus,
+  const TransactionStateSuccessGetTransactionById({
+    required this.transaction,
   });
 
   @override
-  List<Object> get props => [
-        transactionStatus,
-      ];
+  List<Object> get props => [transaction];
 }
 
 class TransactionStateSuccessCreateTransaction extends TransactionState {}
 
-class TransactionStateSuccessUpdateDefaultTransactionStatus
-    extends TransactionState {}
+class TransactionStateSuccessUpdateTransaction extends TransactionState {}
+
+class TransactionStateSuccessDeleteTransaction extends TransactionState {}
+
+class TransactionStateSuccessActivateTransaction extends TransactionState {}
 
 class TransactionStateFailure extends TransactionState {
   final String message;
@@ -51,7 +62,5 @@ class TransactionStateFailure extends TransactionState {
   });
 
   @override
-  List<Object> get props => [
-        message,
-      ];
+  List<Object> get props => [message];
 }

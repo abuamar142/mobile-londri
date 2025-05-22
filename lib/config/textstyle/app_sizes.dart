@@ -23,6 +23,7 @@ class AppSizes {
   static const SizedBox spaceHeight24 = SizedBox(height: size24);
 
   static const SizedBox spaceWidth8 = SizedBox(width: size8);
+  static const SizedBox spaceWidth12 = SizedBox(width: size12);
 
   static const EdgeInsetsGeometry paddingAll16 = EdgeInsets.all(size16);
 }

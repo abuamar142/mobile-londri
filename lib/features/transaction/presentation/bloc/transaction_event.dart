@@ -9,7 +9,16 @@ abstract class TransactionEvent extends Equatable {
 
 class TransactionEventGetTransactions extends TransactionEvent {}
 
-class TransactionEventGetDefaultTransactionStatus extends TransactionEvent {}
+class TransactionEventGetTransactionById extends TransactionEvent {
+  final String id;
+
+  const TransactionEventGetTransactionById({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
 
 class TransactionEventCreateTransaction extends TransactionEvent {
   final Transaction transaction;
@@ -19,20 +28,62 @@ class TransactionEventCreateTransaction extends TransactionEvent {
   });
 
   @override
-  List<Object> get props => [
-        transaction,
-      ];
+  List<Object> get props => [transaction];
 }
 
-class TransactionEventUpdateDefaultTransactionStatus extends TransactionEvent {
-  final TransactionStatus transactionStatus;
+class TransactionEventUpdateTransaction extends TransactionEvent {
+  final Transaction transaction;
 
-  const TransactionEventUpdateDefaultTransactionStatus({
-    required this.transactionStatus,
+  const TransactionEventUpdateTransaction({
+    required this.transaction,
   });
 
   @override
-  List<Object> get props => [
-        transactionStatus,
-      ];
+  List<Object> get props => [transaction];
+}
+
+class TransactionEventDeleteTransaction extends TransactionEvent {
+  final String id;
+
+  const TransactionEventDeleteTransaction({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
+
+class TransactionEventActivateTransaction extends TransactionEvent {
+  final String id;
+
+  const TransactionEventActivateTransaction({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
+
+class TransactionEventSearchTransaction extends TransactionEvent {
+  final String query;
+
+  const TransactionEventSearchTransaction({
+    required this.query,
+  });
+
+  @override
+  List<Object> get props => [query];
+}
+
+class TransactionEventSortTransactions extends TransactionEvent {
+  final String sortBy;
+  final bool ascending;
+
+  const TransactionEventSortTransactions({
+    required this.sortBy,
+    required this.ascending,
+  });
+
+  @override
+  List<Object> get props => [sortBy, ascending];
 }

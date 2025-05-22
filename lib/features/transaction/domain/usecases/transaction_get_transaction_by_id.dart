@@ -4,14 +4,14 @@ import '../../../../core/error/failure.dart';
 import '../entities/transaction.dart';
 import '../repositories/transaction_repository.dart';
 
-class TransactionCreateTransaction {
+class TransactionGetTransactionById {
   final TransactionRepository transactionRepository;
 
-  TransactionCreateTransaction({
+  TransactionGetTransactionById({
     required this.transactionRepository,
   });
 
-  Future<Either<Failure, void>> call(Transaction transaction) async {
-    return await transactionRepository.createTransaction(transaction);
+  Future<Either<Failure, Transaction>> call(String id) async {
+    return await transactionRepository.getTransactionById(id);
   }
 }

@@ -9,7 +9,7 @@ import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
 import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
-import '../../features/transaction/presentation/screens/select_customer_screen.dart';
+import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 
@@ -106,12 +106,35 @@ class AppRoutes {
         },
         routes: [
           GoRoute(
-            path: 'select-customer',
-            name: 'select-customer',
+            path: 'add',
+            name: 'add-transaction',
             builder: (context, state) {
-              return const SelectCustomerScreen();
+              return const ManageTransactionScreen(
+                  mode: ManageTransactionMode.add);
             },
-          )
+          ),
+          GoRoute(
+            path: 'view/:id',
+            name: 'view-transaction',
+            builder: (context, state) {
+              final transactionId = state.pathParameters['id']!;
+              return ManageTransactionScreen(
+                mode: ManageTransactionMode.view,
+                transactionId: transactionId,
+              );
+            },
+          ),
+          GoRoute(
+            path: 'edit/:id',
+            name: 'edit-transaction',
+            builder: (context, state) {
+              final transactionId = state.pathParameters['id']!;
+              return ManageTransactionScreen(
+                mode: ManageTransactionMode.edit,
+                transactionId: transactionId,
+              );
+            },
+          ),
         ],
       ),
       GoRoute(

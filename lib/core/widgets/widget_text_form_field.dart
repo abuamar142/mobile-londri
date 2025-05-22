@@ -15,6 +15,7 @@ class WidgetTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
   final int maxLines;
+  final bool readOnly;
 
   const WidgetTextFormField({
     super.key,
@@ -29,6 +30,7 @@ class WidgetTextFormField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.maxLines = 1,
+    this.readOnly = false,
   });
 
   @override
@@ -45,6 +47,7 @@ class WidgetTextFormField extends StatelessWidget {
         FocusManager.instance.primaryFocus?.unfocus();
       },
       maxLines: maxLines,
+      readOnly: readOnly,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
