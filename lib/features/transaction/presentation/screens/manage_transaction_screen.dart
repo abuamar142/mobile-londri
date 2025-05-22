@@ -13,7 +13,6 @@ import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
-import '../../../auth/domain/entities/role_manager.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
@@ -141,7 +140,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             context.pop(true);
           } else if (state is TransactionStateSuccessUpdateTransaction) {
             showSnackbar(context, appText.transaction_update_success_message);
-            context.pop(true);
           } else if (state is TransactionStateSuccessDeleteTransaction) {
             showSnackbar(context, appText.transaction_delete_success_message);
             context.pop(true);
@@ -150,8 +148,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           }
         },
         builder: (context, state) {
-          final bool isLoading = state is TransactionStateLoading;
-
           return Scaffold(
             appBar: AppBar(
               title: Text(
@@ -160,19 +156,18 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
               ),
               centerTitle: true,
               actions: [
-                if (_isViewMode &&
-                    RoleManager.hasPermission(Permission.manageTransactions))
+                if (_isViewMode)
                   IconButton(
                     onPressed: () async {
                       final result = await context.pushNamed(
-                        'edit-transaction',
+                        'print-transaction',
                         pathParameters: {'id': widget.transactionId!},
                       );
                       if (result == true && context.mounted) {
                         context.pop(true);
                       }
                     },
-                    icon: const Icon(Icons.edit),
+                    icon: const Icon(Icons.print),
                   ),
               ],
             ),
@@ -194,53 +189,89 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                       ),
                     ),
                   ),
-            bottomNavigationBar: _isLoading
-                ? null
-                : BottomAppBar(
-                    color: AppColors.onPrimary,
-                    elevation: 8,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.size16,
-                      vertical: AppSizes.size12,
-                    ),
-                    child: _buildBottomBarButtons(state, appText, isLoading),
-                  ),
+            bottomNavigationBar: _buildBottomBar(context, appText, state),
           );
         },
       ),
     );
   }
 
-  Widget _buildBottomBarButtons(
-    TransactionState state,
+  Widget _buildBottomBar(
+    BuildContext context,
     AppLocalizations appText,
-    bool isLoading,
+    TransactionState state,
   ) {
-    if (_isViewMode) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (RoleManager.hasPermission(Permission.manageTransactions))
-            WidgetButton(
-              label: appText.button_delete,
-              backgroundColor: AppColors.error,
-              onPressed: () {
-                deleteTransaction(
-                  context: context,
-                  transaction: _currentTransaction!,
-                  transactionBloc: _transactionBloc,
-                );
-              },
-            ),
-        ],
-      );
-    } else {
-      return WidgetButton(
-        label: _isAddMode ? appText.button_add : appText.button_save,
-        isLoading: isLoading,
-        onPressed: _submitForm,
-      );
-    }
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: AppSizes.size16,
+          right: AppSizes.size16,
+          bottom: AppSizes.size16,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_isViewMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label: appText.button_edit,
+                      onPressed: () async {
+                        if (_currentTransaction != null) {
+                          final result = await context.pushNamed(
+                            'edit-transaction',
+                            pathParameters: {
+                              'id': _currentTransaction!.id!.toString()
+                            },
+                          );
+
+                          if (result == true && context.mounted) {
+                            context.pop(true);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            if (_isAddMode || _isEditMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label:
+                          _isAddMode ? appText.button_add : appText.button_save,
+                      isLoading: state is TransactionStateLoading,
+                      onPressed: _submitForm,
+                    ),
+                  ),
+                ],
+              ),
+            if (_isViewMode) AppSizes.spaceHeight12,
+            if (_isViewMode)
+              Row(
+                children: [
+                  Expanded(
+                    child: WidgetButton(
+                      label: appText.button_delete,
+                      backgroundColor: AppColors.error,
+                      isLoading: state is TransactionStateLoading,
+                      onPressed: () {
+                        deleteTransaction(
+                          context: context,
+                          transaction: _currentTransaction!,
+                          transactionBloc: _transactionBloc,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   String _getScreenTitle(AppLocalizations appText) {
