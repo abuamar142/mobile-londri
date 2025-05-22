@@ -487,7 +487,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   }
                 }
               : null,
-          backgroundColor: AppColors.gray.withOpacity(0.1),
+          backgroundColor: AppColors.gray.withValues(
+            alpha: 0.1,
+          ),
           selectedColor: AppColors.primary,
         );
       }).toList(),
@@ -517,7 +519,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   }
                 }
               : null,
-          backgroundColor: AppColors.gray.withOpacity(0.1),
+          backgroundColor: AppColors.gray.withValues(
+            alpha: 0.1,
+          ),
           selectedColor: status == PaymentStatus.paid
               ? AppColors.success
               : AppColors.warning,
@@ -536,7 +540,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                 width: AppSizes.size80,
                 height: AppSizes.size80,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(
+                    alpha: 0.1,
+                  ),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: AppColors.primary,
@@ -732,8 +738,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                               final customer = activeCustomers[index];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor:
-                                      AppColors.primary.withOpacity(0.1),
+                                  backgroundColor: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   child: Text(
                                     customer.name?[0] ?? '',
                                     style: TextStyle(
@@ -813,8 +820,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                               final service = activeServices[index];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor:
-                                      AppColors.primary.withOpacity(0.1),
+                                  backgroundColor: AppColors.primary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   child: Icon(
                                     Icons.design_services,
                                     color: AppColors.primary,
