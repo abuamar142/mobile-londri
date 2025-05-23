@@ -47,8 +47,10 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     // Check if any permission was denied
     if (permissionStatuses.values.any((status) => !status.isGranted)) {
       if (mounted) {
-        showSnackbar(context,
-            "Bluetooth permissions are required for printer functionality");
+        showSnackbar(
+          context,
+          "Bluetooth permissions are required for printer functionality",
+        );
       }
     }
 
@@ -69,7 +71,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     try {
       _devices = await _printerService.getBondedDevices();
     } catch (e) {
-      showSnackbar(context, "Failed to get devices: $e");
+      if (mounted) showSnackbar(context, "Failed to get devices: $e");
     }
 
     setState(() {
@@ -89,10 +91,12 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       _selectedDevice = connected ? device : _selectedDevice;
     });
 
-    if (connected) {
-      showSnackbar(context, "Connected to ${device.name}");
-    } else {
-      showSnackbar(context, "Failed to connect to ${device.name}");
+    if (mounted) {
+      if (connected) {
+        showSnackbar(context, "Connected to ${device.name}");
+      } else {
+        showSnackbar(context, "Failed to connect to ${device.name}");
+      }
     }
   }
 
@@ -102,7 +106,8 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     setState(() {
       _selectedDevice = null;
     });
-    showSnackbar(context, "Disconnected from printer");
+
+    if (mounted) showSnackbar(context, "Disconnected from printer");
   }
 
   Future<void> _testPrint() async {
@@ -110,8 +115,6 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       showSnackbar(context, "Please connect to a printer first");
       return;
     }
-
-    print('cobain');
 
     try {
       // Create a sample transaction for test printing
@@ -136,13 +139,15 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
         businessPhone: "0812-3456-7890",
       );
 
-      if (result) {
-        showSnackbar(context, "Test print successful");
-      } else {
-        showSnackbar(context, "Failed to print test receipt");
+      if (mounted) {
+        if (result) {
+          showSnackbar(context, "Test print successful");
+        } else {
+          showSnackbar(context, "Failed to print test receipt");
+        }
       }
     } catch (e) {
-      showSnackbar(context, "Error while printing: $e");
+      if (mounted) showSnackbar(context, "Error while printing: $e");
     }
   }
 
@@ -212,8 +217,8 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       padding: EdgeInsets.all(AppSizes.size16),
       decoration: BoxDecoration(
         color: isConnected
-            ? AppColors.success.withOpacity(0.1)
-            : AppColors.warning.withOpacity(0.1),
+            ? AppColors.success.withValues(alpha: 0.1)
+            : AppColors.warning.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSizes.size12),
         border: Border.all(
           color: isConnected ? AppColors.success : AppColors.warning,
@@ -304,13 +309,13 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
             color: isSelected ? AppColors.primary : AppColors.gray,
           ),
           title: Text(
-            device.name ?? "Unknown Device",
+            device.name,
             style: AppTextStyle.body1.copyWith(
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               color: isSelected ? AppColors.primary : null,
             ),
           ),
-          subtitle: Text(device.macAdress ?? ""),
+          subtitle: Text(device.macAdress),
           trailing: ElevatedButton(
             onPressed: _isConnecting ? null : () => _connectToDevice(device),
             style: ElevatedButton.styleFrom(
