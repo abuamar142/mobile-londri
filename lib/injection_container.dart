@@ -9,6 +9,8 @@ import 'package:timezone/timezone.dart' as timezone;
 import 'app_observer.dart';
 import 'config/i18n/i18n.dart';
 import 'core/services/auth_service.dart';
+import 'core/services/permission_service.dart';
+import 'core/services/printer_service.dart';
 import 'core/utils/get_timezone.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
@@ -299,6 +301,15 @@ Future<void> initializeDependencies() async {
     )
 
     // Feature - Transaction
+    // Permission Service
+    ..registerLazySingleton<PermissionService>(
+      () => PermissionService(),
+    )
+
+    // Printer Service
+    ..registerLazySingleton<PrinterService>(
+      () => PrinterService(),
+    )
     // DataSources
     ..registerLazySingleton<TransactionRemoteDatasource>(
       () => TransactionRemoteDatasourceImplementation(

@@ -11,6 +11,7 @@ import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/print_transaction_note_screen.dart';
+import '../../features/transaction/presentation/screens/printer_settings_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/transaction_detail_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
@@ -178,6 +179,13 @@ class AppRoutes {
           mode: ManageServiceMode.edit,
           serviceId: state.pathParameters['id'],
         ),
+      ),
+      GoRoute(
+        path: '/printer-settings',
+        name: 'printer-settings',
+        builder: (context, state) {
+          return const PrinterSettingsScreen();
+        },
       ),
     ],
   );
