@@ -14,11 +14,12 @@ import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
+import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
-import '../../../service/presentation/widgets/widget_text_form_field.dart';
 import '../../domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
+import '../widgets/widget_bottom_bar.dart';
 import 'printer_settings_screen.dart';
 
 void pushPrintTransactionNoteScreen({
@@ -42,12 +43,10 @@ class PrintTransactionNoteScreen extends StatefulWidget {
   });
 
   @override
-  State<PrintTransactionNoteScreen> createState() =>
-      _PrintTransactionNoteScreenState();
+  State<PrintTransactionNoteScreen> createState() => _PrintTransactionNoteScreenState();
 }
 
-class _PrintTransactionNoteScreenState
-    extends State<PrintTransactionNoteScreen> {
+class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen> {
   final PrinterService _printerService = serviceLocator<PrinterService>();
   late final TransactionBloc _transactionBloc;
 
@@ -57,12 +56,9 @@ class _PrintTransactionNoteScreenState
   bool _isLoading = true;
   bool _isPrinting = false;
 
-  final TextEditingController _businessNameController =
-      TextEditingController(text: 'Londri');
-  final TextEditingController _businessAddressController =
-      TextEditingController(text: 'Jl. Raya No. 123, Jakarta');
-  final TextEditingController _businessPhoneController =
-      TextEditingController(text: '0812-3456-7890');
+  final TextEditingController _businessNameController = TextEditingController(text: 'Londri');
+  final TextEditingController _businessAddressController = TextEditingController(text: 'Jl. Raya No. 123, Jakarta');
+  final TextEditingController _businessPhoneController = TextEditingController(text: '0812-3456-7890');
 
   @override
   void initState() {
@@ -232,23 +228,17 @@ class _PrintTransactionNoteScreenState
                         Expanded(
                           child: _buildReceiptPreview(appText),
                         ),
-
-                        AppSizes.spaceHeight16,
-
-                        // Print button
-                        SizedBox(
-                          width: double.infinity,
-                          child: WidgetButton(
-                            label: appText.printer_print_receipt,
-                            isLoading: _isPrinting,
-                            onPressed: () =>
-                                _transaction != null ? _printReceipt() : null,
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ),
+          bottomNavigationBar: WidgetBottomBar(content: [
+            WidgetButton(
+              label: appText.printer_print_receipt,
+              isLoading: _isPrinting,
+              onPressed: () => _transaction != null ? _printReceipt() : null,
+            ),
+          ]),
         ),
       ),
     );
@@ -285,9 +275,7 @@ class _PrintTransactionNoteScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isConnected
-                      ? appText.printer_status_connected(_selectedPrinter!.name)
-                      : appText.printer_status_not_connected,
+                  isConnected ? appText.printer_status_connected(_selectedPrinter!.name) : appText.printer_status_not_connected,
                   style: AppTextStyle.body1.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -300,11 +288,14 @@ class _PrintTransactionNoteScreenState
               ],
             ),
           ),
-          WidgetButton(
-            label: isConnected ? appText.button_change : appText.button_connect,
-            backgroundColor:
-                isConnected ? AppColors.success : AppColors.primary,
-            onPressed: _navigateToPrinterSettings,
+          SizedBox(
+            width: AppSizes.size96,
+            height: AppSizes.size40,
+            child: WidgetButton(
+              label: isConnected ? appText.button_change : appText.button_connect,
+              backgroundColor: isConnected ? AppColors.success : AppColors.primary,
+              onPressed: _navigateToPrinterSettings,
+            ),
           ),
         ],
       ),
@@ -316,16 +307,19 @@ class _PrintTransactionNoteScreenState
       children: [
         WidgetTextFormField(
           label: appText.printer_business_name,
+          hint: appText.printer_business_name_hint,
           controller: _businessNameController,
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
           label: appText.printer_business_address,
+          hint: appText.printer_business_address_hint,
           controller: _businessAddressController,
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
           label: appText.printer_business_phone,
+          hint: appText.printer_business_phone_hint,
           controller: _businessPhoneController,
         ),
       ],
@@ -444,15 +438,13 @@ class _PrintTransactionNoteScreenState
               Divider(thickness: 1),
 
               // Notes
-              if (_transaction!.description != null &&
-                  _transaction!.description!.isNotEmpty) ...[
+              if (_transaction!.description != null && _transaction!.description!.isNotEmpty) ...[
                 AppSizes.spaceHeight8,
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     appText.invoice_print_notes,
-                    style: AppTextStyle.body1
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 AppSizes.spaceHeight4,
@@ -469,9 +461,17 @@ class _PrintTransactionNoteScreenState
               AppSizes.spaceHeight16,
               Text(
                 appText.invoice_print_thank_you(
-                  _businessAddressController.text,
+                  _businessNameController.text,
                 ),
                 style: AppTextStyle.body1.copyWith(
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              AppSizes.spaceHeight4,
+              Text(
+                '${appText.invoice_print_staff_name}: ${_transaction!.userName ?? "-"}',
+                style: AppTextStyle.caption.copyWith(
                   fontStyle: FontStyle.italic,
                 ),
                 textAlign: TextAlign.center,
@@ -489,23 +489,9 @@ class _PrintTransactionNoteScreenState
   }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: AppSizes.size96,
-            child: Text(
-              label,
-              style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: AppTextStyle.body1,
-            ),
-          ),
-        ],
+      child: Text(
+        '$label: $value',
+        style: AppTextStyle.body1,
       ),
     );
   }

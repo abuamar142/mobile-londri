@@ -792,13 +792,25 @@
   "@printer_business_name": {
     "description": "Label for business name field"
   },
+  "printer_business_name_hint": "Enter your business name",
+  "@printer_business_name_hint": {
+    "description": "Hint text for business name field"
+  },
   "printer_business_address": "Business Address",
   "@printer_business_address": {
     "description": "Label for business address field"
   },
+  "printer_business_address_hint": "Enter your business address",
+  "@printer_business_address_hint": {
+    "description": "Hint text for business address field"
+  },
   "printer_business_phone": "Business Phone",
   "@printer_business_phone": {
     "description": "Label for business phone field"
+  },
+  "printer_business_phone_hint": "Enter your business phone number",
+  "@printer_business_phone_hint": {
+    "description": "Hint text for business phone field"
   },
   "printer_receipt_preview": "Receipt Preview",
   "@printer_receipt_preview": {
@@ -823,51 +835,51 @@
   "@invoice_print_title": {
     "description": "Title for the invoice print"
   },
-  "invoice_print_transaction_id": "Transaction ID:",
+  "invoice_print_transaction_id": "Transaction ID",
   "@invoice_print_transaction_id": {
     "description": "Label for the transaction ID in the invoice"
   },
-  "invoice_print_date": "Date:",
+  "invoice_print_date": "Date",
   "@invoice_print_date": {
     "description": "Label for the date in the invoice"
   },
-  "invoice_print_customer_name": "Customer Name:",
+  "invoice_print_customer_name": "Customer Name",
   "@invoice_print_customer_name": {
     "description": "Label for the customer name in the invoice"
   },
-  "invoice_print_service_name": "Service:",
+  "invoice_print_service_name": "Service",
   "@invoice_print_service": {
     "description": "Label for the service in the invoice"
   },
-  "invoice_print_weight": "Weight:",
+  "invoice_print_weight": "Weight",
   "@invoice_print_weight": {
     "description": "Label for the weight in the invoice"
   },
-  "invoice_print_amount": "Amount:",
+  "invoice_print_amount": "Amount",
   "@invoice_print_amount": {
     "description": "Label for the amount in the invoice"
   },
-  "invoice_print_transaction_status": "Transaction Status:",
+  "invoice_print_transaction_status": "Transaction Status",
   "@invoice_print_transaction_status": {
     "description": "Label for the transaction status in the invoice"
   },
-  "invoice_print_payment_status": "Payment Status:",
+  "invoice_print_payment_status": "Payment Status",
   "@invoice_print_payment_status": {
     "description": "Label for the payment status in the invoice"
   },
-  "invoice_print_start_date": "Start Date:",
+  "invoice_print_start_date": "Start Date",
   "@invoice_print_start_date": {
     "description": "Label for the start date in the invoice"
   },
-  "invoice_print_end_date": "End Date:",
+  "invoice_print_end_date": "End Date",
   "@invoice_print_end_date": {
     "description": "Label for the end date in the invoice"
   },
-  "invoice_print_staff_name": "Staff Name:",
+  "invoice_print_staff_name": "Staff Name",
   "@invoice_print_staff_name": {
     "description": "Label for the staff name in the invoice"
   },
-  "invoice_print_notes": "Notes:",
+  "invoice_print_notes": "Notes",
   "@invoice_print_notes": {
     "description": "Label for the notes in the invoice"
   },
