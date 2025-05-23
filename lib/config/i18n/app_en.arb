@@ -199,21 +199,35 @@
     "description": "Label for the service description card"
   },
 
+  "@_TRANSACTION": {},
+
   "transaction_screen_title": "Transaction",
   "@transaction_screen_title": {
     "description": "Title for the transaction screen"
+  },
+  "transaction_search_hint": "Search transaction",
+  "@transaction_search_hint": {
+    "description": "Hint text for the transaction search input"
+  },
+  "transaction_deleted_message": "Transaction deleted, long press to restore",
+  "@transaction_deleted_message": {
+    "description": "Message displayed when transaction is deleted"
+  },
+  "transaction_detail_screen_title": "Transaction Details",
+  "@transaction_detail_screen_title": {
+    "description": "Title for the transaction details screen"
   },
   "transaction_empty_message": "No transaction found",
   "@transaction_empty_message": {
     "description": "Message displayed when no transaction is found"
   },
-  "transaction_add_dialog_title": "Add Transaction",
-  "@transaction_add_dialog_title": {
-    "description": "Title for the add transaction dialog"
+  "transaction_add_screen_title": "Add Transaction",
+  "@transaction_add_screen_title": {
+    "description": "Title for the add transaction screen"
   },
-  "transaction_edit_dialog_title": "Edit Transaction",
-  "@transaction_edit_dialog_title": {
-    "description": "Title for the edit transaction dialog"
+  "transaction_edit_screen_title": "Edit Transaction",
+  "@transaction_edit_screen_title": {
+    "description": "Title for the edit transaction screen"
   },
   "transaction_delete_dialog_title": "Delete Transaction",
   "@transaction_delete_dialog_title": {
@@ -537,6 +551,53 @@
     "description": "Label for the price input field"
   },
 
+  "@_CARD": {},
+
+  "card_title_transaction_details": "Transaction Details",
+  "@card_title_transaction_details": {
+    "description": "Title for the transaction details card"
+  },
+  "card_title_transaction_dates": "Transaction Dates",
+  "@card_title_transaction_dates": {
+    "description": "Title for the transaction dates card"
+  },
+  "card_title_description": "Description",
+  "@card_title_description": {
+    "description": "Title for the description card"
+  },
+  "card_item_title_customer": "Customer",
+  "@card_item_title_customer": {
+    "description": "Title for the customer card item"
+  },
+  "card_item_title_service": "Service",
+  "@card_item_title_service": {
+    "description": "Title for the service card item"
+  },
+  "card_item_title_weight": "Weight",
+  "@card_item_title_weight": {
+    "description": "Title for the weight card item"
+  },
+  "card_item_title_amount": "Amount",
+  "@card_item_title_amount": {
+    "description": "Title for the amount card item"
+  },
+  "card_item_title_start_date": "Start Date",
+  "@card_item_title_start_date": {
+    "description": "Title for the start date card item"
+  },
+  "card_item_title_end_date": "End Date",
+  "@card_item_title_end_date": {
+    "description": "Title for the end date card item"
+  },
+  "card_item_title_created_at": "Created At",
+  "@card_item_title_created_at": {
+    "description": "Title for the created at card item"
+  },
+  "card_item_title_staff_name": "Staff Name",
+  "@card_item_title_staff_name": {
+    "description": "Title for the staff name card item"
+  },
+  
   "@_FORM_HINT": {},
 
   "form_name_hint": "Please enter your name",

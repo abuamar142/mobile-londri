@@ -3,14 +3,14 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failure.dart';
 import '../repositories/transaction_repository.dart';
 
-class TransactionActivateTransaction {
+class TransactionDeleteTransaction {
   final TransactionRepository transactionRepository;
 
-  TransactionActivateTransaction({
+  TransactionDeleteTransaction({
     required this.transactionRepository,
   });
 
   Future<Either<Failure, void>> call(String id) async {
-    return await transactionRepository.activateTransaction(id);
+    return await transactionRepository.hardDeleteTransaction(id);
   }
 }

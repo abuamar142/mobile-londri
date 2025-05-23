@@ -32,6 +32,8 @@ class AuthRepositoryImplementation extends AuthRepository {
         final userRole = response.accessToken!.getUserRoleFromJwt();
 
         RoleManager.setUserRole(userRole);
+
+        await authRemoteDatasource.saveAuth(response.id, response.accessToken!);
       }
 
       return Right(response);

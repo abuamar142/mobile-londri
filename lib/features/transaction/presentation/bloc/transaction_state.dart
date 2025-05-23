@@ -52,7 +52,7 @@ class TransactionStateSuccessUpdateTransaction extends TransactionState {}
 
 class TransactionStateSuccessDeleteTransaction extends TransactionState {}
 
-class TransactionStateSuccessActivateTransaction extends TransactionState {}
+class TransactionStateSuccessRestoreTransaction extends TransactionState {}
 
 class TransactionStateFailure extends TransactionState {
   final String message;

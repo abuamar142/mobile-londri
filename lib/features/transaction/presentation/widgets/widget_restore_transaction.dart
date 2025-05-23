@@ -5,18 +5,18 @@ import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
 
-Future<void> activateTransaction({
+Future<void> restoreTransaction({
   required BuildContext context,
   required Transaction transaction,
   required TransactionBloc transactionBloc,
 }) async {
   showConfirmationDialog(
     context: context,
-    title: 'Activate Transaction',
-    content: 'Are you sure you want to activate this transaction?',
+    title: 'Restore Transaction',
+    content: 'Are you sure you want to restore this transaction?',
     onConfirm: () {
       transactionBloc.add(
-        TransactionEventActivateTransaction(
+        TransactionEventRestoreTransaction(
           id: transaction.id.toString(),
         ),
       );

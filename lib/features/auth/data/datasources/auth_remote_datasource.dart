@@ -1,6 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exceptions.dart';
+import '../../domain/entities/auth.dart';
 import '../models/auth_model.dart';
 
 abstract class AuthRemoteDatasource {
@@ -12,6 +13,10 @@ abstract class AuthRemoteDatasource {
     String email,
     String password,
     String name,
+  );
+  Future<void> saveAuth(
+    String userId,
+    String accessToken,
   );
   Future<void> logout();
 }
@@ -43,6 +48,35 @@ class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
       );
     } on AuthException catch (e) {
       throw ServerException(message: e.code.toString());
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> saveAuth(String userId, String accessToken) async {
+    try {
+      final Map<String, dynamic> response =
+          await supabaseClient.from('users').select('''
+        id,
+        email,
+        name
+      ''').eq('user_id', userId).single();
+
+      if (response.isNotEmpty) {
+        AuthManager.setCurrentUser(
+          Auth(
+            accessToken: accessToken,
+            id: response['id'].toString(),
+            email: response['email'],
+            name: response['name'],
+          ),
+        );
+      } else {
+        throw ServerException(message: 'User not found');
+      }
+    } on AuthException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());
     }

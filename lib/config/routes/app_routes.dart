@@ -12,6 +12,7 @@ import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/print_transaction_note_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
+import '../../features/transaction/presentation/screens/transaction_detail_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 
 class AppRoutes {
@@ -111,7 +112,8 @@ class AppRoutes {
             name: 'add-transaction',
             builder: (context, state) {
               return const ManageTransactionScreen(
-                  mode: ManageTransactionMode.add);
+                mode: ManageTransactionMode.add,
+              );
             },
           ),
           GoRoute(
@@ -119,8 +121,7 @@ class AppRoutes {
             name: 'view-transaction',
             builder: (context, state) {
               final transactionId = state.pathParameters['id']!;
-              return ManageTransactionScreen(
-                mode: ManageTransactionMode.view,
+              return TransactionDetailScreen(
                 transactionId: transactionId,
               );
             },

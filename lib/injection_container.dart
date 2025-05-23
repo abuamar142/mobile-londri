@@ -46,11 +46,11 @@ import 'features/service/presentation/bloc/service_bloc.dart';
 import 'features/transaction/data/datasources/transaction_remote_datasource.dart';
 import 'features/transaction/data/repositories/transaction_repository_implementation.dart';
 import 'features/transaction/domain/repositories/transaction_repository.dart';
-import 'features/transaction/domain/usecases/transaction_activate_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_create_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_delete_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_get_transaction_by_id.dart';
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
+import 'features/transaction/domain/usecases/transaction_restore_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_update_transaction.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 
@@ -334,8 +334,8 @@ Future<void> initializeDependencies() async {
         transactionRepository: serviceLocator(),
       ),
     )
-    ..registerLazySingleton<TransactionActivateTransaction>(
-      () => TransactionActivateTransaction(
+    ..registerLazySingleton<TransactionRestoreTransaction>(
+      () => TransactionRestoreTransaction(
         transactionRepository: serviceLocator(),
       ),
     )
@@ -353,7 +353,7 @@ Future<void> initializeDependencies() async {
         transactionCreateTransaction: serviceLocator(),
         transactionUpdateTransaction: serviceLocator(),
         transactionDeleteTransaction: serviceLocator(),
-        transactionActivateTransaction: serviceLocator(),
+        transactionRestoreTransaction: serviceLocator(),
       ),
     );
 

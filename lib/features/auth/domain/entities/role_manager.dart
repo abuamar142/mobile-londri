@@ -9,6 +9,7 @@ class RoleManager {
       Permission.manageCustomers,
       Permission.manageServices,
       Permission.manageTransactions,
+      Permission.hardDeleteTransaction,
       Permission.activateCustomer,
       Permission.deleteCustomer,
     ],
@@ -55,6 +56,7 @@ enum Permission {
   deleteCustomer,
   manageServices,
   manageTransactions,
+  hardDeleteTransaction,
   trackTransactions,
 }
 

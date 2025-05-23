@@ -4,11 +4,11 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/transaction.dart';
-import '../../domain/usecases/transaction_activate_transaction.dart';
 import '../../domain/usecases/transaction_create_transaction.dart';
 import '../../domain/usecases/transaction_delete_transaction.dart';
 import '../../domain/usecases/transaction_get_transaction_by_id.dart';
 import '../../domain/usecases/transaction_get_transactions.dart';
+import '../../domain/usecases/transaction_restore_transaction.dart';
 import '../../domain/usecases/transaction_update_transaction.dart';
 
 part 'transaction_event.dart';
@@ -20,7 +20,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionCreateTransaction transactionCreateTransaction;
   final TransactionUpdateTransaction transactionUpdateTransaction;
   final TransactionDeleteTransaction transactionDeleteTransaction;
-  final TransactionActivateTransaction transactionActivateTransaction;
+  final TransactionRestoreTransaction transactionRestoreTransaction;
 
   late List<Transaction> _allTransactions;
   String _currentQuery = '';
@@ -36,7 +36,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.transactionCreateTransaction,
     required this.transactionUpdateTransaction,
     required this.transactionDeleteTransaction,
-    required this.transactionActivateTransaction,
+    required this.transactionRestoreTransaction,
   }) : super(TransactionStateInitial()) {
     on<TransactionEventGetTransactions>(
       (event, emit) => onTransactionEventGetTransactions(event, emit),
@@ -53,8 +53,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionEventDeleteTransaction>(
       (event, emit) => onTransactionEventDeleteTransaction(event, emit),
     );
-    on<TransactionEventActivateTransaction>(
-      (event, emit) => onTransactionEventActivateTransaction(event, emit),
+    on<TransactionEventRestoreTransaction>(
+      (event, emit) => onTransactionEventRestoreTransaction(event, emit),
     );
     on<TransactionEventSearchTransaction>(
       (event, emit) => onTransactionEventSearchTransaction(event, emit),
@@ -164,21 +164,21 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     });
   }
 
-  void onTransactionEventActivateTransaction(
-    TransactionEventActivateTransaction event,
+  void onTransactionEventRestoreTransaction(
+    TransactionEventRestoreTransaction event,
     Emitter<TransactionState> emit,
   ) async {
     emit(TransactionStateLoading());
 
     Either<Failure, void> result =
-        await transactionActivateTransaction(event.id);
+        await transactionRestoreTransaction(event.id);
 
     result.fold((left) {
       emit(TransactionStateFailure(
         message: left.message,
       ));
     }, (right) {
-      emit(TransactionStateSuccessActivateTransaction());
+      emit(TransactionStateSuccessRestoreTransaction());
       add(
         TransactionEventGetTransactions(),
       );
@@ -232,6 +232,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final lowerQuery = query.toLowerCase();
     List<Transaction> filtered = transactions
         .where((transaction) =>
+            (transaction.id?.toLowerCase().contains(lowerQuery) ?? false) ||
             (transaction.customerName?.toLowerCase().contains(lowerQuery) ??
                 false) ||
             (transaction.serviceName?.toLowerCase().contains(lowerQuery) ??

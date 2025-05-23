@@ -13,7 +13,7 @@ import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
-import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/domain/entities/auth.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
 import '../../../service/domain/entities/service.dart';
@@ -21,11 +21,40 @@ import '../../../service/presentation/bloc/service_bloc.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
-import '../widgets/widget_delete_transaction.dart';
-import '../widgets/widget_payment_status_badge.dart';
-import '../widgets/widget_transaction_status_badge.dart';
+import '../widgets/widget_bottom_bar.dart';
 
-enum ManageTransactionMode { add, edit, view }
+Future<bool> pushAddTransaction(BuildContext context) async {
+  await context.pushNamed('add-transaction');
+  return true;
+}
+
+Future<bool> pushViewTransaction(
+  BuildContext context,
+  String transactionId,
+) async {
+  await context.pushNamed(
+    'view-transaction',
+    pathParameters: {
+      'id': transactionId,
+    },
+  );
+  return true;
+}
+
+Future<bool> pushEditTransaction(
+  BuildContext context,
+  String transactionId,
+) async {
+  await context.pushNamed(
+    'edit-transaction',
+    pathParameters: {
+      'id': transactionId,
+    },
+  );
+  return true;
+}
+
+enum ManageTransactionMode { add, edit }
 
 class ManageTransactionScreen extends StatefulWidget {
   final ManageTransactionMode mode;
@@ -71,7 +100,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
   bool get _isAddMode => widget.mode == ManageTransactionMode.add;
   bool get _isEditMode => widget.mode == ManageTransactionMode.edit;
-  bool get _isViewMode => widget.mode == ManageTransactionMode.view;
 
   @override
   void initState() {
@@ -97,11 +125,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   }
 
   void _getCurrentUserId() {
-    final authBloc = serviceLocator<AuthBloc>();
-    if (authBloc.state is AuthStateSuccessLogin) {
-      final user = (authBloc.state as AuthStateSuccessLogin).auth;
-      _currentUserId = user.id;
-    }
+    _currentUserId = AuthManager.currentUser!.id;
   }
 
   void _setDefaultDates() {
@@ -142,8 +166,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             context.pop(true);
           } else if (state is TransactionStateSuccessUpdateTransaction) {
             showSnackbar(context, appText.transaction_update_success_message);
-          } else if (state is TransactionStateSuccessDeleteTransaction) {
-            showSnackbar(context, appText.transaction_delete_success_message);
             context.pop(true);
           } else if (state is TransactionStateWithFilteredTransactions) {
             _handleTransactionDataLoaded(state);
@@ -157,21 +179,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                 style: AppTextStyle.heading3,
               ),
               centerTitle: true,
-              actions: [
-                if (_isViewMode)
-                  IconButton(
-                    onPressed: () async {
-                      final result = await context.pushNamed(
-                        'print-transaction',
-                        pathParameters: {'id': widget.transactionId!},
-                      );
-                      if (result == true && context.mounted) {
-                        context.pop(true);
-                      }
-                    },
-                    icon: const Icon(Icons.print),
-                  ),
-              ],
             ),
             body: _isLoading
                 ? WidgetLoading(usingPadding: true)
@@ -185,60 +192,12 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildFormFields(state, appText),
-                            SizedBox(height: AppSizes.size80),
                           ],
                         ),
                       ),
                     ),
                   ),
-            bottomNavigationBar: _buildBottomBar(context, appText, state),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildBottomBar(
-    BuildContext context,
-    AppLocalizations appText,
-    TransactionState state,
-  ) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: AppSizes.size16,
-          right: AppSizes.size16,
-          bottom: AppSizes.size16,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (_isViewMode)
-              Row(
-                children: [
-                  Expanded(
-                    child: WidgetButton(
-                      label: appText.button_edit,
-                      isLoading: state is TransactionStateLoading,
-                      onPressed: () async {
-                        if (_currentTransaction != null) {
-                          final result = await context.pushNamed(
-                            'edit-transaction',
-                            pathParameters: {
-                              'id': _currentTransaction!.id!.toString()
-                            },
-                          );
-
-                          if (result == true && context.mounted) {
-                            context.pop(true);
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            if (_isAddMode || _isEditMode)
+            bottomNavigationBar: WidgetBottomBar(content: [
               Row(
                 children: [
                   Expanded(
@@ -251,49 +210,23 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   ),
                 ],
               ),
-            if (_isViewMode) AppSizes.spaceHeight12,
-            if (_isViewMode)
-              Row(
-                children: [
-                  Expanded(
-                    child: WidgetButton(
-                      label: appText.button_delete,
-                      backgroundColor: AppColors.error,
-                      isLoading: state is TransactionStateLoading,
-                      onPressed: () {
-                        deleteTransaction(
-                          context: context,
-                          transaction: _currentTransaction!,
-                          transactionBloc: _transactionBloc,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-          ],
-        ),
+            ]),
+          );
+        },
       ),
     );
   }
 
   String _getScreenTitle(AppLocalizations appText) {
     if (_isAddMode) {
-      return 'Tambah Transaksi';
-    } else if (_isEditMode) {
-      return 'Edit Transaksi';
+      return appText.transaction_add_screen_title;
     } else {
-      return 'Detail Transaksi';
+      return appText.transaction_edit_screen_title;
     }
   }
 
   Widget _buildFormFields(TransactionState state, AppLocalizations appText) {
-    final bool isFormEnabled =
-        !_isViewMode && state is! TransactionStateLoading;
-
-    if (_isViewMode) {
-      return _buildTransactionDetailView(appText);
-    }
+    final bool isFormEnabled = state is! TransactionStateLoading;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,7 +379,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         AppSizes.spaceHeight16,
 
         // Status Selection
-        if (!_isAddMode) ...[
+        if (_isEditMode) ...[
           Text(
             'Transaction Status',
             style: AppTextStyle.label,
@@ -532,137 +465,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     );
   }
 
-  Widget _buildTransactionDetailView(AppLocalizations appText) {
-    return Column(
-      children: [
-        Center(
-          child: Column(
-            children: [
-              Container(
-                width: AppSizes.size80,
-                height: AppSizes.size80,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(
-                    alpha: 0.1,
-                  ),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.primary,
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  Icons.receipt_long,
-                  size: AppSizes.size40,
-                  color: AppColors.primary,
-                ),
-              ),
-              SizedBox(height: AppSizes.size16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  WidgetTransactionStatusBadge(
-                    status: _currentTransaction!.transactionStatus!,
-                  ),
-                  SizedBox(width: AppSizes.size8),
-                  WidgetPaymentStatusBadge(
-                    status: _currentTransaction!.paymentStatus!,
-                  ),
-                ],
-              ),
-              SizedBox(height: AppSizes.size8),
-              Text(
-                "#${_currentTransaction!.id!.substring(0, 8).toUpperCase()}",
-                style: AppTextStyle.heading2.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: AppSizes.size24),
-
-        // Customer & Service Info Card
-        _buildDetailCard(
-          title: 'Transaction Details',
-          content: [
-            _buildDetailItem(
-              icon: Icons.person,
-              label: 'Customer',
-              value: _customerController.text,
-            ),
-            _buildDetailItem(
-              icon: Icons.design_services,
-              label: 'Service',
-              value: _serviceController.text,
-            ),
-            _buildDetailItem(
-              icon: Icons.scale,
-              label: 'Weight',
-              value: "${_weightController.text} kg",
-            ),
-            _buildDetailItem(
-              icon: Icons.attach_money,
-              label: 'Amount',
-              value:
-                  int.tryParse(_amountController.text)?.formatNumber() ?? '-',
-            ),
-          ],
-        ),
-        SizedBox(height: AppSizes.size16),
-
-        // Dates Card
-        _buildDetailCard(
-          title: 'Transaction Dates',
-          content: [
-            _buildDetailItem(
-              icon: Icons.calendar_today,
-              label: 'Start Date',
-              value: _startDateController.text,
-            ),
-            _buildDetailItem(
-              icon: Icons.event,
-              label: 'End Date',
-              value: _endDateController.text,
-            ),
-            _buildDetailItem(
-              icon: Icons.access_time,
-              label: 'Created At',
-              value: _currentTransaction?.createdAt != null
-                  ? DateFormat('yyyy-MM-dd HH:mm')
-                      .format(_currentTransaction!.createdAt!)
-                  : '-',
-            ),
-          ],
-        ),
-        SizedBox(height: AppSizes.size16),
-
-        // Description Card
-        _buildDetailCard(
-          title: 'Description',
-          content: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: AppSizes.size8,
-              ),
-              child: Text(
-                _descriptionController.text.isNotEmpty
-                    ? _descriptionController.text
-                    : '-',
-                style: AppTextStyle.body1.copyWith(
-                  color: _descriptionController.text.isNotEmpty
-                      ? AppColors.onSecondary
-                      : AppColors.gray,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   void _selectCustomer(BuildContext context) async {
     if (_customerBloc.state is CustomerStateWithFilteredCustomers) {
       final state = _customerBloc.state as CustomerStateWithFilteredCustomers;
@@ -696,11 +498,16 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                       style: AppTextStyle.heading3,
                     ),
                   ),
-                  Divider(height: 1),
+                  Divider(
+                    thickness: 1,
+                  ),
                   Expanded(
                     child: activeCustomers.isEmpty
                         ? Center(
-                            child: Text(appText.customer_empty_message),
+                            child: Text(
+                              appText.customer_empty_message,
+                              style: AppTextStyle.body1,
+                            ),
                           )
                         : ListView.builder(
                             controller: scrollController,
@@ -712,23 +519,28 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                                   backgroundColor: AppColors.primary.withValues(
                                     alpha: 0.1,
                                   ),
-                                  child: Text(
-                                    customer.name?[0] ?? '',
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  child: Icon(
+                                    _getLeadingIcon(customer),
+                                    color: AppColors.primary,
                                   ),
                                 ),
-                                title: Text(customer.name ?? ''),
-                                subtitle: Text(customer.phone ?? ''),
+                                title: Text(
+                                  customer.name ?? '',
+                                  style: AppTextStyle.body1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  _getCustomerSubtitle(customer),
+                                  style: AppTextStyle.body2,
+                                ),
                                 onTap: () {
                                   setState(() {
                                     _selectedCustomer = customer;
                                     _customerController.text =
                                         customer.name ?? '';
                                   });
-                                  Navigator.pop(context);
+                                  context.pop();
                                 },
                               );
                             },
@@ -742,6 +554,50 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
       );
     } else {
       _customerBloc.add(CustomerEventGetCustomers());
+    }
+  }
+
+  String _getCustomerSubtitle(Customer customer) {
+    final List<String> parts = [];
+
+    if (customer.phone != null && customer.phone!.isNotEmpty) {
+      parts.add(customer.phone!);
+    }
+
+    if (customer.description != null && customer.description!.isNotEmpty) {
+      parts.add(customer.description!);
+    }
+
+    return parts.isEmpty ? '-' : parts.join(' • ');
+  }
+
+  String _getServiceSubtitle(Service service) {
+    final List<String> parts = [];
+
+    if (service.price != null && service.price! > 0) {
+      parts.add('${service.price!.formatNumber()}/kg');
+    }
+
+    if (service.description != null && service.description!.isNotEmpty) {
+      parts.add(service.description!);
+    }
+
+    return parts.isEmpty ? '-' : parts.join(' • ');
+  }
+
+  IconData _getLeadingIcon(Customer customer) {
+    if (!(customer.isActive ?? true)) {
+      return Icons.person_off;
+    }
+
+    switch (customer.gender) {
+      case Gender.male:
+        return Icons.man;
+      case Gender.female:
+        return Icons.woman;
+      case Gender.other:
+      default:
+        return Icons.person;
     }
   }
 
@@ -795,15 +651,19 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                                     alpha: 0.1,
                                   ),
                                   child: Icon(
-                                    Icons.design_services,
+                                    Icons.assignment,
                                     color: AppColors.primary,
                                   ),
                                 ),
-                                title: Text(service.name ?? ''),
+                                title: Text(
+                                  service.name ?? '',
+                                  style: AppTextStyle.body1.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 subtitle: Text(
-                                  service.price != null
-                                      ? service.price!.formatNumber()
-                                      : '-',
+                                  _getServiceSubtitle(service),
+                                  style: AppTextStyle.body2,
                                 ),
                                 onTap: () {
                                   setState(() {
@@ -818,7 +678,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                                       _calculateAmount(weight, service.price!);
                                     }
                                   });
-                                  Navigator.pop(context);
+                                  context.pop();
                                 },
                               );
                             },
@@ -857,79 +717,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         _endDateController.text = DateFormat('yyyy-MM-dd').format(_endDate);
       });
     }
-  }
-
-  Widget _buildDetailCard({
-    required String title,
-    required List<Widget> content,
-  }) {
-    return Card(
-      elevation: 2,
-      surfaceTintColor: AppColors.primary,
-      color: AppColors.onPrimary,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.size12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: AppSizes.size16,
-          right: AppSizes.size16,
-          top: AppSizes.size16,
-          bottom: AppSizes.size8,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: AppTextStyle.heading3.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Divider(),
-            ...content,
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailItem({
-    required IconData icon,
-    required String label,
-    required String value,
-    Widget? trailing,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSizes.size8),
-      child: Row(
-        children: [
-          Icon(icon, size: AppSizes.size20, color: AppColors.primary),
-          SizedBox(width: AppSizes.size8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: AppTextStyle.body2.copyWith(
-                  color: AppColors.gray,
-                ),
-              ),
-              SizedBox(height: AppSizes.size4),
-              Text(
-                value,
-                style: AppTextStyle.body1.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          if (trailing != null) trailing,
-        ],
-      ),
-    );
   }
 
   void _selectEndDate(BuildContext context) async {
@@ -1027,7 +814,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         paymentStatus: _isAddMode ? PaymentStatus.notPaidYet : _paymentStatus,
         startDate: _startDate,
         endDate: _endDate,
-        isActive: _currentTransaction?.isActive ?? true,
+        isDeleted: _currentTransaction?.isDeleted ?? true,
       );
 
       if (_isAddMode) {

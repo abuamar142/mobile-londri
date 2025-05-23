@@ -58,10 +58,15 @@
   "service_information_card_label": "Informasi",
   "service_description_card_label": "Deskripsi",
 
+  "@_TRANSACTION": {},
+
   "transaction_screen_title": "Transaksi",
+  "transaction_search_hint": "Cari transaksi",
+  "transaction_deleted_message": "Transaksi sudah dihapus, tekan lama untuk mengembalikan",
   "transaction_empty_message": "Tidak ada transaksi ditemukan",
-  "transaction_add_dialog_title": "Tambah Transaksi",
-  "transaction_edit_dialog_title": "Edit Transaksi",
+  "transaction_add_screen_title": "Tambah Transaksi",
+  "transaction_edit_screen_title": "Edit Transaksi",
+  "transaction_detail_screen_title": "Detail Transaksi",
   "transaction_delete_dialog_title": "Hapus Transaksi",
   "transaction_add_success_message": "Transaksi berhasil ditambahkan",
   "transaction_update_success_message": "Transaksi berhasil diperbarui",
@@ -153,6 +158,20 @@
   "form_phone_label": "Telepon",
   "form_description_label": "Deskripsi",
   "form_price_label": "Harga",
+
+  "@_CARD": {},
+
+  "card_title_transaction_details": "Detail Transaksi",
+  "card_title_transaction_dates": "Tanggal Transaksi",
+  "card_title_description": "Deskripsi",
+  "card_item_title_customer": "Pelanggan",
+  "card_item_title_service": "Layanan",
+  "card_item_title_weight": "Berat",
+  "card_item_title_amount": "Total",
+  "card_item_title_start_date": "Tanggal Mulai",
+  "card_item_title_end_date": "Tanggal Selesai",
+  "card_item_title_created_at": "Tanggal Dibuat",
+  "card_item_title_staff_name": "Nama Pegawai",
 
   "@_FORM_HINT": {},
 

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
@@ -16,10 +14,10 @@ import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../domain/entities/transaction.dart';
-import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
-import '../widgets/widget_activate_transaction.dart';
-import '../widgets/widget_transaction_status_badge.dart';
+import '../widgets/widget_restore_transaction.dart';
+import '../widgets/widget_transaction_card.dart';
+import 'manage_transaction_screen.dart';
 
 void pushTransactions(BuildContext context) {
   context.pushNamed('transactions');
@@ -63,8 +61,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         listener: (context, state) {
           if (state is TransactionStateFailure) {
             showSnackbar(context, state.message);
-          } else if (state is TransactionStateSuccessActivateTransaction) {
-            showSnackbar(context, 'Transaction activated successfully');
+          } else if (state is TransactionStateSuccessRestoreTransaction) {
+            showSnackbar(context, 'Transaction restored successfully');
           }
         },
         child: Scaffold(
@@ -80,7 +78,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               padding: EdgeInsets.only(
                 left: AppSizes.size16,
                 right: AppSizes.size16,
-                bottom: AppSizes.size16,
               ),
               child: Column(
                 children: [
@@ -97,8 +94,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               RoleManager.hasPermission(Permission.manageTransactions)
                   ? FloatingActionButton(
                       onPressed: () async {
-                        final result =
-                            await context.pushNamed('add-transaction');
+                        final result = await pushAddTransaction(context);
                         if (result == true) {
                           _getTransactions();
                         }
@@ -117,21 +113,23 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Row _buildHeader(AppLocalizations appText, BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: WidgetSearchBar(
-            controller: _searchController,
-            hintText: 'Cari transaksi',
-            onChanged: (value) {
+        WidgetSearchBar(
+          controller: _searchController,
+          hintText: appText.transaction_search_hint,
+          onChanged: (value) {
+            setState(() {
               _transactionBloc.add(
                 TransactionEventSearchTransaction(query: value),
               );
-            },
-            onClear: () {
+            });
+          },
+          onClear: () {
+            setState(() {
               _transactionBloc.add(
                 TransactionEventSearchTransaction(query: ''),
               );
-            },
-          ),
+            });
+          },
         ),
         AppSizes.spaceWidth8,
         IconButton(
@@ -168,66 +166,35 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               separatorBuilder: (_, __) => AppSizes.spaceHeight8,
               itemBuilder: (context, index) {
                 final transaction = filteredTransactions[index];
-                final isActive = transaction.isActive ?? false;
+                final isDeleted = transaction.isDeleted ?? false;
 
-                return ListTile(
-                  title: Text(
-                    transaction.customerName ?? 'No Customer',
-                    style: AppTextStyle.tileTitle,
-                  ),
-                  subtitle: _buildSubtitle(transaction, appText),
-                  leading: Icon(isActive ? Icons.receipt : Icons.receipt_long),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        (transaction.amount ?? 0).formatNumber(),
-                        style: AppTextStyle.tileTrailing,
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      WidgetTransactionStatusBadge(
-                        status: transaction.transactionStatus ??
-                            TransactionStatus.onProgress,
-                      ),
-                    ],
-                  ),
-                  tileColor: isActive
-                      ? null
-                      : AppColors.gray.withValues(
-                          alpha: 0.1,
-                        ),
+                return WidgetTransactionCard(
+                  transaction: transaction,
                   onTap: () async {
-                    if (isActive) {
-                      final result = await context.pushNamed(
-                        'view-transaction',
-                        pathParameters: {'id': transaction.id!.toString()},
+                    if (isDeleted) {
+                      final result = await pushViewTransaction(
+                        context,
+                        transaction.id!,
                       );
 
                       if (result == true) {
                         _getTransactions();
                       }
                     } else {
-                      showSnackbar(context, 'Transaction is not active');
+                      showSnackbar(
+                        context,
+                        appText.transaction_deleted_message,
+                      );
                     }
                   },
                   onLongPress: () {
-                    if (isActive) {
-                      showSnackbar(context, 'Transaction is active');
-                    } else {
+                    if (!isDeleted) {
                       if (RoleManager.hasPermission(
                           Permission.manageTransactions)) {
-                        activateTransaction(
+                        restoreTransaction(
                           context: context,
                           transaction: transaction,
                           transactionBloc: _transactionBloc,
-                        );
-                      } else {
-                        showSnackbar(
-                          context,
-                          'Please ask a super admin to activate this transaction.',
                         );
                       }
                     }
@@ -243,48 +210,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           );
         }
       },
-    );
-  }
-
-  Widget _buildSubtitle(Transaction transaction, AppLocalizations appText) {
-    final serviceName = transaction.serviceName ?? 'No Service';
-
-    final dateFormat = DateFormat('dd MMM yyyy');
-    final startDate = transaction.startDate != null
-        ? dateFormat.format(transaction.startDate!)
-        : '?';
-    final endDate = transaction.endDate != null
-        ? dateFormat.format(transaction.endDate!)
-        : '?';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          serviceName,
-          style: AppTextStyle.tileSubtitle,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        AppSizes.spaceHeight4,
-        Row(
-          children: [
-            Icon(
-              Icons.date_range,
-              size: AppSizes.size12,
-              color: AppColors.gray,
-            ),
-            AppSizes.spaceWidth8,
-            Text(
-              '$startDate - $endDate',
-              style: AppTextStyle.tileSubtitle.copyWith(
-                fontSize: AppSizes.size12,
-                color: AppColors.gray,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

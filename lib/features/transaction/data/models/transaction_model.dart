@@ -8,6 +8,7 @@ class TransactionModel extends Transaction {
   const TransactionModel({
     super.id,
     super.userId,
+    super.userName,
     super.customerId,
     super.customerName,
     super.serviceId,
@@ -23,13 +24,14 @@ class TransactionModel extends Transaction {
     required this.updatedAt,
     this.deletedAt,
   }) : super(
-          isActive: deletedAt == null,
+          isDeleted: deletedAt == null,
         );
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
       userId: json['user_id'],
+      userName: json['users'] != null ? json['users']['name'] : null,
       customerId: json['customer_id'],
       customerName:
           json['customers'] != null ? json['customers']['name'] : null,
@@ -66,7 +68,7 @@ class TransactionModel extends Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'user_id': userId,
+      'employee_id': userId,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,
@@ -80,11 +82,5 @@ class TransactionModel extends Transaction {
       'updated_at': updatedAt.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
     };
-  }
-
-  Map<String, dynamic> toUpdateJson() {
-    Map<String, dynamic> data = toJson();
-    data.removeWhere((key, value) => value == null);
-    return data;
   }
 }

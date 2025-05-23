@@ -53,10 +53,10 @@ class TransactionEventDeleteTransaction extends TransactionEvent {
   List<Object> get props => [id];
 }
 
-class TransactionEventActivateTransaction extends TransactionEvent {
+class TransactionEventRestoreTransaction extends TransactionEvent {
   final String id;
 
-  const TransactionEventActivateTransaction({
+  const TransactionEventRestoreTransaction({
     required this.id,
   });
 

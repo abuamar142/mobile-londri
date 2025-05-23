@@ -22,7 +22,7 @@ class WidgetEmptyList extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              Icons.people_outline,
+              Icons.warning_amber_rounded,
               size: AppSizes.size64,
               color: AppColors.primary,
             ),

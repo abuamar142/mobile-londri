@@ -21,3 +21,17 @@ class Auth extends Equatable {
         name,
       ];
 }
+
+class AuthManager {
+  static Auth? _currentUser;
+
+  static Auth? get currentUser => _currentUser;
+
+  static void setCurrentUser(Auth user) {
+    _currentUser = user;
+  }
+
+  static void clearCurrentUser() {
+    _currentUser = null;
+  }
+}

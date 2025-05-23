@@ -10,7 +10,8 @@ abstract class TransactionRemoteDatasource {
   Future<void> createTransaction(TransactionModel transaction);
   Future<void> updateTransaction(TransactionModel transaction);
   Future<void> deleteTransaction(String id);
-  Future<void> activateTransaction(String id);
+  Future<void> hardDeleteTransaction(String id);
+  Future<void> restoreTransaction(String id);
 }
 
 class TransactionRemoteDatasourceImplementation
@@ -27,6 +28,9 @@ class TransactionRemoteDatasourceImplementation
       final List<Map<String, dynamic>> response =
           await supabaseClient.from('transactions').select('''
             *,
+            users (
+              name
+            ),
             customers (
               name
             ),
@@ -49,6 +53,9 @@ class TransactionRemoteDatasourceImplementation
       final Map<String, dynamic> response =
           await supabaseClient.from('transactions').select('''
             *,
+            users (
+              name
+            ),
             customers (
               name
             ),
@@ -83,7 +90,9 @@ class TransactionRemoteDatasourceImplementation
     try {
       await supabaseClient
           .from('transactions')
-          .update(transaction.toUpdateJson())
+          .update(
+            transaction.toJson().cleanNulls(),
+          )
           .eq('id', transaction.id!);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
@@ -106,7 +115,18 @@ class TransactionRemoteDatasourceImplementation
   }
 
   @override
-  Future<void> activateTransaction(String id) async {
+  Future<void> hardDeleteTransaction(String id) async {
+    try {
+      await supabaseClient.from('transactions').delete().eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> restoreTransaction(String id) async {
     try {
       await supabaseClient.from('transactions').update({
         'deleted_at': null,

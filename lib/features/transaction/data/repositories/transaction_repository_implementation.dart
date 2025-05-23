@@ -113,9 +113,21 @@ class TransactionRepositoryImplementation extends TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, void>> activateTransaction(String id) async {
+  Future<Either<Failure, void>> hardDeleteTransaction(String id) async {
     try {
-      await transactionRemoteDatasource.activateTransaction(id);
+      await transactionRemoteDatasource.hardDeleteTransaction(id);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> restoreTransaction(String id) async {
+    try {
+      await transactionRemoteDatasource.restoreTransaction(id);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(Failure(message: e.message));
