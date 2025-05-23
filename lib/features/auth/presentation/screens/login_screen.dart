@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
+import '../../../../core/utils/email_validation.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
@@ -122,8 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return appText.form_email_required_message;
-                            } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                .hasMatch(value)) {
+                            } else if (value.isValidEmail()) {
                               return appText.form_email_invalid_message;
                             } else {
                               return null;
