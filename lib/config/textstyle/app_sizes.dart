@@ -14,6 +14,7 @@ class AppSizes {
   static const double size56 = 56;
   static const double size64 = 64;
   static const double size80 = 80;
+  static const double size96 = 96;
   static const double size400 = 400;
 
   static const SizedBox spaceHeight4 = SizedBox(height: size4);

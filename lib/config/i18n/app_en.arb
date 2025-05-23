@@ -702,6 +702,180 @@
     "description": "Text for the other gender option"
   },
 
+  "@_PRINTER": {},
+
+  "printer_settings_screen_title": "Printer Settings",
+  "@printer_settings_screen_title": {
+    "description": "Title for the printer settings screen"
+  },
+  "printer_status_connected": "Connected to: {printerName}",
+  "@printer_status_connected": {
+    "description": "Status message when printer is connected"
+  },
+  "printer_status_not_connected": "Not connected to any printer",
+  "@printer_status_not_connected": {
+    "description": "Status message when no printer is connected"
+  },
+  "printer_available_printers": "Available Printers",
+  "@printer_available_printers": {
+    "description": "Label for available printers section"
+  },
+  "printer_no_printers_found": "No bonded printers found",
+  "@printer_no_printers_found": {
+    "description": "Message when no paired printers are found"
+  },
+  "printer_pair_instruction": "Pair your printer in Bluetooth settings first,\nthen refresh this list",
+  "@printer_pair_instruction": {
+    "description": "Instructions for pairing a printer"
+  },
+  "printer_test_print": "Test Print",
+  "@printer_test_print": {
+    "description": "Button text for testing printer"
+  },
+  "printer_disconnect": "Disconnect",
+  "@printer_disconnect": {
+    "description": "Button text for disconnecting printer"
+  },
+  "printer_connect": "Connect",
+  "@printer_connect": {
+    "description": "Button text for connecting to printer"
+  },
+  "printer_connected": "Connected",
+  "@printer_connected": {
+    "description": "Status text for connected printer"
+  },
+  "printer_connect_success": "Connected to {printerName}",
+  "@printer_connect_success": {
+    "description": "Success message when connected to printer"
+  },
+  "printer_connect_failed": "Failed to connect to {printerName}",
+  "@printer_connect_failed": {
+    "description": "Error message when connection to printer fails"
+  },
+  "printer_disconnect_success": "Disconnected from printer",
+  "@printer_disconnect_success": {
+    "description": "Success message when disconnected from printer"
+  },
+  "printer_test_print_success": "Test print successful",
+  "@printer_test_print_success": {
+    "description": "Success message for test print"
+  },
+  "printer_test_print_failed": "Failed to print test receipt",
+  "@printer_test_print_failed": {
+    "description": "Error message when test print fails"
+  },
+  "printer_print_error": "Error while printing: {error}",
+  "@printer_print_error": {
+    "description": "Error message when printing fails"
+  },
+  "printer_print_receipt": "Print Receipt",
+  "@printer_print_receipt": {
+    "description": "Button text for printing receipt"
+  },
+  "printer_receipt_success": "Receipt printed successfully",
+  "@printer_receipt_success": {
+    "description": "Success message when receipt is printed"
+  },
+  "printer_receipt_failed": "Failed to print receipt",
+  "@printer_receipt_failed": {
+    "description": "Error message when receipt printing fails"
+  },
+  "printer_permissions_required": "Bluetooth permissions are required for printer functionality",
+  "@printer_permissions_required": {
+    "description": "Message when Bluetooth permissions are required"
+  },
+  "printer_business_info": "Business Information",
+  "@printer_business_info": {
+    "description": "Section title for business information"
+  },
+  "printer_business_name": "Business Name",
+  "@printer_business_name": {
+    "description": "Label for business name field"
+  },
+  "printer_business_address": "Business Address",
+  "@printer_business_address": {
+    "description": "Label for business address field"
+  },
+  "printer_business_phone": "Business Phone",
+  "@printer_business_phone": {
+    "description": "Label for business phone field"
+  },
+  "printer_receipt_preview": "Receipt Preview",
+  "@printer_receipt_preview": {
+    "description": "Title for receipt preview section"
+  },
+  "printer_no_transaction_data": "No transaction data available",
+  "@printer_no_transaction_data": {
+    "description": "Message when no transaction data is available"
+  },
+  "printer_please_connect": "Please connect to a printer first",
+  "@printer_please_connect": {
+    "description": "Message asking to connect to a printer"
+  },
+  "print_transaction_screen_title": "Print Transaction Receipt",
+  "@print_transaction_screen_title": {
+    "description": "Title for the print transaction screen"
+  },
+  
+  "@_INVOICE": {},
+
+  "invoice_print_title": "Invoice",
+  "@invoice_print_title": {
+    "description": "Title for the invoice print"
+  },
+  "invoice_print_transaction_id": "Transaction ID:",
+  "@invoice_print_transaction_id": {
+    "description": "Label for the transaction ID in the invoice"
+  },
+  "invoice_print_date": "Date:",
+  "@invoice_print_date": {
+    "description": "Label for the date in the invoice"
+  },
+  "invoice_print_customer_name": "Customer Name:",
+  "@invoice_print_customer_name": {
+    "description": "Label for the customer name in the invoice"
+  },
+  "invoice_print_service_name": "Service:",
+  "@invoice_print_service": {
+    "description": "Label for the service in the invoice"
+  },
+  "invoice_print_weight": "Weight:",
+  "@invoice_print_weight": {
+    "description": "Label for the weight in the invoice"
+  },
+  "invoice_print_amount": "Amount:",
+  "@invoice_print_amount": {
+    "description": "Label for the amount in the invoice"
+  },
+  "invoice_print_transaction_status": "Transaction Status:",
+  "@invoice_print_transaction_status": {
+    "description": "Label for the transaction status in the invoice"
+  },
+  "invoice_print_payment_status": "Payment Status:",
+  "@invoice_print_payment_status": {
+    "description": "Label for the payment status in the invoice"
+  },
+  "invoice_print_start_date": "Start Date:",
+  "@invoice_print_start_date": {
+    "description": "Label for the start date in the invoice"
+  },
+  "invoice_print_end_date": "End Date:",
+  "@invoice_print_end_date": {
+    "description": "Label for the end date in the invoice"
+  },
+  "invoice_print_staff_name": "Staff Name:",
+  "@invoice_print_staff_name": {
+    "description": "Label for the staff name in the invoice"
+  },
+  "invoice_print_notes": "Notes:",
+  "@invoice_print_notes": {
+    "description": "Label for the notes in the invoice"
+  },
+  "invoice_print_thank_you": "Thank you for choosing {businessName}!",
+  "@invoice_print_thank_you": {
+    "description": "Thank you message in the invoice"
+  },
+
   "@_BUTTON": {},
 
   "button_submit": "Submit",
@@ -751,6 +925,18 @@
   "button_clear": "Clear",
   "@button_clear": {
     "description": "Text for the clear button"
+  },
+  "button_change": "Change",
+  "@button_change": {
+    "description": "Text for the change button"
+  },
+  "button_print": "Print",
+  "@button_print": {
+    "description": "Text for the print button"
+  },
+  "button_connect": "Connect",
+  "@button_connect": {
+    "description": "Text for the connect button"
   },
   "button_manage_employee": "Manage Employee",
   "@button_manage_employee": {
