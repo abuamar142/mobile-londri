@@ -9,6 +9,8 @@ abstract class ServiceEvent extends Equatable {
 
 class ServiceEventGetServices extends ServiceEvent {}
 
+class ServiceEventGetActiveServices extends ServiceEvent {}
+
 class ServiceEventGetServiceById extends ServiceEvent {
   final String id;
 

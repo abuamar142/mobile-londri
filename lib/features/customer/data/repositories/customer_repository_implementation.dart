@@ -32,6 +32,40 @@ class CustomerRepositoryImplementation extends CustomerRepository {
   }
 
   @override
+  Future<Either<Failure, List<CustomerModel>>> getActiveCustomers() async {
+    try {
+      final response = await customerRemoteDatasource.readActiveCustomers();
+
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, CustomerModel>> getCustomerById(String id) async {
+    try {
+      final response = await customerRemoteDatasource.readCustomerById(id);
+
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> createCustomer(Customer customer) async {
     try {
       await customerRemoteDatasource.createCustomer(CustomerModel(

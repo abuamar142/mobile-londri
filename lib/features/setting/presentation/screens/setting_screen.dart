@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import '../../../../config/i18n/i18n.dart';
+import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 
@@ -16,12 +17,12 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final TextEditingController _transactionStatusController =
-      TextEditingController();
+  final TextEditingController _transactionStatusController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
     AppLocales.localeNotifier.addListener(_onLocaleChanged);
   }
 
@@ -33,14 +34,8 @@ class _SettingScreenState extends State<SettingScreen> {
     super.dispose();
   }
 
-  void _onLocaleChanged() {
-    context.pushNamed('home');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -53,7 +48,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   tiles: [
                     SettingsTile(
                       title: Text(
-                        appText.setting_language_label,
+                        context.appText.setting_language_label,
                         style: AppTextStyle.label,
                       ),
                       trailing: SizedBox(
@@ -67,10 +62,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 newLocale,
                               );
 
-                              showSnackbar(
-                                context,
-                                appText.locale_change_success_message,
-                              );
+                              context.showSnackbar(context.appText.locale_change_success_message);
                             }
                           },
                           items: AppLocalizations.supportedLocales
@@ -78,11 +70,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                 (Locale locale) => DropdownMenuItem<Locale>(
                                   value: locale,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(AppSizes.size8),
                                     child: Text(
-                                      locale.languageCode == 'en'
-                                          ? appText.setting_language_en
-                                          : appText.setting_language_id,
+                                      locale.languageCode == 'en' ? context.appText.setting_language_en : context.appText.setting_language_id,
                                       style: AppTextStyle.body,
                                     ),
                                   ),
@@ -100,5 +90,9 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
       ),
     );
+  }
+
+  void _onLocaleChanged() {
+    context.pushNamed('home');
   }
 }

@@ -22,6 +22,28 @@ class CustomerStateSuccessGetCustomers extends CustomerState {
   List<Object> get props => [customers];
 }
 
+class CustomerStateSuccessGetActiveCustomers extends CustomerState {
+  final List<Customer> activeCustomers;
+
+  const CustomerStateSuccessGetActiveCustomers({
+    required this.activeCustomers,
+  });
+
+  @override
+  List<Object> get props => [activeCustomers];
+}
+
+class CustomerStateSuccessGetCustomerById extends CustomerState {
+  final Customer customer;
+
+  const CustomerStateSuccessGetCustomerById({
+    required this.customer,
+  });
+
+  @override
+  List<Object> get props => [customer];
+}
+
 class CustomerStateWithFilteredCustomers extends CustomerState {
   final List<Customer> allCustomers;
   final List<Customer> filteredCustomers;

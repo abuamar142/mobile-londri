@@ -45,6 +45,9 @@ class AppThemes {
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: AppColors.primary),
       ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: AppColors.error),
+      ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(

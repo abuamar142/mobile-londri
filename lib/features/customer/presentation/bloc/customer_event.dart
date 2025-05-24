@@ -9,6 +9,19 @@ abstract class CustomerEvent extends Equatable {
 
 class CustomerEventGetCustomers extends CustomerEvent {}
 
+class CustomerEventGetActiveCustomers extends CustomerEvent {}
+
+class CustomerEventGetCustomerById extends CustomerEvent {
+  final String customerId;
+
+  const CustomerEventGetCustomerById({
+    required this.customerId,
+  });
+
+  @override
+  List<Object> get props => [customerId];
+}
+
 class CustomerEventSearchCustomer extends CustomerEvent {
   final String query;
 

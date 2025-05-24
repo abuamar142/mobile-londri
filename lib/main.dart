@@ -28,21 +28,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => serviceLocator<AuthBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => serviceLocator<ManageEmployeeBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => serviceLocator<ServiceBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => serviceLocator<CustomerBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => serviceLocator<TransactionBloc>(),
-        ),
+        BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator<ManageEmployeeBloc>()),
+        BlocProvider(create: (context) => serviceLocator<ServiceBloc>()),
+        BlocProvider(create: (context) => serviceLocator<CustomerBloc>()),
+        BlocProvider(create: (context) => serviceLocator<TransactionBloc>()),
       ],
       child: ValueListenableBuilder<Locale>(
         valueListenable: AppLocales.localeNotifier,

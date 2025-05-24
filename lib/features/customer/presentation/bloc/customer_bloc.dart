@@ -7,6 +7,8 @@ import '../../domain/entities/customer.dart';
 import '../../domain/usecases/customer_activate_customer.dart';
 import '../../domain/usecases/customer_create_customer.dart';
 import '../../domain/usecases/customer_delete_customer.dart';
+import '../../domain/usecases/customer_get_active_customers.dart';
+import '../../domain/usecases/customer_get_customer_by_id.dart';
 import '../../domain/usecases/customer_get_customers.dart';
 import '../../domain/usecases/customer_update_customer.dart';
 
@@ -15,6 +17,8 @@ part 'customer_state.dart';
 
 class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   final CustomerGetCustomers customerGetCustomers;
+  final CustomerGetActiveCustomers customerGetActiveCustomers;
+  final CustomerGetCustomerById customerGetCustomerById;
   final CustomerCreateCustomer customerCreateCustomer;
   final CustomerUpdateCustomer customerUpdateCustomer;
   final CustomerDeleteCustomer customerDeleteCustomer;
@@ -22,6 +26,8 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
   CustomerBloc({
     required this.customerGetCustomers,
+    required this.customerGetActiveCustomers,
+    required this.customerGetCustomerById,
     required this.customerCreateCustomer,
     required this.customerUpdateCustomer,
     required this.customerDeleteCustomer,
@@ -29,6 +35,12 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   }) : super(CustomerStateInitial()) {
     on<CustomerEventGetCustomers>(
       (event, emit) => onCustomerEventGetCustomers(event, emit),
+    );
+    on<CustomerEventGetActiveCustomers>(
+      (event, emit) => onCustomerEventGetActiveCustomers(event, emit),
+    );
+    on<CustomerEventGetCustomerById>(
+      (event, emit) => onCustomerEventGetCustomerById(event, emit),
     );
     on<CustomerEventCreateCustomer>(
       (event, emit) => onCustomerEventCreateCustomer(event, emit),
@@ -81,6 +93,42 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
           _isAscending,
         ),
       ));
+    });
+  }
+
+  void onCustomerEventGetActiveCustomers(
+    CustomerEventGetActiveCustomers event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(CustomerStateLoading());
+
+    Either<Failure, List<Customer>> result = await customerGetActiveCustomers();
+
+    result.fold((left) {
+      emit(CustomerStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(CustomerStateSuccessGetActiveCustomers(activeCustomers: right));
+    });
+  }
+
+  void onCustomerEventGetCustomerById(
+    CustomerEventGetCustomerById event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(CustomerStateLoading());
+
+    Either<Failure, Customer> result = await customerGetCustomerById(
+      event.customerId,
+    );
+
+    result.fold((left) {
+      emit(CustomerStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(CustomerStateSuccessGetCustomerById(customer: right));
     });
   }
 
@@ -143,12 +191,10 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
           result = (a.name ?? '').compareTo(b.name ?? '');
           break;
         case 'createdAt':
-          result = (a.createdAt ?? DateTime.now())
-              .compareTo(b.createdAt ?? DateTime.now());
+          result = (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
           break;
         default:
-          result = (b.createdAt ?? DateTime.now())
-              .compareTo(a.createdAt ?? DateTime.now());
+          result = (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now());
       }
 
       return ascending ? result : -result;

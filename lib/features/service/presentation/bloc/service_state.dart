@@ -35,6 +35,17 @@ class ServiceStateSuccessGetServices extends ServiceState {
   List<Object> get props => [services];
 }
 
+class ServiceStateSuccessGetActiveServices extends ServiceState {
+  final List<Service> activeServices;
+
+  const ServiceStateSuccessGetActiveServices({
+    required this.activeServices,
+  });
+
+  @override
+  List<Object> get props => [activeServices];
+}
+
 class ServiceStateSuccessGetServiceById extends ServiceState {
   final Service service;
 

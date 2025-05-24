@@ -3,17 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/price_formatter.dart';
-import '../../../../core/utils/show_snackbar.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/auth.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
@@ -24,38 +24,40 @@ import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_bottom_bar.dart';
 
-Future<bool> pushAddTransaction(BuildContext context) async {
-  await context.pushNamed('add-transaction');
-  return true;
-}
-
-Future<bool> pushViewTransaction(
-  BuildContext context,
-  String transactionId,
-) async {
-  await context.pushNamed(
-    'view-transaction',
-    pathParameters: {
-      'id': transactionId,
-    },
-  );
-  return true;
-}
-
-Future<bool> pushEditTransaction(
-  BuildContext context,
-  String transactionId,
-) async {
-  await context.pushNamed(
-    'edit-transaction',
-    pathParameters: {
-      'id': transactionId,
-    },
-  );
-  return true;
-}
-
 enum ManageTransactionMode { add, edit }
+
+Future<bool> pushAddTransaction({
+  required BuildContext context,
+}) async {
+  await context.pushNamed(RouteNames.addTransaction);
+  return true;
+}
+
+Future<bool> pushViewTransaction({
+  required BuildContext context,
+  required String transactionId,
+}) async {
+  await context.pushNamed(
+    RouteNames.viewTransaction,
+    pathParameters: {
+      'id': transactionId,
+    },
+  );
+  return true;
+}
+
+Future<bool> pushEditTransaction({
+  required BuildContext context,
+  required String transactionId,
+}) async {
+  await context.pushNamed(
+    RouteNames.editTransaction,
+    pathParameters: {
+      'id': transactionId,
+    },
+  );
+  return true;
+}
 
 class ManageTransactionScreen extends StatefulWidget {
   final ManageTransactionMode mode;
@@ -68,14 +70,16 @@ class ManageTransactionScreen extends StatefulWidget {
   });
 
   @override
-  State<ManageTransactionScreen> createState() =>
-      _ManageTransactionScreenState();
+  State<ManageTransactionScreen> createState() => _ManageTransactionScreenState();
 }
 
 class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
+  late final TransactionBloc _transactionBloc;
+  late final CustomerBloc _customerBloc;
+  late final ServiceBloc _serviceBloc;
+
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for form fields
   final TextEditingController _customerController = TextEditingController();
   final TextEditingController _serviceController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -84,20 +88,16 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
-  // Selected values
+  String? _currentUserId;
   Customer? _selectedCustomer;
   Service? _selectedService;
+  Transaction? _currentTransaction;
+
   TransactionStatus _transactionStatus = TransactionStatus.onProgress;
   PaymentStatus _paymentStatus = PaymentStatus.notPaidYet;
+
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now().add(const Duration(days: 3));
-
-  bool _isLoading = true;
-  Transaction? _currentTransaction;
-  late final TransactionBloc _transactionBloc;
-  late final CustomerBloc _customerBloc;
-  late final ServiceBloc _serviceBloc;
-  String? _currentUserId;
 
   bool get _isAddMode => widget.mode == ManageTransactionMode.add;
   bool get _isEditMode => widget.mode == ManageTransactionMode.edit;
@@ -105,6 +105,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   @override
   void initState() {
     super.initState();
+
     _transactionBloc = serviceLocator<TransactionBloc>();
     _customerBloc = serviceLocator<CustomerBloc>();
     _serviceBloc = serviceLocator<ServiceBloc>();
@@ -113,27 +114,14 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
     if (_isAddMode) {
       _setDefaultDates();
-      setState(() {
-        _isLoading = false;
-      });
     } else {
-      _transactionBloc.add(TransactionEventGetTransactions());
+      _transactionBloc.add(
+        TransactionEventGetTransactionById(id: widget.transactionId!),
+      );
     }
 
-    // Load customers and services for selection
-    _customerBloc.add(CustomerEventGetCustomers());
-    _serviceBloc.add(ServiceEventGetServices());
-  }
-
-  void _getCurrentUserId() {
-    _currentUserId = AuthManager.currentUser!.id;
-  }
-
-  void _setDefaultDates() {
-    _startDate = DateTime.now();
-    _endDate = _startDate.add(const Duration(days: 3));
-    _startDateController.text = DateFormat('yyyy-MM-dd').format(_startDate);
-    _endDateController.text = DateFormat('yyyy-MM-dd').format(_endDate);
+    _customerBloc.add(CustomerEventGetActiveCustomers());
+    _serviceBloc.add(ServiceEventGetActiveServices());
   }
 
   @override
@@ -145,13 +133,12 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     _descriptionController.dispose();
     _startDateController.dispose();
     _endDateController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: _transactionBloc),
@@ -161,69 +148,69 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
       child: BlocConsumer<TransactionBloc, TransactionState>(
         listener: (context, state) {
           if (state is TransactionStateFailure) {
-            showSnackbar(context, state.message);
+            context.showSnackbar(state.message);
           } else if (state is TransactionStateSuccessCreateTransaction) {
-            showSnackbar(context, appText.transaction_add_success_message);
+            context.showSnackbar(context.appText.transaction_add_success_message);
             context.pop(true);
           } else if (state is TransactionStateSuccessUpdateTransaction) {
-            showSnackbar(context, appText.transaction_update_success_message);
-            context.pop(true);
-          } else if (state is TransactionStateWithFilteredTransactions) {
-            _handleTransactionDataLoaded(state);
+            context.showSnackbar(context.appText.transaction_update_success_message);
+            context.pop();
+          } else if (state is TransactionStateSuccessGetTransactionById) {
+            _handleTransactionDataLoaded();
           }
         },
         builder: (context, state) {
           return Scaffold(
             appBar: WidgetAppBar(
-              label: _getScreenTitle(appText),
+              label: _getScreenTitle(),
             ),
-            body: _isLoading
-                ? WidgetLoading(usingPadding: true)
-                : SafeArea(
-                    bottom: false,
-                    child: SingleChildScrollView(
+            body: SafeArea(
+              child: state is TransactionStateLoading
+                  ? WidgetLoading(usingPadding: true)
+                  : SingleChildScrollView(
                       padding: EdgeInsets.all(AppSizes.size16),
                       child: Form(
                         key: _formKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildFormFields(state, appText),
+                            _buildFormFields(),
                           ],
                         ),
                       ),
                     ),
-                  ),
-            bottomNavigationBar: WidgetBottomBar(content: [
-              Row(
-                children: [
-                  Expanded(
-                    child: WidgetButton(
-                      label:
-                          _isAddMode ? appText.button_add : appText.button_save,
-                      isLoading: state is TransactionStateLoading,
-                      onPressed: _submitForm,
+            ),
+            bottomNavigationBar: WidgetBottomBar(
+              content: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: WidgetButton(
+                        label: _isAddMode ? context.appText.button_add : context.appText.button_save,
+                        isLoading: state is TransactionStateLoading,
+                        onPressed: _submitForm,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ]),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  String _getScreenTitle(AppLocalizations appText) {
+  String _getScreenTitle() {
     if (_isAddMode) {
-      return appText.transaction_add_screen_title;
+      return context.appText.transaction_add_screen_title;
     } else {
-      return appText.transaction_edit_screen_title;
+      return context.appText.transaction_edit_screen_title;
     }
   }
 
-  Widget _buildFormFields(TransactionState state, AppLocalizations appText) {
-    final bool isFormEnabled = state is! TransactionStateLoading;
+  Widget _buildFormFields() {
+    final bool isFormEnabled = _transactionBloc.state is! TransactionStateLoading;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,11 +250,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
               controller: _serviceController,
               isEnabled: isFormEnabled,
               readOnly: true,
-              suffixIcon: isFormEnabled
-                  ? IconButton(
-                      onPressed: () => _selectService(context),
-                      icon: Icon(Icons.arrow_drop_down))
-                  : null,
+              suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectService(context), icon: Icon(Icons.arrow_drop_down)) : null,
               validator: (value) {
                 if (_selectedService == null) {
                   return 'Service is required';
@@ -319,8 +302,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
         // Description Field
         WidgetTextFormField(
-          label: appText.form_description_label,
-          hint: appText.form_description_hint,
+          label: context.appText.form_description_label,
+          hint: context.appText.form_description_hint,
           controller: _descriptionController,
           isEnabled: isFormEnabled,
           maxLines: 3,
@@ -337,11 +320,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                 controller: _startDateController,
                 isEnabled: isFormEnabled,
                 readOnly: true,
-                suffixIcon: isFormEnabled
-                    ? IconButton(
-                        onPressed: () => _selectStartDate(context),
-                        icon: Icon(Icons.calendar_today))
-                    : null,
+                suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectStartDate(context), icon: Icon(Icons.calendar_today)) : null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Start date is required';
@@ -358,11 +337,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                 controller: _endDateController,
                 isEnabled: isFormEnabled,
                 readOnly: true,
-                suffixIcon: isFormEnabled
-                    ? IconButton(
-                        onPressed: () => _selectEndDate(context),
-                        icon: Icon(Icons.calendar_today))
-                    : null,
+                suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectEndDate(context), icon: Icon(Icons.calendar_today)) : null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'End date is required';
@@ -382,21 +357,20 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             style: AppTextStyle.label,
           ),
           AppSizes.spaceHeight8,
-          _buildTransactionStatusSelector(isFormEnabled, appText),
+          _buildTransactionStatusSelector(isFormEnabled),
           AppSizes.spaceHeight16,
           Text(
             'Payment Status',
             style: AppTextStyle.label,
           ),
           AppSizes.spaceHeight8,
-          _buildPaymentStatusSelector(isFormEnabled, appText),
+          _buildPaymentStatusSelector(isFormEnabled),
         ],
       ],
     );
   }
 
-  Widget _buildTransactionStatusSelector(
-      bool isEnabled, AppLocalizations appText) {
+  Widget _buildTransactionStatusSelector(bool isEnabled) {
     return Wrap(
       spacing: AppSizes.size8,
       runSpacing: AppSizes.size8,
@@ -428,7 +402,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     );
   }
 
-  Widget _buildPaymentStatusSelector(bool isEnabled, AppLocalizations appText) {
+  Widget _buildPaymentStatusSelector(bool isEnabled) {
     return Wrap(
       spacing: AppSizes.size8,
       runSpacing: AppSizes.size8,
@@ -454,22 +428,16 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           backgroundColor: AppColors.gray.withValues(
             alpha: 0.1,
           ),
-          selectedColor: status == PaymentStatus.paid
-              ? AppColors.success
-              : AppColors.warning,
+          selectedColor: status == PaymentStatus.paid ? AppColors.success : AppColors.warning,
         );
       }).toList(),
     );
   }
 
   void _selectCustomer(BuildContext context) async {
-    if (_customerBloc.state is CustomerStateWithFilteredCustomers) {
-      final state = _customerBloc.state as CustomerStateWithFilteredCustomers;
-      final activeCustomers = state.filteredCustomers
-          .where((customer) => customer.isActive ?? false)
-          .toList();
-
-      final AppLocalizations appText = AppLocalizations.of(context)!;
+    if (_customerBloc.state is CustomerStateSuccessGetActiveCustomers) {
+      final state = _customerBloc.state as CustomerStateSuccessGetActiveCustomers;
+      final activeCustomers = state.activeCustomers;
 
       showModalBottomSheet(
         context: context,
@@ -502,7 +470,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                     child: activeCustomers.isEmpty
                         ? Center(
                             child: Text(
-                              appText.customer_empty_message,
+                              context.appText.customer_empty_message,
                               style: AppTextStyle.body1,
                             ),
                           )
@@ -534,8 +502,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                                 onTap: () {
                                   setState(() {
                                     _selectedCustomer = customer;
-                                    _customerController.text =
-                                        customer.name ?? '';
+                                    _customerController.text = customer.name ?? '';
                                   });
                                   context.pop();
                                 },
@@ -599,13 +566,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   }
 
   void _selectService(BuildContext context) async {
-    if (_serviceBloc.state is ServiceStateWithFilteredServices) {
-      final state = _serviceBloc.state as ServiceStateWithFilteredServices;
-      final activeServices = state.filteredServices
-          .where((service) => service.isActive ?? false)
-          .toList();
-
-      final AppLocalizations appText = AppLocalizations.of(context)!;
+    if (_serviceBloc.state is ServiceStateSuccessGetActiveServices) {
+      final state = _serviceBloc.state as ServiceStateSuccessGetActiveServices;
+      final activeServices = state.activeServices;
 
       showModalBottomSheet(
         context: context,
@@ -635,7 +598,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   Expanded(
                     child: activeServices.isEmpty
                         ? Center(
-                            child: Text(appText.service_empty_message),
+                            child: Text(context.appText.service_empty_message),
                           )
                         : ListView.builder(
                             controller: scrollController,
@@ -665,13 +628,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                                 onTap: () {
                                   setState(() {
                                     _selectedService = service;
-                                    _serviceController.text =
-                                        service.name ?? '';
-                                    if (service.price != null &&
-                                        _weightController.text.isNotEmpty) {
-                                      final weight = double.tryParse(
-                                              _weightController.text) ??
-                                          0;
+                                    _serviceController.text = service.name ?? '';
+                                    if (service.price != null && _weightController.text.isNotEmpty) {
+                                      final weight = double.tryParse(_weightController.text) ?? 0;
                                       _calculateAmount(weight, service.price!);
                                     }
                                   });
@@ -692,6 +651,17 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     }
   }
 
+  void _getCurrentUserId() {
+    _currentUserId = AuthManager.currentUser!.id;
+  }
+
+  void _setDefaultDates() {
+    _startDate = DateTime.now();
+    _endDate = _startDate.add(const Duration(days: 3));
+    _startDateController.text = DateFormat('yyyy-MM-dd').format(_startDate);
+    _endDateController.text = DateFormat('yyyy-MM-dd').format(_endDate);
+  }
+
   void _calculateAmount(double weight, int price) {
     final amount = (weight * price).round();
     _amountController.text = amount.toString();
@@ -709,7 +679,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
       setState(() {
         _startDate = picked;
         _startDateController.text = DateFormat('yyyy-MM-dd').format(_startDate);
-        // Update end date to be 3 days after start date
+
         _endDate = _startDate.add(const Duration(days: 3));
         _endDateController.text = DateFormat('yyyy-MM-dd').format(_endDate);
       });
@@ -732,19 +702,15 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     }
   }
 
-  void _handleTransactionDataLoaded(
-      TransactionStateWithFilteredTransactions state) {
+  void _handleTransactionDataLoaded() {
     if (widget.transactionId != null) {
-      final transaction = state.allTransactions.firstWhere(
-        (transaction) => transaction.id == widget.transactionId,
-      );
+      final transaction = (_transactionBloc.state as TransactionStateSuccessGetTransactionById).transaction;
 
       if (transaction.id != null) {
         _currentTransaction = transaction;
 
         // Populate form fields
-        _transactionStatus =
-            transaction.transactionStatus ?? TransactionStatus.onProgress;
+        _transactionStatus = transaction.transactionStatus ?? TransactionStatus.onProgress;
         _paymentStatus = transaction.paymentStatus ?? PaymentStatus.notPaidYet;
         _customerController.text = transaction.customerName ?? '';
         _serviceController.text = transaction.serviceName ?? '';
@@ -754,8 +720,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
         if (transaction.startDate != null) {
           _startDate = transaction.startDate!;
-          _startDateController.text =
-              DateFormat('yyyy-MM-dd').format(_startDate);
+          _startDateController.text = DateFormat('yyyy-MM-dd').format(_startDate);
         }
 
         if (transaction.endDate != null) {
@@ -773,12 +738,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           id: transaction.serviceId,
           name: transaction.serviceName,
         );
-
-        setState(() {
-          _isLoading = false;
-        });
       } else {
-        showSnackbar(context, 'Transaction not found');
+        context.showSnackbar(context.appText.transaction_status_default);
         context.pop();
       }
     }
@@ -787,12 +748,12 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       if (_selectedCustomer == null) {
-        showSnackbar(context, 'Customer is required');
+        context.showSnackbar(context.appText.customer_empty_message);
         return;
       }
 
       if (_selectedService == null) {
-        showSnackbar(context, 'Service is required');
+        context.showSnackbar(context.appText.service_empty_message);
         return;
       }
 
@@ -806,8 +767,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         weight: double.tryParse(_weightController.text),
         amount: int.tryParse(_amountController.text),
         description: _descriptionController.text,
-        transactionStatus:
-            _isAddMode ? TransactionStatus.onProgress : _transactionStatus,
+        transactionStatus: _isAddMode ? TransactionStatus.onProgress : _transactionStatus,
         paymentStatus: _isAddMode ? PaymentStatus.notPaidYet : _paymentStatus,
         startDate: _startDate,
         endDate: _endDate,
@@ -815,11 +775,9 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
       );
 
       if (_isAddMode) {
-        _transactionBloc
-            .add(TransactionEventCreateTransaction(transaction: transaction));
+        _transactionBloc.add(TransactionEventCreateTransaction(transaction: transaction));
       } else if (_isEditMode) {
-        _transactionBloc
-            .add(TransactionEventUpdateTransaction(transaction: transaction));
+        _transactionBloc.add(TransactionEventUpdateTransaction(transaction: transaction));
       }
     }
   }

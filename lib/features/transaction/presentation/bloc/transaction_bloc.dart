@@ -8,6 +8,7 @@ import '../../domain/usecases/transaction_create_transaction.dart';
 import '../../domain/usecases/transaction_delete_transaction.dart';
 import '../../domain/usecases/transaction_get_transaction_by_id.dart';
 import '../../domain/usecases/transaction_get_transactions.dart';
+import '../../domain/usecases/transaction_hard_delete_transaction.dart';
 import '../../domain/usecases/transaction_restore_transaction.dart';
 import '../../domain/usecases/transaction_update_transaction.dart';
 
@@ -20,6 +21,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionCreateTransaction transactionCreateTransaction;
   final TransactionUpdateTransaction transactionUpdateTransaction;
   final TransactionDeleteTransaction transactionDeleteTransaction;
+  final TransactionHardDeleteTransaction transactionHardDeleteTransaction;
   final TransactionRestoreTransaction transactionRestoreTransaction;
 
   late List<Transaction> _allTransactions;
@@ -36,6 +38,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.transactionCreateTransaction,
     required this.transactionUpdateTransaction,
     required this.transactionDeleteTransaction,
+    required this.transactionHardDeleteTransaction,
     required this.transactionRestoreTransaction,
   }) : super(TransactionStateInitial()) {
     on<TransactionEventGetTransactions>(
@@ -52,6 +55,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     );
     on<TransactionEventDeleteTransaction>(
       (event, emit) => onTransactionEventDeleteTransaction(event, emit),
+    );
+    on<TransactionEventHardDeleteTransaction>(
+      (event, emit) => onTransactionEventHardDeleteTransaction(event, emit),
     );
     on<TransactionEventRestoreTransaction>(
       (event, emit) => onTransactionEventRestoreTransaction(event, emit),
@@ -70,8 +76,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, List<Transaction>> result =
-        await transactionGetTransactions();
+    Either<Failure, List<Transaction>> result = await transactionGetTransactions();
 
     result.fold((left) {
       emit(TransactionStateFailure(
@@ -97,8 +102,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, Transaction> result =
-        await transactionGetTransactionById(event.id);
+    Either<Failure, Transaction> result = await transactionGetTransactionById(event.id);
 
     result.fold((left) {
       emit(TransactionStateFailure(
@@ -117,8 +121,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, void> result =
-        await transactionCreateTransaction(event.transaction);
+    Either<Failure, void> result = await transactionCreateTransaction(event.transaction);
 
     result.fold((left) {
       emit(TransactionStateFailure(
@@ -135,8 +138,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, void> result =
-        await transactionUpdateTransaction(event.transaction);
+    Either<Failure, void> result = await transactionUpdateTransaction(event.transaction);
 
     result.fold((left) {
       emit(TransactionStateFailure(
@@ -164,14 +166,30 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     });
   }
 
+  void onTransactionEventHardDeleteTransaction(
+    TransactionEventHardDeleteTransaction event,
+    Emitter<TransactionState> emit,
+  ) async {
+    emit(TransactionStateLoading());
+
+    Either<Failure, void> result = await transactionHardDeleteTransaction(event.id);
+
+    result.fold((left) {
+      emit(TransactionStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(TransactionStateSuccessDeleteTransaction());
+    });
+  }
+
   void onTransactionEventRestoreTransaction(
     TransactionEventRestoreTransaction event,
     Emitter<TransactionState> emit,
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, void> result =
-        await transactionRestoreTransaction(event.id);
+    Either<Failure, void> result = await transactionRestoreTransaction(event.id);
 
     result.fold((left) {
       emit(TransactionStateFailure(
@@ -233,12 +251,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     List<Transaction> filtered = transactions
         .where((transaction) =>
             (transaction.id?.toLowerCase().contains(lowerQuery) ?? false) ||
-            (transaction.customerName?.toLowerCase().contains(lowerQuery) ??
-                false) ||
-            (transaction.serviceName?.toLowerCase().contains(lowerQuery) ??
-                false) ||
-            (transaction.description?.toLowerCase().contains(lowerQuery) ??
-                false))
+            (transaction.customerName?.toLowerCase().contains(lowerQuery) ?? false) ||
+            (transaction.serviceName?.toLowerCase().contains(lowerQuery) ?? false) ||
+            (transaction.description?.toLowerCase().contains(lowerQuery) ?? false))
         .toList();
 
     filtered.sort((a, b) {
@@ -255,28 +270,22 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           result = (a.amount ?? 0).compareTo(b.amount ?? 0);
           break;
         case 'transactionStatus':
-          result = (a.transactionStatus?.value ?? '')
-              .compareTo(b.transactionStatus?.value ?? '');
+          result = (a.transactionStatus?.value ?? '').compareTo(b.transactionStatus?.value ?? '');
           break;
         case 'paymentStatus':
-          result = (a.paymentStatus?.value ?? '')
-              .compareTo(b.paymentStatus?.value ?? '');
+          result = (a.paymentStatus?.value ?? '').compareTo(b.paymentStatus?.value ?? '');
           break;
         case 'startDate':
-          result = (a.startDate ?? DateTime.now())
-              .compareTo(b.startDate ?? DateTime.now());
+          result = (a.startDate ?? DateTime.now()).compareTo(b.startDate ?? DateTime.now());
           break;
         case 'endDate':
-          result = (a.endDate ?? DateTime.now())
-              .compareTo(b.endDate ?? DateTime.now());
+          result = (a.endDate ?? DateTime.now()).compareTo(b.endDate ?? DateTime.now());
           break;
         case 'createdAt':
-          result = (a.createdAt ?? DateTime.now())
-              .compareTo(b.createdAt ?? DateTime.now());
+          result = (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
           break;
         default:
-          result = (a.createdAt ?? DateTime.now())
-              .compareTo(b.createdAt ?? DateTime.now());
+          result = (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
       }
 
       return ascending ? result : -result;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/textstyle/app_colors.dart';
-import '../../../../config/textstyle/app_sizes.dart';
-import '../../../../config/textstyle/app_textstyle.dart';
+import '../../config/textstyle/app_colors.dart';
+import '../../config/textstyle/app_sizes.dart';
+import '../../config/textstyle/app_textstyle.dart';
 
 class WidgetDetailCard extends StatelessWidget {
   final String title;

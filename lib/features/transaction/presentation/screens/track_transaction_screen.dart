@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 
 void pushTrackTransactionsScreen(BuildContext context) {
-  context.pushNamed('track-transactions');
+  context.pushNamed(RouteNames.trackTransactions);
 }
 
 class TrackTransactionsScreen extends StatelessWidget {

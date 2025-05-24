@@ -16,6 +16,31 @@ import '../../features/transaction/presentation/screens/track_transaction_screen
 import '../../features/transaction/presentation/screens/transaction_detail_screen.dart';
 import '../../features/transaction/presentation/screens/transactions_screen.dart';
 
+class RouteNames {
+  RouteNames._();
+
+  static const String splash = 'splash';
+  static const String login = 'login';
+  static const String register = 'register';
+  static const String home = 'home';
+  static const String manageEmployee = 'manage-employee';
+  static const String services = 'services';
+  static const String addService = 'add-service';
+  static const String viewService = 'view-service';
+  static const String editService = 'edit-service';
+  static const String customers = 'customers';
+  static const String addCustomer = 'add-customer';
+  static const String viewCustomer = 'view-customer';
+  static const String editCustomer = 'edit-customer';
+  static const String transactions = 'transactions';
+  static const String addTransaction = 'add-transaction';
+  static const String viewTransaction = 'view-transaction';
+  static const String editTransaction = 'edit-transaction';
+  static const String printTransaction = 'print-transaction';
+  static const String trackTransactions = 'track-transactions';
+  static const String printerSettings = 'printer-settings';
+}
+
 class AppRoutes {
   AppRoutes._();
 
@@ -25,77 +50,98 @@ class AppRoutes {
     routes: [
       GoRoute(
         path: '/',
-        name: 'splash',
+        name: RouteNames.splash,
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: '/login',
-        name: 'login',
+        name: RouteNames.login,
         builder: (context, state) {
           return LoginScreen();
         },
       ),
       GoRoute(
         path: '/register',
-        name: 'register',
+        name: RouteNames.register,
         builder: (context, state) {
           return const RegisterScreen();
         },
       ),
       GoRoute(
         path: '/home',
-        name: 'home',
+        name: RouteNames.home,
         builder: (context, state) {
           return const HomeScreen();
         },
       ),
       GoRoute(
-        path: '/services',
-        name: 'services',
-        builder: (context, state) {
-          return const ServicesScreen();
-        },
-      ),
-      GoRoute(
         path: '/manage-employee',
-        name: 'manage-employee',
+        name: RouteNames.manageEmployee,
         builder: (context, state) {
           return const ManageEmployeeScreen();
         },
       ),
       GoRoute(
-        path: '/customers',
-        name: 'customers',
-        builder: (context, state) {
-          return const CustomersScreen();
-        },
+        path: '/services',
+        name: RouteNames.services,
+        builder: (context, state) => const ServicesScreen(),
         routes: [
           GoRoute(
             path: 'add',
-            name: 'add-customer',
-            builder: (context, state) {
-              return const ManageCustomerScreen(mode: ManageCustomerMode.add);
-            },
+            name: RouteNames.addService,
+            builder: (context, state) => const ManageServiceScreen(
+              mode: ManageServiceMode.add,
+            ),
           ),
           GoRoute(
-            path: 'view/:id',
-            name: 'view-customer',
+            path: ':id/view',
+            name: RouteNames.viewService,
+            builder: (context, state) => ManageServiceScreen(
+              mode: ManageServiceMode.view,
+              serviceId: state.pathParameters['id'],
+            ),
+          ),
+          GoRoute(
+            path: ':id/edit',
+            name: RouteNames.editService,
+            builder: (context, state) => ManageServiceScreen(
+              mode: ManageServiceMode.edit,
+              serviceId: state.pathParameters['id'],
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/customers',
+        name: RouteNames.customers,
+        builder: (context, state) => const CustomersScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            name: RouteNames.addCustomer,
+            builder: (context, state) => const ManageCustomerScreen(
+              mode: ManageCustomerMode.add,
+            ),
+          ),
+          GoRoute(
+            path: ':id/view',
+            name: RouteNames.viewCustomer,
             builder: (context, state) {
-              final customerId = state.pathParameters['id']!;
+              final id = state.pathParameters['id']!;
               return ManageCustomerScreen(
                 mode: ManageCustomerMode.view,
-                customerId: customerId,
+                customerId: id,
               );
             },
           ),
           GoRoute(
-            path: 'edit/:id',
-            name: 'edit-customer',
+            path: ':id/edit',
+            name: RouteNames.editCustomer,
             builder: (context, state) {
-              final customerId = state.pathParameters['id']!;
+              final id = state.pathParameters['id']!;
               return ManageCustomerScreen(
                 mode: ManageCustomerMode.edit,
-                customerId: customerId,
+                customerId: id,
               );
             },
           ),
@@ -103,86 +149,55 @@ class AppRoutes {
       ),
       GoRoute(
         path: '/transactions',
-        name: 'transactions',
-        builder: (context, state) {
-          return const TransactionsScreen();
-        },
+        name: RouteNames.transactions,
+        builder: (context, state) => const TransactionsScreen(),
         routes: [
           GoRoute(
             path: 'add',
-            name: 'add-transaction',
+            name: RouteNames.addTransaction,
+            builder: (context, state) => const ManageTransactionScreen(
+              mode: ManageTransactionMode.add,
+            ),
+          ),
+          GoRoute(
+            path: ':id/view',
+            name: RouteNames.viewTransaction,
             builder: (context, state) {
-              return const ManageTransactionScreen(
-                mode: ManageTransactionMode.add,
-              );
+              final id = state.pathParameters['id']!;
+              return TransactionDetailScreen(transactionId: id);
             },
           ),
           GoRoute(
-            path: 'view/:id',
-            name: 'view-transaction',
+            path: ':id/edit',
+            name: RouteNames.editTransaction,
             builder: (context, state) {
-              final transactionId = state.pathParameters['id']!;
-              return TransactionDetailScreen(
-                transactionId: transactionId,
-              );
-            },
-          ),
-          GoRoute(
-            path: 'edit/:id',
-            name: 'edit-transaction',
-            builder: (context, state) {
-              final transactionId = state.pathParameters['id']!;
+              final id = state.pathParameters['id']!;
               return ManageTransactionScreen(
                 mode: ManageTransactionMode.edit,
-                transactionId: transactionId,
+                transactionId: id,
               );
             },
           ),
           GoRoute(
-            path: 'print/:id',
-            name: 'print-transaction',
+            path: ':id/print',
+            name: RouteNames.printTransaction,
             builder: (context, state) {
-              final transactionId = state.pathParameters['id']!;
-              return PrintTransactionNoteScreen(
-                transactionId: transactionId,
-              );
+              final id = state.pathParameters['id']!;
+              return PrintTransactionNoteScreen(transactionId: id);
             },
-          )
+          ),
         ],
       ),
       GoRoute(
         path: '/track-transactions',
-        name: 'track-transactions',
+        name: RouteNames.trackTransactions,
         builder: (context, state) {
           return const TrackTransactionsScreen();
         },
       ),
       GoRoute(
-        path: '/services/add',
-        name: 'add-service',
-        builder: (context, state) => const ManageServiceScreen(
-          mode: ManageServiceMode.add,
-        ),
-      ),
-      GoRoute(
-        path: '/services/:id',
-        name: 'view-service',
-        builder: (context, state) => ManageServiceScreen(
-          mode: ManageServiceMode.view,
-          serviceId: state.pathParameters['id'],
-        ),
-      ),
-      GoRoute(
-        path: '/services/:id/edit',
-        name: 'edit-service',
-        builder: (context, state) => ManageServiceScreen(
-          mode: ManageServiceMode.edit,
-          serviceId: state.pathParameters['id'],
-        ),
-      ),
-      GoRoute(
         path: '/printer-settings',
-        name: 'printer-settings',
+        name: RouteNames.printerSettings,
         builder: (context, state) {
           return const PrinterSettingsScreen();
         },

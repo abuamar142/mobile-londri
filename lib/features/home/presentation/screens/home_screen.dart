@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/show_snackbar.dart';
+import '../../../../config/routes/app_routes.dart';
+import '../../../../config/textstyle/app_colors.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../setting/presentation/screens/setting_screen.dart';
 import 'main_screen.dart';
 import 'splash_screen.dart';
 
-void pushReplacementHome(BuildContext context) {
-  context.pushReplacementNamed('home');
+void pushReplacementHome({
+  required BuildContext context,
+}) {
+  context.pushReplacementNamed(RouteNames.home);
 }
 
-void pushHome(BuildContext context) {
-  context.pushNamed('home');
+void pushHome({
+  required BuildContext context,
+}) {
+  context.pushNamed(RouteNames.home);
 }
 
 class HomeScreen extends StatefulWidget {
@@ -27,38 +32,34 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final AuthBloc _authBloc;
+
   int _selectedIndex = 0;
 
-  List<Widget> _widgetOptions(BuildContext context) => [
+  List<Widget> _widgetOptions() => [
         MainScreen(),
         SettingScreen(),
       ];
 
-  void _logout() {
-    context.read<AuthBloc>().add(
-          AuthEventLogout(),
-        );
-  }
+  @override
+  void initState() {
+    super.initState();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    _authBloc = context.read<AuthBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: WidgetAppBar(
         leading: BlocConsumer<AuthBloc, AuthState>(
+          bloc: _authBloc,
           listener: (context, state) {
             if (state is AuthStateFailure) {
-              showSnackbar(context, state.message.toString());
+              context.showSnackbar(state.message.toString());
             } else if (state is AuthStateSuccessLogout) {
-              showSnackbar(context, appText.auth_logout_success_message);
-              pushReplacementSplash(context);
+              context.showSnackbar(context.appText.auth_logout_success_message);
+              pushReplacementSplash(context: context);
             }
           },
           builder: (context, state) {
@@ -66,40 +67,42 @@ class _HomeScreenState extends State<HomeScreen> {
               return WidgetLoading(usingPadding: true);
             } else {
               return IconButton(
-                tooltip: appText.button_logout,
+                tooltip: context.appText.button_logout,
                 icon: const Icon(Icons.logout),
-                onPressed: () {
-                  _logout();
-                },
+                onPressed: () => _logout(),
               );
             }
           },
         ),
-        label: 'Home',
+        label: context.appText.home_screen_title,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: _widgetOptions(context).elementAt(_selectedIndex),
+        child: _widgetOptions().elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-            ),
-            label: 'Home',
+            icon: Icon(Icons.home),
+            label: context.appText.home_screen_title,
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.settings,
-            ),
-            label: 'Setting',
+            icon: Icon(Icons.settings),
+            label: context.appText.setting_screen_title,
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
+        selectedItemColor: AppColors.primary,
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  void _logout() => _authBloc.add(AuthEventLogout());
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }

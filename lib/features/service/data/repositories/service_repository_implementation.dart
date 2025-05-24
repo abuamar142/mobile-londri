@@ -27,6 +27,18 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   }
 
   @override
+  Future<Either<Failure, List<Service>>> getActiveServices() async {
+    try {
+      final response = await serviceRemoteDatasource.readActiveServices();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, Service>> getServiceById(String id) async {
     try {
       final response = await serviceRemoteDatasource.readServiceById(id);

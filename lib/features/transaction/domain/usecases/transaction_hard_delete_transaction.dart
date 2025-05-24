@@ -3,10 +3,10 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failure.dart';
 import '../repositories/transaction_repository.dart';
 
-class TransactionDeleteTransaction {
+class TransactionHardDeleteTransaction {
   final TransactionRepository transactionRepository;
 
-  TransactionDeleteTransaction({
+  TransactionHardDeleteTransaction({
     required this.transactionRepository,
   });
 

@@ -7,6 +7,7 @@ import '../../domain/entities/service.dart';
 import '../../domain/usecases/service_activate_service.dart';
 import '../../domain/usecases/service_create_service.dart';
 import '../../domain/usecases/service_delete_service.dart';
+import '../../domain/usecases/service_get_active_services.dart';
 import '../../domain/usecases/service_get_service_by_id.dart';
 import '../../domain/usecases/service_get_services.dart';
 import '../../domain/usecases/service_update_service.dart';
@@ -16,6 +17,7 @@ part 'service_state.dart';
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceGetServices serviceGetServices;
+  final ServiceGetActiveServices serviceGetActiveServices;
   final ServiceGetServiceById serviceGetServiceById;
   final ServiceCreateService serviceCreateService;
   final ServiceUpdateService serviceUpdateService;
@@ -32,6 +34,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   ServiceBloc({
     required this.serviceGetServices,
+    required this.serviceGetActiveServices,
     required this.serviceGetServiceById,
     required this.serviceCreateService,
     required this.serviceUpdateService,
@@ -40,6 +43,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }) : super(ServiceStateInitial()) {
     on<ServiceEventGetServices>(
       (event, emit) => onServiceEventGetServices(event, emit),
+    );
+    on<ServiceEventGetActiveServices>(
+      (event, emit) => onServiceEventGetActiveServices(event, emit),
     );
     on<ServiceEventGetServiceById>(
       (event, emit) => onServiceEventGetServiceById(event, emit),
@@ -86,6 +92,25 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           _currentSortField,
           _isAscending,
         ),
+      ));
+    });
+  }
+
+  void onServiceEventGetActiveServices(
+    ServiceEventGetActiveServices event,
+    Emitter<ServiceState> emit,
+  ) async {
+    emit(ServiceStateLoading());
+
+    Either<Failure, List<Service>> result = await serviceGetActiveServices();
+
+    result.fold((left) {
+      emit(ServiceStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(ServiceStateSuccessGetActiveServices(
+        activeServices: right,
       ));
     });
   }
@@ -224,9 +249,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   ) {
     final lowerQuery = query.toLowerCase();
     List<Service> filtered = services
-        .where((service) =>
-            (service.name?.toLowerCase().contains(lowerQuery) ?? false) ||
-            (service.description?.toLowerCase().contains(lowerQuery) ?? false))
+        .where((service) => (service.name?.toLowerCase().contains(lowerQuery) ?? false) || (service.description?.toLowerCase().contains(lowerQuery) ?? false))
         .toList();
 
     filtered.sort((a, b) {
@@ -240,8 +263,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
           result = (a.price ?? 0).compareTo(b.price ?? 0);
           break;
         case 'createdAt':
-          result = (a.createdAt ?? DateTime.now())
-              .compareTo(b.createdAt ?? DateTime.now());
+          result = (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
           break;
         default:
           result = (a.name ?? '').compareTo(b.name ?? '');

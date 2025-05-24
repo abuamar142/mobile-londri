@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/services/permission_service.dart';
 import '../../../../core/services/printer_service.dart';
-import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../injection_container.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
+
+Future<bool> pushPrinterSettings({
+  required BuildContext context,
+}) async {
+  await context.pushNamed(RouteNames.printerSettings);
+  return true;
+}
 
 class PrinterSettingsScreen extends StatefulWidget {
   const PrinterSettingsScreen({super.key});
@@ -24,16 +32,19 @@ class PrinterSettingsScreen extends StatefulWidget {
 
 class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
   final PrinterService _printerService = serviceLocator<PrinterService>();
-  final PermissionService _permissionService =
-      serviceLocator<PermissionService>();
-  List<BluetoothInfo> _devices = [];
+  final PermissionService _permissionService = serviceLocator<PermissionService>();
+
   BluetoothInfo? _selectedDevice;
+
+  List<BluetoothInfo> _devices = [];
+
   bool _isLoading = false;
   bool _isConnecting = false;
 
   @override
   void initState() {
     super.initState();
+
     _initBluetooth();
   }
 
@@ -43,22 +54,19 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     });
 
     // Request Bluetooth permissions using the permission service
-    final permissionStatuses =
-        await _permissionService.requestBluetoothPermissions();
+    final permissionStatuses = await _permissionService.requestBluetoothPermissions();
 
     // Check if any permission was denied
     if (permissionStatuses.values.any((status) => !status.isGranted)) {
       if (mounted) {
-        final appText = AppLocalizations.of(context)!;
-        showSnackbar(
-          context,
-          appText.printer_permissions_required,
-        );
+        context.showSnackbar(context.appText.printer_permissions_required);
       }
     }
 
     await _printerService.init();
+
     _selectedDevice = _printerService.selectedDevice;
+
     await _refreshDevices();
 
     setState(() {
@@ -75,15 +83,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
       _devices = await _printerService.getBondedDevices();
     } catch (e) {
       if (mounted) {
-        showSnackbar(
-          context,
-          AppLocalizations.of(context)!.printer_print_error(
-            (
-              '{error}',
-              e.toString(),
-            ),
-          ),
-        );
+        context.showSnackbar(context.appText.printer_print_error(e.toString()));
       }
     }
 
@@ -105,21 +105,10 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     });
 
     if (mounted) {
-      final appText = AppLocalizations.of(context)!;
       if (connected) {
-        showSnackbar(
-          context,
-          appText.printer_connect_success(
-            device.name,
-          ),
-        );
+        context.showSnackbar(context.appText.printer_connect_success(device.name));
       } else {
-        showSnackbar(
-          context,
-          appText.printer_connect_failed(
-            device.name,
-          ),
-        );
+        context.showSnackbar(context.appText.printer_connect_failed(device.name));
       }
     }
   }
@@ -127,23 +116,19 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
   Future<void> _disconnectPrinter() async {
     await _printerService.disconnect();
     await _printerService.clearSavedPrinter();
+
     setState(() {
       _selectedDevice = null;
     });
 
     if (mounted) {
-      showSnackbar(
-        context,
-        AppLocalizations.of(context)!.printer_disconnect_success,
-      );
+      context.showSnackbar(context.appText.printer_disconnect_success);
     }
   }
 
   Future<void> _testPrint() async {
-    final appText = AppLocalizations.of(context)!;
-
     if (!_printerService.isConnected) {
-      showSnackbar(context, appText.printer_please_connect);
+      context.showSnackbar(context.appText.printer_please_connect);
       return;
     }
 
@@ -176,34 +161,27 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
 
       if (mounted) {
         if (result) {
-          showSnackbar(context, appText.printer_test_print_success);
+          context.showSnackbar(context.appText.printer_test_print_success);
         } else {
-          showSnackbar(context, appText.printer_test_print_failed);
+          context.showSnackbar(context.appText.printer_test_print_failed);
         }
       }
     } catch (e) {
       if (mounted) {
-        showSnackbar(
-          context,
-          appText.printer_print_error(
-            e.toString(),
-          ),
-        );
+        context.showSnackbar(context.appText.printer_print_error(e.toString()));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: WidgetAppBar(
-        label: appText.printer_settings_screen_title,
+        label: context.appText.printer_settings_screen_title,
         action: IconButton(
           icon: Icon(Icons.refresh),
           onPressed: _refreshDevices,
-          tooltip: appText.printer_refresh_devices,
+          tooltip: context.appText.printer_refresh_devices,
         ),
       ),
       body: SafeArea(
@@ -212,22 +190,19 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Current printer status
-              _buildCurrentPrinterStatus(appText),
+              _buildCurrentPrinterStatus(),
 
               AppSizes.spaceHeight16,
 
               // Available devices
               Text(
-                appText.printer_available_printers,
+                context.appText.printer_available_printers,
                 style: AppTextStyle.heading3,
               ),
               AppSizes.spaceHeight8,
 
               Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildDevicesList(appText),
+                child: _isLoading ? const Center(child: CircularProgressIndicator()) : _buildDevicesList(),
               ),
 
               AppSizes.spaceHeight16,
@@ -236,9 +211,8 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
               SizedBox(
                 width: double.infinity,
                 child: WidgetButton(
-                  label: appText.printer_test_print,
-                  onPressed: () =>
-                      _printerService.isConnected ? _testPrint() : null,
+                  label: context.appText.printer_test_print,
+                  onPressed: () => _printerService.isConnected ? _testPrint() : null,
                 ),
               ),
             ],
@@ -248,15 +222,13 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     );
   }
 
-  Widget _buildCurrentPrinterStatus(AppLocalizations appText) {
+  Widget _buildCurrentPrinterStatus() {
     final bool isConnected = _printerService.isConnected;
 
     return Container(
       padding: EdgeInsets.all(AppSizes.size16),
       decoration: BoxDecoration(
-        color: isConnected
-            ? AppColors.success.withValues(alpha: 0.1)
-            : AppColors.warning.withValues(alpha: 0.1),
+        color: isConnected ? AppColors.success.withValues(alpha: 0.1) : AppColors.warning.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSizes.size12),
         border: Border.all(
           color: isConnected ? AppColors.success : AppColors.warning,
@@ -269,25 +241,19 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
           Row(
             children: [
               Icon(
-                isConnected
-                    ? Icons.bluetooth_connected
-                    : Icons.bluetooth_disabled,
+                isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
                 color: isConnected ? AppColors.success : AppColors.warning,
               ),
               AppSizes.spaceWidth8,
               Text(
-                appText.printer_settings_screen_title,
+                context.appText.printer_settings_screen_title,
                 style: AppTextStyle.heading3,
               ),
             ],
           ),
           AppSizes.spaceHeight8,
           Text(
-            isConnected
-                ? appText.printer_status_connected(
-                    _selectedDevice?.name ?? '-',
-                  )
-                : appText.printer_status_not_connected,
+            isConnected ? context.appText.printer_status_connected(_selectedDevice?.name ?? '-') : context.appText.printer_status_not_connected,
             style: AppTextStyle.body1,
           ),
           if (isConnected) ...[
@@ -295,7 +261,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
             GestureDetector(
               onTap: _disconnectPrinter,
               child: Text(
-                appText.printer_disconnect,
+                context.appText.printer_disconnect,
                 style: AppTextStyle.body2.copyWith(
                   color: AppColors.error,
                   decoration: TextDecoration.underline,
@@ -308,7 +274,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     );
   }
 
-  Widget _buildDevicesList(AppLocalizations appText) {
+  Widget _buildDevicesList() {
     if (_devices.isEmpty) {
       return Center(
         child: Column(
@@ -321,13 +287,13 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
             ),
             AppSizes.spaceHeight16,
             Text(
-              appText.printer_no_printers_found,
+              context.appText.printer_no_printers_found,
               style: AppTextStyle.body1.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
             AppSizes.spaceHeight8,
             Text(
-              appText.printer_pair_instruction,
+              context.appText.printer_pair_instruction,
               style: AppTextStyle.body2.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
@@ -359,13 +325,10 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
           trailing: ElevatedButton(
             onPressed: _isConnecting ? null : () => _connectToDevice(device),
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  isSelected ? AppColors.success : AppColors.primary,
+              backgroundColor: isSelected ? AppColors.success : AppColors.primary,
               foregroundColor: Colors.white,
             ),
-            child: Text(isSelected
-                ? appText.printer_connected
-                : appText.printer_connect),
+            child: Text(isSelected ? context.appText.printer_connected : context.appText.printer_connect),
           ),
           onTap: () => _connectToDevice(device),
         );

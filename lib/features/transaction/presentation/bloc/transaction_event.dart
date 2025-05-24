@@ -53,6 +53,17 @@ class TransactionEventDeleteTransaction extends TransactionEvent {
   List<Object> get props => [id];
 }
 
+class TransactionEventHardDeleteTransaction extends TransactionEvent {
+  final String id;
+
+  const TransactionEventHardDeleteTransaction({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
+
 class TransactionEventRestoreTransaction extends TransactionEvent {
   final String id;
 

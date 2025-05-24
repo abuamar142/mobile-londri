@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/show_confirmation_dialog.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
 
@@ -10,19 +10,28 @@ Future<void> deleteTransaction({
   required BuildContext context,
   required Transaction transaction,
   required TransactionBloc transactionBloc,
+  bool isHardDelete = false,
 }) async {
-  final appText = AppLocalizations.of(context)!;
-
   showConfirmationDialog(
     context: context,
-    title: appText.transaction_delete_dialog_title,
-    content: 'Apakah Anda yakin ingin menghapus transaksi?',
+    title: context.appText.transaction_delete_dialog_title,
+    content: context.appText.transaction_delete_confirm_message(
+      transaction.id.toString(),
+    ),
     onConfirm: () {
-      transactionBloc.add(
-        TransactionEventDeleteTransaction(
-          id: transaction.id.toString(),
-        ),
-      );
+      if (isHardDelete) {
+        transactionBloc.add(
+          TransactionEventHardDeleteTransaction(
+            id: transaction.id.toString(),
+          ),
+        );
+      } else {
+        transactionBloc.add(
+          TransactionEventDeleteTransaction(
+            id: transaction.id.toString(),
+          ),
+        );
+      }
 
       context.pop();
     },

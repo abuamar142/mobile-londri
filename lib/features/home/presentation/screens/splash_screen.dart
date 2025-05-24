@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/assets/app_assets.dart';
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../auth/presentation/screens/login_screen.dart';
 
-void pushReplacementSplash(BuildContext context) {
-  context.pushReplacementNamed('splash');
+void pushReplacementSplash({
+  required BuildContext context,
+}) {
+  context.pushReplacementNamed(RouteNames.splash);
 }
 
 class SplashScreen extends StatefulWidget {
@@ -29,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
           const Duration(seconds: 2),
           () {
             if (mounted) {
-              pushReplacementLogin(context);
+              pushReplacementLogin(context: context);
             }
           },
         );
@@ -39,8 +42,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -65,13 +66,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       AppSizes.spaceHeight24,
                       Text(
-                        appText.app_name,
+                        context.appText.app_name,
                         style: AppTextStyle.heading1,
                         textAlign: TextAlign.center,
                       ),
                       AppSizes.spaceHeight12,
                       Text(
-                        appText.splash_screen_text,
+                        context.appText.splash_screen_text,
                         style: AppTextStyle.body1,
                         textAlign: TextAlign.center,
                       ),

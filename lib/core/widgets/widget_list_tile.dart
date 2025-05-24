@@ -7,7 +7,7 @@ import '../../config/textstyle/app_textstyle.dart';
 class WidgetListTile extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData leadingIcon;
+  final IconData? leadingIcon;
   final Widget? trailing;
   final VoidCallback? onLongPress;
   final Color? tileColor;
@@ -17,7 +17,7 @@ class WidgetListTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.leadingIcon,
+    this.leadingIcon,
     this.trailing,
     this.onLongPress,
     this.tileColor = AppColors.background,
@@ -35,17 +35,19 @@ class WidgetListTile extends StatelessWidget {
         vertical: AppSizes.size8,
         horizontal: AppSizes.size16,
       ),
-      leading: CircleAvatar(
-        radius: AppSizes.size24,
-        backgroundColor: AppColors.primary.withValues(
-          alpha: 0.1,
-        ),
-        child: Icon(
-          leadingIcon,
-          color: AppColors.primary,
-          size: AppSizes.size32,
-        ),
-      ),
+      leading: leadingIcon != null
+          ? CircleAvatar(
+              radius: AppSizes.size24,
+              backgroundColor: AppColors.primary.withValues(
+                alpha: 0.1,
+              ),
+              child: Icon(
+                leadingIcon,
+                color: AppColors.primary,
+                size: AppSizes.size32,
+              ),
+            )
+          : null,
       title: Text(
         title,
         style: AppTextStyle.body1.copyWith(

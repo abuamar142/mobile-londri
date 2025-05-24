@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/textstyle/app_sizes.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/widgets/widget_button.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../../customer/presentation/screens/customers_screen.dart';
 import '../../../manage_employee/presentation/screens/manage_employee_screen.dart';
@@ -15,8 +15,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -26,30 +24,29 @@ class MainScreen extends StatelessWidget {
             children: [
               if (RoleManager.hasPermission(Permission.manageEmployees))
                 WidgetButton(
-                  label: appText.button_manage_employee,
-                  onPressed: () => pushManageEmployee(context),
+                  label: context.appText.button_manage_employee,
+                  onPressed: () => pushManageEmployee(context: context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageServices))
                 WidgetButton(
-                  label: appText.button_manage_service,
-                  onPressed: () => pushServices(context),
+                  label: context.appText.button_manage_service,
+                  onPressed: () => pushServices(context: context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageCustomers))
                 WidgetButton(
-                  label: appText.button_manage_customer,
-                  onPressed: () => pushCustomers(context),
+                  label: context.appText.button_manage_customer,
+                  onPressed: () => pushCustomers(context: context),
                 ),
               AppSizes.spaceHeight12,
               if (RoleManager.hasPermission(Permission.manageTransactions))
                 WidgetButton(
-                  label: appText.button_manage_transaction,
-                  onPressed: () => pushTransactions(context),
+                  label: context.appText.button_manage_transaction,
+                  onPressed: () => pushTransactions(context: context),
                 ),
               AppSizes.spaceHeight12,
-              if (RoleManager.hasPermission(Permission.trackTransactions))
-                TrackTransactionsScreen()
+              if (RoleManager.hasPermission(Permission.trackTransactions)) TrackTransactionsScreen()
             ],
           ),
         ),

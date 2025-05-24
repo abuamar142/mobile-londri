@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
@@ -13,14 +14,15 @@ import '../../../../core/widgets/widget_list_tile.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_search_bar.dart';
 import '../../../../injection_container.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/user.dart';
 import '../bloc/manage_employee_bloc.dart';
 import '../widgets/widget_activate_employee.dart';
 import '../widgets/widget_deactivate_employee.dart';
 
-void pushManageEmployee(BuildContext context) {
-  context.pushNamed('manage-employee');
+void pushManageEmployee({
+  required BuildContext context,
+}) {
+  context.pushNamed(RouteNames.manageEmployee);
 }
 
 class ManageEmployeeScreen extends StatefulWidget {
@@ -31,13 +33,14 @@ class ManageEmployeeScreen extends StatefulWidget {
 }
 
 class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
-  final TextEditingController _searchController = TextEditingController();
-
   late final ManageEmployeeBloc _employeeBloc;
+
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+
     _employeeBloc = serviceLocator<ManageEmployeeBloc>();
     _getUsers();
   }
@@ -48,31 +51,23 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
     super.dispose();
   }
 
-  void _getUsers() {
-    _employeeBloc.add(ManageEmployeeEventGetUsers());
-  }
-
   @override
   Widget build(BuildContext context) {
-    final appText = AppLocalizations.of(context)!;
-
     return BlocProvider.value(
       value: _employeeBloc,
       child: BlocListener<ManageEmployeeBloc, ManageEmployeeState>(
         listener: (context, state) {
           if (state is ManageEmployeeFailure) {
-            showSnackbar(context, state.message);
+            context.showSnackbar(state.message);
           } else if (state is ManageEmployeeSuccessActivateEmployee) {
-            showSnackbar(context,
-                appText.manage_employee_success_activate_message(state.name));
+            context.showSnackbar(context.appText.manage_employee_success_activate_message(state.name));
           } else if (state is ManageEmployeeSuccessDeactivateEmployee) {
-            showSnackbar(context,
-                appText.manage_employee_success_deactivate_message(state.name));
+            context.showSnackbar(context.appText.manage_employee_success_deactivate_message(state.name));
           }
         },
         child: Scaffold(
           appBar: WidgetAppBar(
-            label: appText.manage_employee_screen_title,
+            label: context.appText.manage_employee_screen_title,
           ),
           body: SafeArea(
             child: Padding(
@@ -83,10 +78,10 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
               ),
               child: Column(
                 children: [
-                  _buildHeader(appText, context),
+                  _buildHeader(),
                   AppSizes.spaceHeight16,
                   Expanded(
-                    child: _buildEmployeeList(appText),
+                    child: _buildEmployeeList(),
                   ),
                 ],
               ),
@@ -97,12 +92,12 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
     );
   }
 
-  Row _buildHeader(AppLocalizations appText, BuildContext context) {
+  Row _buildHeader() {
     return Row(
       children: [
         WidgetSearchBar(
           controller: _searchController,
-          hintText: appText.manage_employee_search_hint,
+          hintText: context.appText.manage_employee_search_hint,
           onChanged: (value) {
             setState(() {
               _employeeBloc.add(
@@ -125,13 +120,13 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
         AppSizes.spaceWidth8,
         IconButton(
           icon: Icon(Icons.sort, size: AppSizes.size24),
-          onPressed: () => _showSortOptions(context),
+          onPressed: () => _showSortOptions(),
         ),
       ],
     );
   }
 
-  Widget _buildEmployeeList(AppLocalizations appText) {
+  Widget _buildEmployeeList() {
     return BlocBuilder<ManageEmployeeBloc, ManageEmployeeState>(
       builder: (context, state) {
         if (state is ManageEmployeeLoading) {
@@ -143,15 +138,13 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
 
           if (filteredUsers.isEmpty) {
             return WidgetEmptyList(
-              emptyMessage: appText.manage_employee_empty_message,
+              emptyMessage: context.appText.manage_employee_empty_message,
               onRefresh: _getUsers,
             );
           }
 
           return RefreshIndicator(
-            onRefresh: () async {
-              _getUsers();
-            },
+            onRefresh: () async => _getUsers(),
             child: ListView.separated(
               itemCount: filteredUsers.length,
               separatorBuilder: (_, __) => AppSizes.spaceHeight8,
@@ -162,42 +155,74 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
                 return WidgetListTile(
                   title: user.name,
                   subtitle: user.email,
-                  leadingIcon:
-                      isAdmin ? Icons.admin_panel_settings : Icons.person,
-                  tileColor:
-                      isAdmin ? AppColors.success.withValues(alpha: 0.2) : null,
+                  leadingIcon: isAdmin ? Icons.admin_panel_settings : Icons.person,
+                  tileColor: isAdmin ? AppColors.success.withValues(alpha: 0.2) : null,
                   onTap: () => isAdmin
-                      ? showSnackbar(context,
-                          appText.manage_employee_active_tap_info(user.name))
-                      : showSnackbar(
-                          context,
-                          appText
-                              .manage_employee_non_active_tap_info(user.name)),
-                  onLongPress: () {
-                    isAdmin
-                        ? deactivateEmployee(
-                            context: context,
-                            user: user,
-                          )
-                        : activateEmployee(
-                            context: context,
-                            user: user,
-                          );
-                  },
+                      ? context.showSnackbar(context.appText.manage_employee_active_tap_info(user.name))
+                      : context.showSnackbar(context.appText.manage_employee_non_active_tap_info(user.name)),
+                  onLongPress: () => isAdmin
+                      ? deactivateEmployee(
+                          context: context,
+                          user: user,
+                        )
+                      : activateEmployee(
+                          context: context,
+                          user: user,
+                        ),
                 );
               },
             ),
           );
         } else {
           return WidgetError(
-            message: appText.manage_employee_empty_message,
+            message: context.appText.manage_employee_empty_message,
           );
         }
       },
     );
   }
 
-  void _showSortOptions(BuildContext context) {
+  Widget _buildSortOption({
+    required BuildContext context,
+    required String title,
+    required bool isSelected,
+    required String field,
+    required bool isAscending,
+  }) {
+    return ListTile(
+      title: Text(
+        title,
+        style: isSelected
+            ? AppTextStyle.body1.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+              )
+            : AppTextStyle.body1,
+      ),
+      trailing: isSelected
+          ? Icon(
+              isAscending ? Icons.arrow_upward : Icons.arrow_downward,
+              color: AppColors.primary,
+            )
+          : null,
+      onTap: () {
+        bool newAscending = isSelected ? !isAscending : true;
+
+        _employeeBloc.add(
+          ManageEmployeeEventSortUsers(
+            sortBy: field,
+            ascending: newAscending,
+          ),
+        );
+
+        context.pop();
+      },
+    );
+  }
+
+  void _getUsers() => _employeeBloc.add(ManageEmployeeEventGetUsers());
+
+  void _showSortOptions() {
     final blocState = _employeeBloc.state;
     String currentSortField = 'name';
     bool isAscending = true;
@@ -226,16 +251,14 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
             child: Row(
               children: [
                 Text(
-                  AppLocalizations.of(context)!.sort_text,
+                  context.appText.sort_text,
                   style: AppTextStyle.heading3.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
                 Text(
-                  isAscending
-                      ? AppLocalizations.of(context)!.sort_asc
-                      : AppLocalizations.of(context)!.sort_desc,
+                  isAscending ? context.appText.sort_asc : context.appText.sort_desc,
                   style: AppTextStyle.body1.copyWith(
                     color: AppColors.primary,
                   ),
@@ -251,52 +274,33 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildSortOption(AppLocalizations.of(context)!.sort_by_name,
-                      'name', currentSortField, isAscending),
-                  _buildSortOption(AppLocalizations.of(context)!.sort_by_email,
-                      'email', currentSortField, isAscending),
-                  _buildSortOption(AppLocalizations.of(context)!.sort_by_role,
-                      'role', currentSortField, isAscending),
+                  _buildSortOption(
+                    context: context,
+                    title: context.appText.sort_by_name,
+                    isSelected: currentSortField == 'name',
+                    field: 'name',
+                    isAscending: isAscending,
+                  ),
+                  _buildSortOption(
+                    context: context,
+                    title: context.appText.sort_by_email,
+                    isSelected: currentSortField == 'email',
+                    field: 'email',
+                    isAscending: isAscending,
+                  ),
+                  _buildSortOption(
+                    context: context,
+                    title: context.appText.sort_by_role,
+                    isSelected: currentSortField == 'role',
+                    field: 'role',
+                    isAscending: isAscending,
+                  ),
                 ],
               ),
             ),
           )
         ],
       ),
-    );
-  }
-
-  Widget _buildSortOption(
-      String title, String field, String currentSortField, bool isAscending) {
-    final bool isSelected = currentSortField == field;
-
-    return ListTile(
-      leading: Icon(
-        isSelected
-            ? (isAscending ? Icons.arrow_upward : Icons.arrow_downward)
-            : Icons.sort,
-        color: isSelected ? AppColors.primary : Colors.grey,
-      ),
-      title: Text(
-        title,
-        style: AppTextStyle.body1.copyWith(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? AppColors.primary : AppColors.onSecondary,
-        ),
-      ),
-      onTap: () {
-        // Let the bloc handle the actual sort logic
-        final newAscending = currentSortField == field ? !isAscending : true;
-
-        _employeeBloc.add(
-          ManageEmployeeEventSortUsers(
-            sortBy: field,
-            ascending: newAscending,
-          ),
-        );
-
-        Navigator.pop(context);
-      },
     );
   }
 }

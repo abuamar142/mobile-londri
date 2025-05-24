@@ -9,14 +9,16 @@ import '../../features/transaction/domain/entities/transaction.dart';
 
 class PrinterService {
   static const String _printerKeyPref = 'selected_printer_address';
-  bool _isConnected = false;
-  BluetoothInfo? _selectedDevice;
-  List<BluetoothInfo> _devices = [];
-  final _selectedDeviceController =
-      StreamController<BluetoothInfo?>.broadcast();
 
-  Stream<BluetoothInfo?> get selectedDeviceStream =>
-      _selectedDeviceController.stream;
+  List<BluetoothInfo> _devices = [];
+
+  BluetoothInfo? _selectedDevice;
+
+  bool _isConnected = false;
+
+  final _selectedDeviceController = StreamController<BluetoothInfo?>.broadcast();
+
+  Stream<BluetoothInfo?> get selectedDeviceStream => _selectedDeviceController.stream;
   bool get isConnected => _isConnected;
   BluetoothInfo? get selectedDevice => _selectedDevice;
 
@@ -34,8 +36,7 @@ class PrinterService {
 
       // Automatically connect to saved printer if available
       if (_selectedDevice != null && !_isConnected) {
-        debugPrint(
-            "Attempting to connect to saved printer: ${_selectedDevice?.name}");
+        debugPrint("Attempting to connect to saved printer: ${_selectedDevice?.name}");
         await connectToSavedPrinter();
       }
     } catch (e, stackTrace) {
@@ -76,8 +77,7 @@ class PrinterService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_printerKeyPref, device.macAdress);
-      debugPrint(
-          "Saved printer: ${device.name} with address: ${device.macAdress}");
+      debugPrint("Saved printer: ${device.name} with address: ${device.macAdress}");
       return true;
     } catch (e) {
       debugPrint('Error saving printer: $e');
@@ -114,12 +114,10 @@ class PrinterService {
 
   Future<bool> connectToDevice(BluetoothInfo device) async {
     try {
-      debugPrint(
-          "Attempting to connect to: ${device.name} (${device.macAdress})");
+      debugPrint("Attempting to connect to: ${device.name} (${device.macAdress})");
 
       // Check if we need to disconnect first
-      final bool currentlyConnected =
-          await PrintBluetoothThermal.connectionStatus;
+      final bool currentlyConnected = await PrintBluetoothThermal.connectionStatus;
       if (currentlyConnected == true) {
         debugPrint("Already connected to a device, disconnecting first");
         await PrintBluetoothThermal.disconnect;
@@ -174,8 +172,7 @@ class PrinterService {
       return false;
     }
 
-    debugPrint(
-        "Attempting to connect to saved printer: ${_selectedDevice?.name}");
+    debugPrint("Attempting to connect to saved printer: ${_selectedDevice?.name}");
     return await connectToDevice(_selectedDevice!);
   }
 
@@ -214,7 +211,7 @@ class PrinterService {
 
       return true;
     } catch (e) {
-      print('Error printing receipt: $e');
+      debugPrint('Error printing receipt: $e');
       return false;
     }
   }
@@ -245,13 +242,10 @@ class PrinterService {
     bytes += latin1.encode('--------------------------------\n');
 
     // Transaction details
-    final transId = transaction.id != null
-        ? "#${transaction.id!.substring(0, min(8, transaction.id!.length)).toUpperCase()}"
-        : "-";
+    final transId = transaction.id != null ? "#${transaction.id!.substring(0, min(8, transaction.id!.length)).toUpperCase()}" : "-";
 
     bytes += latin1.encode('Trans ID: $transId\n');
-    bytes += latin1.encode(
-        'Date: ${transaction.createdAt?.toString().substring(0, 10) ?? "-"}\n');
+    bytes += latin1.encode('Date: ${transaction.createdAt?.toString().substring(0, 10) ?? "-"}\n');
     bytes += latin1.encode('Customer: ${transaction.customerName ?? "-"}\n');
     bytes += latin1.encode('--------------------------------\n');
 
@@ -261,33 +255,27 @@ class PrinterService {
 
     // Format amount with thousand separators
     final amount = transaction.amount ?? 0;
-    final formattedAmount = amount.toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+    final formattedAmount = amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
 
     bytes += latin1.encode('Price: Rp $formattedAmount\n');
     bytes += latin1.encode('--------------------------------\n');
 
     // Status information
-    bytes += latin1
-        .encode('Status: ${transaction.transactionStatus?.value ?? "-"}\n');
-    bytes +=
-        latin1.encode('Payment: ${transaction.paymentStatus?.value ?? "-"}\n');
+    bytes += latin1.encode('Status: ${transaction.transactionStatus?.value ?? "-"}\n');
+    bytes += latin1.encode('Payment: ${transaction.paymentStatus?.value ?? "-"}\n');
 
     if (transaction.startDate != null) {
-      bytes += latin1.encode(
-          'Start Date: ${transaction.startDate!.toString().substring(0, 10)}\n');
+      bytes += latin1.encode('Start Date: ${transaction.startDate!.toString().substring(0, 10)}\n');
     }
 
     if (transaction.endDate != null) {
-      bytes += latin1.encode(
-          'End Date: ${transaction.endDate!.toString().substring(0, 10)}\n');
+      bytes += latin1.encode('End Date: ${transaction.endDate!.toString().substring(0, 10)}\n');
     }
 
     bytes += latin1.encode('--------------------------------\n');
 
     // Notes section
-    if (transaction.description != null &&
-        transaction.description!.isNotEmpty) {
+    if (transaction.description != null && transaction.description!.isNotEmpty) {
       bytes += latin1.encode('Notes:\n${transaction.description}\n');
       bytes += latin1.encode('--------------------------------\n');
     }

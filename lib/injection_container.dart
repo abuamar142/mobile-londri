@@ -25,6 +25,8 @@ import 'features/customer/domain/repositories/customer_repository.dart';
 import 'features/customer/domain/usecases/customer_activate_customer.dart';
 import 'features/customer/domain/usecases/customer_create_customer.dart';
 import 'features/customer/domain/usecases/customer_delete_customer.dart';
+import 'features/customer/domain/usecases/customer_get_active_customers.dart';
+import 'features/customer/domain/usecases/customer_get_customer_by_id.dart';
 import 'features/customer/domain/usecases/customer_get_customers.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
@@ -41,6 +43,7 @@ import 'features/service/domain/repositories/service_repository.dart';
 import 'features/service/domain/usecases/service_activate_service.dart';
 import 'features/service/domain/usecases/service_create_service.dart';
 import 'features/service/domain/usecases/service_delete_service.dart';
+import 'features/service/domain/usecases/service_get_active_services.dart';
 import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
 import 'features/service/domain/usecases/service_update_service.dart';
@@ -52,6 +55,7 @@ import 'features/transaction/domain/usecases/transaction_create_transaction.dart
 import 'features/transaction/domain/usecases/transaction_delete_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_get_transaction_by_id.dart';
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
+import 'features/transaction/domain/usecases/transaction_hard_delete_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_restore_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_update_transaction.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -65,9 +69,7 @@ Future<void> initializeDependencies() async {
   // Timezone
   timezone.initializeTimeZones();
   timezone.setLocalLocation(
-    timezone.getLocation(
-      await AppTimezone.getCurrentTimezone(),
-    ),
+    timezone.getLocation(await AppTimezone.getCurrentTimezone()),
   );
 
   // Bloc Observer
@@ -81,9 +83,7 @@ Future<void> initializeDependencies() async {
 
   // Localization
   serviceLocator.registerLazySingleton<AppLocales>(
-    () => AppLocales(
-      sharedPreferences: serviceLocator(),
-    ),
+    () => AppLocales(sharedPreferences: serviceLocator()),
   );
   serviceLocator<AppLocales>().loadLocale();
 
@@ -94,48 +94,34 @@ Future<void> initializeDependencies() async {
       () => SupabaseClient(
         dotenv.env['SUPABASE_URL']!,
         dotenv.env['SUPABASE_KEY']!,
-        authOptions: const AuthClientOptions(
-          authFlowType: AuthFlowType.implicit,
-        ),
+        authOptions: const AuthClientOptions(authFlowType: AuthFlowType.implicit),
       ),
     )
 
     // Auth Service
     ..registerLazySingleton<AuthService>(
-      () => AuthService(
-        supabaseClient: serviceLocator(),
-      ),
+      () => AuthService(supabaseClient: serviceLocator()),
     )
 
     // DataSources
     ..registerLazySingleton<AuthRemoteDatasource>(
-      () => AuthRemoteDatasourceImplementation(
-        supabaseClient: serviceLocator(),
-      ),
+      () => AuthRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<AuthRepository>(
-      () => AuthRepositoryImplementation(
-        authRemoteDatasource: serviceLocator(),
-      ),
+      () => AuthRepositoryImplementation(authRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
     ..registerLazySingleton<AuthLogin>(
-      () => AuthLogin(
-        authRepository: serviceLocator(),
-      ),
+      () => AuthLogin(authRepository: serviceLocator()),
     )
     ..registerLazySingleton<AuthRegister>(
-      () => AuthRegister(
-        authRepository: serviceLocator(),
-      ),
+      () => AuthRegister(authRepository: serviceLocator()),
     )
     ..registerLazySingleton<AuthLogout>(
-      () => AuthLogout(
-        authRepository: serviceLocator(),
-      ),
+      () => AuthLogout(authRepository: serviceLocator()),
     )
 
     // Bloc
@@ -150,33 +136,23 @@ Future<void> initializeDependencies() async {
     // Feature - User Role
     // DataSources
     ..registerLazySingleton<ManageEmployeeRemoteDatasource>(
-      () => ManageEmployeeRemoteDataSourceImplementation(
-        supabaseClient: serviceLocator(),
-      ),
+      () => ManageEmployeeRemoteDataSourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<ManageEmployeeRepository>(
-      () => ManageEmployeeRepositoryImplementation(
-        manageEmployeeRemoteDatasource: serviceLocator(),
-      ),
+      () => ManageEmployeeRepositoryImplementation(manageEmployeeRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
     ..registerLazySingleton<ManageEmployeeGetUsers>(
-      () => ManageEmployeeGetUsers(
-        manageEmployeeRepository: serviceLocator(),
-      ),
+      () => ManageEmployeeGetUsers(manageEmployeeRepository: serviceLocator()),
     )
     ..registerLazySingleton<ManageEmployeeActivateEmployee>(
-      () => ManageEmployeeActivateEmployee(
-        manageEmployeeRepository: serviceLocator(),
-      ),
+      () => ManageEmployeeActivateEmployee(manageEmployeeRepository: serviceLocator()),
     )
     ..registerLazySingleton<ManageEmployeeDeactivateEmployee>(
-      () => ManageEmployeeDeactivateEmployee(
-        manageEmployeeRepository: serviceLocator(),
-      ),
+      () => ManageEmployeeDeactivateEmployee(manageEmployeeRepository: serviceLocator()),
     )
 
     // Bloc
@@ -191,54 +167,42 @@ Future<void> initializeDependencies() async {
     // Feature - Service
     // DataSources
     ..registerLazySingleton<ServiceRemoteDatasource>(
-      () => ServiceRemoteDatasourceImplementation(
-        supabaseClient: serviceLocator(),
-      ),
+      () => ServiceRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<ServiceRepository>(
-      () => ServiceRepositoryImplementation(
-        serviceRemoteDatasource: serviceLocator(),
-      ),
+      () => ServiceRepositoryImplementation(serviceRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
     ..registerLazySingleton<ServiceGetServices>(
-      () => ServiceGetServices(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceGetServices(serviceRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<ServiceGetActiveServices>(
+      () => ServiceGetActiveServices(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceGetServiceById>(
-      () => ServiceGetServiceById(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceGetServiceById(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceCreateService>(
-      () => ServiceCreateService(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceCreateService(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceUpdateService>(
-      () => ServiceUpdateService(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceUpdateService(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceDeleteService>(
-      () => ServiceDeleteService(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceDeleteService(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceActivateService>(
-      () => ServiceActivateService(
-        serviceRepository: serviceLocator(),
-      ),
+      () => ServiceActivateService(serviceRepository: serviceLocator()),
     )
 
     // Bloc
     ..registerFactory(
       () => ServiceBloc(
         serviceGetServices: serviceLocator(),
+        serviceGetActiveServices: serviceLocator(),
         serviceGetServiceById: serviceLocator(),
         serviceCreateService: serviceLocator(),
         serviceUpdateService: serviceLocator(),
@@ -250,49 +214,43 @@ Future<void> initializeDependencies() async {
     // Feature - Customer
     // DataSources
     ..registerLazySingleton<CustomerRemoteDatasource>(
-      () => CustomerRemoteDatasourceImplementation(
-        supabaseClient: serviceLocator(),
-      ),
+      () => CustomerRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<CustomerRepository>(
-      () => CustomerRepositoryImplementation(
-        customerRemoteDatasource: serviceLocator(),
-      ),
+      () => CustomerRepositoryImplementation(customerRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
     ..registerLazySingleton<CustomerGetCustomers>(
-      () => CustomerGetCustomers(
-        customerRepository: serviceLocator(),
-      ),
+      () => CustomerGetCustomers(customerRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<CustomerGetActiveCustomers>(
+      () => CustomerGetActiveCustomers(customerRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<CustomerGetCustomerById>(
+      () => CustomerGetCustomerById(customerRepository: serviceLocator()),
     )
     ..registerLazySingleton<CustomerCreateCustomer>(
-      () => CustomerCreateCustomer(
-        customerRepository: serviceLocator(),
-      ),
+      () => CustomerCreateCustomer(customerRepository: serviceLocator()),
     )
     ..registerLazySingleton<CustomerUpdateCustomer>(
-      () => CustomerUpdateCustomer(
-        customerRepository: serviceLocator(),
-      ),
+      () => CustomerUpdateCustomer(customerRepository: serviceLocator()),
     )
     ..registerLazySingleton<CustomerDeleteCustomer>(
-      () => CustomerDeleteCustomer(
-        customerRepository: serviceLocator(),
-      ),
+      () => CustomerDeleteCustomer(customerRepository: serviceLocator()),
     )
     ..registerLazySingleton<CustomerActivateCustomer>(
-      () => CustomerActivateCustomer(
-        customerRepository: serviceLocator(),
-      ),
+      () => CustomerActivateCustomer(customerRepository: serviceLocator()),
     )
 
     // Bloc
     ..registerFactory(
       () => CustomerBloc(
         customerGetCustomers: serviceLocator(),
+        customerGetActiveCustomers: serviceLocator(),
+        customerGetCustomerById: serviceLocator(),
         customerCreateCustomer: serviceLocator(),
         customerUpdateCustomer: serviceLocator(),
         customerDeleteCustomer: serviceLocator(),
@@ -312,48 +270,35 @@ Future<void> initializeDependencies() async {
     )
     // DataSources
     ..registerLazySingleton<TransactionRemoteDatasource>(
-      () => TransactionRemoteDatasourceImplementation(
-        supabaseClient: serviceLocator(),
-      ),
+      () => TransactionRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<TransactionRepository>(
-      () => TransactionRepositoryImplementation(
-        transactionRemoteDatasource: serviceLocator(),
-      ),
+      () => TransactionRepositoryImplementation(transactionRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
     ..registerLazySingleton<TransactionGetTransactions>(
-      () => TransactionGetTransactions(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionGetTransactions(transactionRepository: serviceLocator()),
     )
     ..registerLazySingleton<TransactionGetTransactionById>(
-      () => TransactionGetTransactionById(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionGetTransactionById(transactionRepository: serviceLocator()),
     )
     ..registerLazySingleton<TransactionCreateTransaction>(
-      () => TransactionCreateTransaction(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionCreateTransaction(transactionRepository: serviceLocator()),
     )
     ..registerLazySingleton<TransactionUpdateTransaction>(
-      () => TransactionUpdateTransaction(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionUpdateTransaction(transactionRepository: serviceLocator()),
     )
     ..registerLazySingleton<TransactionRestoreTransaction>(
-      () => TransactionRestoreTransaction(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionRestoreTransaction(transactionRepository: serviceLocator()),
     )
     ..registerLazySingleton<TransactionDeleteTransaction>(
-      () => TransactionDeleteTransaction(
-        transactionRepository: serviceLocator(),
-      ),
+      () => TransactionDeleteTransaction(transactionRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<TransactionHardDeleteTransaction>(
+      () => TransactionHardDeleteTransaction(transactionRepository: serviceLocator()),
     )
 
     // Bloc
@@ -364,6 +309,7 @@ Future<void> initializeDependencies() async {
         transactionCreateTransaction: serviceLocator(),
         transactionUpdateTransaction: serviceLocator(),
         transactionDeleteTransaction: serviceLocator(),
+        transactionHardDeleteTransaction: serviceLocator(),
         transactionRestoreTransaction: serviceLocator(),
       ),
     );
