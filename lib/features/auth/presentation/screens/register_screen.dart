@@ -7,6 +7,7 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
@@ -88,12 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              appText.auth_register_screen_title,
-              style: AppTextStyle.heading3,
-            ),
-            centerTitle: true,
+          appBar: WidgetAppBar(
+            label: appText.auth_register_screen_title,
           ),
           body: SafeArea(
             child: SingleChildScrollView(
