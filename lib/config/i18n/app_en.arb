@@ -728,6 +728,10 @@
   "@printer_pair_instruction": {
     "description": "Instructions for pairing a printer"
   },
+  "printer_refresh_devices": "Refresh Devices",
+  "@printer_refresh_devices": {
+    "description": "Button icon for refreshing printer devices"
+  },
   "printer_test_print": "Test Print",
   "@printer_test_print": {
     "description": "Button text for testing printer"

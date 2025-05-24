@@ -8,6 +8,7 @@ import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../injection_container.dart';
@@ -79,21 +80,16 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                appText.transaction_detail_screen_title,
-                style: AppTextStyle.heading3,
-              ),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  onPressed: () => pushPrintTransactionNoteScreen(
-                    context: context,
-                    transactionId: _transaction?.id,
-                  ),
-                  icon: const Icon(Icons.print),
+            appBar: WidgetAppBar(
+              label: appText.transaction_detail_screen_title,
+              action: IconButton(
+                onPressed: () => pushPrintTransactionNoteScreen(
+                  context: context,
+                  transactionId: _transaction?.id,
                 ),
-              ],
+                icon: const Icon(Icons.print),
+                tooltip: appText.printer_print_receipt,
+              ),
             ),
             body: _isLoading
                 ? WidgetLoading(usingPadding: true)

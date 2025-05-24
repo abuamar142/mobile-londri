@@ -12,6 +12,7 @@ import '../../../../core/services/printer_service.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
@@ -186,19 +187,13 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              appText.print_transaction_screen_title,
-              style: AppTextStyle.heading3,
+          appBar: WidgetAppBar(
+            label: appText.print_transaction_screen_title,
+            action: IconButton(
+              onPressed: _navigateToPrinterSettings,
+              icon: Icon(Icons.settings),
+              tooltip: appText.printer_settings_screen_title,
             ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: _navigateToPrinterSettings,
-                icon: Icon(Icons.settings),
-                tooltip: appText.printer_settings_screen_title,
-              ),
-            ],
           ),
           body: _isLoading
               ? WidgetLoading(usingPadding: true)

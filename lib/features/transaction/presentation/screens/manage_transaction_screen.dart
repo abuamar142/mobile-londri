@@ -8,6 +8,7 @@ import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
@@ -173,12 +174,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                _getScreenTitle(appText),
-                style: AppTextStyle.heading3,
-              ),
-              centerTitle: true,
+            appBar: WidgetAppBar(
+              label: _getScreenTitle(appText),
             ),
             body: _isLoading
                 ? WidgetLoading(usingPadding: true)

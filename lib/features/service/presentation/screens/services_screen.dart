@@ -7,6 +7,7 @@ import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
@@ -66,12 +67,8 @@ class _ServicesScreenState extends State<ServicesScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              appText.service_screen_title,
-              style: AppTextStyle.heading3,
-            ),
-            centerTitle: true,
+          appBar: WidgetAppBar(
+            label: appText.service_screen_title,
           ),
           body: SafeArea(
             child: Padding(

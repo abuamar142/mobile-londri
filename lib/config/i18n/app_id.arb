@@ -213,6 +213,7 @@
   "printer_available_printers": "Printer Tersedia",
   "printer_no_printers_found": "Tidak ada printer yang terpasang",
   "printer_pair_instruction": "Pasangkan printer Anda di pengaturan Bluetooth terlebih dahulu,\nkemudian segarkan daftar ini",
+  "printer_refresh_device": "Segarkan Perangkat",
   "printer_test_print": "Cetak Uji",
   "printer_disconnect": "Putuskan",
   "printer_connect": "Hubungkan",

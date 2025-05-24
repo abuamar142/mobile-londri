@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final appText = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: WidgetAppBar(
         leading: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthStateFailure) {
@@ -75,10 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-        title: Text(
-          'Home',
-          style: AppTextStyle.title,
-        ),
+        label: 'Home',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

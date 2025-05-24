@@ -8,6 +8,7 @@ import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/services/permission_service.dart';
 import '../../../../core/services/printer_service.dart';
 import '../../../../core/utils/show_snackbar.dart';
+import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
@@ -197,18 +198,13 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
     final appText = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          appText.printer_settings_screen_title,
-          style: AppTextStyle.heading3,
+      appBar: WidgetAppBar(
+        label: appText.printer_settings_screen_title,
+        action: IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: _refreshDevices,
+          tooltip: appText.printer_refresh_devices,
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _refreshDevices,
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
