@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
-import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
@@ -36,6 +37,8 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
   late final ManageStaffBloc _staffBloc;
 
   final TextEditingController _searchController = TextEditingController();
+
+  void _getUsers() => _staffBloc.add(ManageStaffEventGetUsers());
 
   @override
   void initState() {
@@ -126,6 +129,57 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
     );
   }
 
+  void _showSortOptions() {
+    return showDropdownBottomSheet(
+      context: context,
+      items: [
+        WidgetDropdownBottomSheetItem(
+          isSelected: _staffBloc.currentSortField == 'name',
+          leadingIcon: Icons.person,
+          title: context.appText.sort_by_name,
+          onTap: () {
+            _staffBloc.add(
+              ManageStaffEventSortUsers(
+                sortBy: 'name',
+                ascending: !_staffBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          isSelected: _staffBloc.currentSortField == 'email',
+          leadingIcon: Icons.email,
+          title: context.appText.sort_by_email,
+          onTap: () {
+            _staffBloc.add(
+              ManageStaffEventSortUsers(
+                sortBy: 'email',
+                ascending: !_staffBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          isSelected: _staffBloc.currentSortField == 'role',
+          leadingIcon: Icons.admin_panel_settings,
+          title: context.appText.sort_by_role,
+          onTap: () {
+            _staffBloc.add(
+              ManageStaffEventSortUsers(
+                sortBy: 'role',
+                ascending: !_staffBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+      ],
+      title: context.appText.sort_text,
+    );
+  }
+
   Widget _buildStaffList() {
     return BlocBuilder<ManageStaffBloc, ManageStaffState>(
       builder: (context, state) {
@@ -179,128 +233,6 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
           );
         }
       },
-    );
-  }
-
-  Widget _buildSortOption({
-    required BuildContext context,
-    required String title,
-    required bool isSelected,
-    required String field,
-    required bool isAscending,
-  }) {
-    return ListTile(
-      title: Text(
-        title,
-        style: isSelected
-            ? AppTextStyle.body1.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-              )
-            : AppTextStyle.body1,
-      ),
-      trailing: isSelected
-          ? Icon(
-              isAscending ? Icons.arrow_upward : Icons.arrow_downward,
-              color: AppColors.primary,
-            )
-          : null,
-      onTap: () {
-        bool newAscending = isSelected ? !isAscending : true;
-
-        _staffBloc.add(
-          ManageStaffEventSortUsers(
-            sortBy: field,
-            ascending: newAscending,
-          ),
-        );
-
-        context.pop();
-      },
-    );
-  }
-
-  void _getUsers() => _staffBloc.add(ManageStaffEventGetUsers());
-
-  void _showSortOptions() {
-    final blocState = _staffBloc.state;
-    String currentSortField = 'name';
-    bool isAscending = true;
-
-    if (blocState is ManageStaffStateWithFilteredUsers) {
-      currentSortField = _staffBloc.currentSortField;
-      isAscending = _staffBloc.isAscending;
-    }
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSizes.size16),
-        ),
-      ),
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: AppSizes.size16,
-              left: AppSizes.size16,
-              right: AppSizes.size16,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  context.appText.sort_text,
-                  style: AppTextStyle.heading3.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  isAscending ? context.appText.sort_asc : context.appText.sort_desc,
-                  style: AppTextStyle.body1.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(thickness: 1),
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.3,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildSortOption(
-                    context: context,
-                    title: context.appText.sort_by_name,
-                    isSelected: currentSortField == 'name',
-                    field: 'name',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: context.appText.sort_by_email,
-                    isSelected: currentSortField == 'email',
-                    field: 'email',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: context.appText.sort_by_role,
-                    isSelected: currentSortField == 'role',
-                    field: 'role',
-                    isAscending: isAscending,
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 }
