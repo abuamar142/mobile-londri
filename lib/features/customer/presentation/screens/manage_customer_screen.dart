@@ -133,7 +133,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: WidgetAppBar(
-              label: _getScreenTitle(),
+              title: _getScreenTitle(),
             ),
             body: _isLoading && !_isAddMode
                 ? const WidgetLoading(usingPadding: true)

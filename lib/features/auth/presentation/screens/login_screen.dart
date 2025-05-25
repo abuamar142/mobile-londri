@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: WidgetAppBar(label: context.appText.auth_login_screen_title),
+          appBar: WidgetAppBar(title: context.appText.auth_login_screen_title),
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSizes.size16),

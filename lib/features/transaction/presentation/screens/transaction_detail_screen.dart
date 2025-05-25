@@ -81,7 +81,7 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: WidgetAppBar(
-              label: context.appText.transaction_detail_screen_title,
+              title: context.appText.transaction_detail_screen_title,
               action: IconButton(
                 onPressed: () => pushPrintTransactionInvoiceScreen(
                   context: context,

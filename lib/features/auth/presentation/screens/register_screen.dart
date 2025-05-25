@@ -73,7 +73,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: WidgetAppBar(label: context.appText.auth_register_screen_title),
+          appBar: WidgetAppBar(title: context.appText.auth_register_screen_title),
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSizes.size16),

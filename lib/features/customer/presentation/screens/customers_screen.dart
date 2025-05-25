@@ -67,7 +67,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
           }
         },
         child: Scaffold(
-          appBar: WidgetAppBar(label: context.appText.customer_screen_title),
+          appBar: WidgetAppBar(title: context.appText.customer_screen_title),
           body: SafeArea(
             child: Padding(
               padding: AppSizes.paddingAll16,

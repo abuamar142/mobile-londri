@@ -162,7 +162,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: WidgetAppBar(
-              label: _getScreenTitle(),
+              title: _getScreenTitle(),
             ),
             body: SafeArea(
               child: state is TransactionStateLoading

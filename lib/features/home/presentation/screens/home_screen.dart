@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-        label: context.appText.home_screen_title,
+        title: context.appText.home_screen_title,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

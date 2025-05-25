@@ -6,14 +6,13 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../core/utils/context_extensions.dart';
-import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
 import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../../../core/widgets/widget_search_bar.dart';
+import '../../../../core/widgets/widget_scaffold_list.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/user.dart';
 import '../bloc/manage_staff_bloc.dart';
@@ -68,39 +67,10 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
             context.showSnackbar(context.appText.manage_staff_success_deactivate_message(state.name));
           }
         },
-        child: Scaffold(
-          appBar: WidgetAppBar(
-            label: context.appText.manage_staff_screen_title,
-          ),
-          body: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.only(
-                left: AppSizes.size16,
-                right: AppSizes.size16,
-                bottom: AppSizes.size16,
-              ),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  AppSizes.spaceHeight16,
-                  Expanded(
-                    child: _buildStaffList(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Row _buildHeader() {
-    return Row(
-      children: [
-        WidgetSearchBar(
-          controller: _searchController,
-          hintText: context.appText.manage_staff_search_hint,
+        child: WidgetScaffoldList(
+          title: context.appText.manage_staff_screen_title,
+          searchController: _searchController,
+          searchHint: context.appText.manage_staff_search_hint,
           onChanged: (value) {
             setState(() {
               _staffBloc.add(
@@ -119,13 +89,10 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
               );
             });
           },
+          onSortTap: () => _showSortOptions(),
+          buildListItems: _buildStaffList(),
         ),
-        AppSizes.spaceWidth8,
-        IconButton(
-          icon: Icon(Icons.sort, size: AppSizes.size24),
-          onPressed: () => _showSortOptions(),
-        ),
-      ],
+      ),
     );
   }
 

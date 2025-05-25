@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../../config/textstyle/app_textstyle.dart';
 
 class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String label;
+  final String title;
   final IconButton? action;
   final Widget? leading;
 
   const WidgetAppBar({
     super.key,
-    required this.label,
+    required this.title,
     this.action,
     this.leading,
   });
@@ -19,7 +19,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: leading,
       title: Text(
-        label,
+        title,
         style: AppTextStyle.heading3,
       ),
       centerTitle: true,

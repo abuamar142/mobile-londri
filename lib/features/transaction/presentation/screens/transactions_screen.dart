@@ -67,7 +67,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         },
         child: Scaffold(
           appBar: WidgetAppBar(
-            label: context.appText.transaction_screen_title,
+            title: context.appText.transaction_screen_title,
           ),
           body: SafeArea(
             child: Padding(

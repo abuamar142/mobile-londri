@@ -107,7 +107,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
         },
         child: Scaffold(
           appBar: WidgetAppBar(
-            label: context.appText.print_transaction_screen_title,
+            title: context.appText.print_transaction_screen_title,
             action: IconButton(
               onPressed: () async {
                 final result = await pushPrinterSettings(context: context);

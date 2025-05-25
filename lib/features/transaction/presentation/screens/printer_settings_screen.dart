@@ -177,7 +177,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WidgetAppBar(
-        label: context.appText.printer_settings_screen_title,
+        title: context.appText.printer_settings_screen_title,
         action: IconButton(
           icon: Icon(Icons.refresh),
           onPressed: _refreshDevices,

@@ -67,7 +67,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
         },
         child: Scaffold(
           appBar: WidgetAppBar(
-            label: context.appText.service_screen_title,
+            title: context.appText.service_screen_title,
           ),
           body: SafeArea(
             child: Padding(

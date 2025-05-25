@@ -129,7 +129,7 @@ class _ManageServiceScreenState extends State<ManageServiceScreen> {
         builder: (context, state) {
           return Scaffold(
             appBar: WidgetAppBar(
-              label: _getScreenTitle(),
+              title: _getScreenTitle(),
             ),
             body: _isLoading
                 ? WidgetLoading(usingPadding: true)
