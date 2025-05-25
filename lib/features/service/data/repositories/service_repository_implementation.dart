@@ -89,9 +89,9 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteService(String id) async {
+  Future<Either<Failure, void>> deactivateService(String id) async {
     try {
-      await serviceRemoteDatasource.deleteService(id);
+      await serviceRemoteDatasource.deactivateService(id);
       return Right(null);
     } on ServerException catch (e) {
       return Left(Failure(message: e.message));

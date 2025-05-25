@@ -10,7 +10,7 @@ abstract class ServiceRemoteDatasource {
   Future<ServiceModel> readServiceById(String id);
   Future<void> createService(ServiceModel service);
   Future<void> updateService(ServiceModel service);
-  Future<void> deleteService(String id);
+  Future<void> deactivateService(String id);
   Future<void> activateService(String id);
 }
 
@@ -90,7 +90,7 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   }
 
   @override
-  Future<void> deleteService(String id) {
+  Future<void> deactivateService(String id) {
     try {
       return supabaseClient.from('services').update({
         'deleted_at': DateTime.now().toIso8601String(),

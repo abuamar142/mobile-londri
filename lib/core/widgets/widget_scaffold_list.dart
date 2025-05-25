@@ -12,6 +12,7 @@ class WidgetScaffoldList extends StatelessWidget {
   final Function() onClear;
   final Function() onSortTap;
   final Widget buildListItems;
+  final VoidCallback? onFloatingActionButtonPressed;
 
   const WidgetScaffoldList({
     super.key,
@@ -22,6 +23,7 @@ class WidgetScaffoldList extends StatelessWidget {
     required this.onClear,
     required this.onSortTap,
     required this.buildListItems,
+    this.onFloatingActionButtonPressed,
   });
 
   @override
@@ -60,6 +62,15 @@ class WidgetScaffoldList extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: onFloatingActionButtonPressed != null
+          ? FloatingActionButton(
+              onPressed: onFloatingActionButtonPressed,
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+            )
+          : null,
     );
   }
 }

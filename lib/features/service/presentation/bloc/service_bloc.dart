@@ -6,7 +6,7 @@ import '../../../../core/error/failure.dart';
 import '../../domain/entities/service.dart';
 import '../../domain/usecases/service_activate_service.dart';
 import '../../domain/usecases/service_create_service.dart';
-import '../../domain/usecases/service_delete_service.dart';
+import '../../domain/usecases/service_deactivate_service.dart';
 import '../../domain/usecases/service_get_active_services.dart';
 import '../../domain/usecases/service_get_service_by_id.dart';
 import '../../domain/usecases/service_get_services.dart';
@@ -21,7 +21,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceGetServiceById serviceGetServiceById;
   final ServiceCreateService serviceCreateService;
   final ServiceUpdateService serviceUpdateService;
-  final ServiceDeleteService serviceDeleteService;
+  final ServiceDeactivateService serviceDeactivateService;
   final ServiceActivateService serviceActivateService;
 
   late List<Service> _allServices;
@@ -38,7 +38,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     required this.serviceGetServiceById,
     required this.serviceCreateService,
     required this.serviceUpdateService,
-    required this.serviceDeleteService,
+    required this.serviceDeactivateService,
     required this.serviceActivateService,
   }) : super(ServiceStateInitial()) {
     on<ServiceEventGetServices>(
@@ -56,8 +56,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<ServiceEventUpdateService>(
       (event, emit) => onServiceEventUpdateService(event, emit),
     );
-    on<ServiceEventDeleteService>(
-      (event, emit) => onServiceEventDeleteService(event, emit),
+    on<ServiceEventDeactivateService>(
+      (event, emit) => onServiceEventDeactivateService(event, emit),
     );
     on<ServiceEventActivateService>(
       (event, emit) => onServiceEventActivateService(event, emit),
@@ -168,20 +168,20 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
   }
 
-  void onServiceEventDeleteService(
-    ServiceEventDeleteService event,
+  void onServiceEventDeactivateService(
+    ServiceEventDeactivateService event,
     Emitter<ServiceState> emit,
   ) async {
     emit(ServiceStateLoading());
 
-    Either<Failure, void> result = await serviceDeleteService(event.id);
+    Either<Failure, void> result = await serviceDeactivateService(event.id);
 
     result.fold((left) {
       emit(ServiceStateFailure(
         message: left.message,
       ));
     }, (right) {
-      emit(ServiceStateSuccessDeleteService());
+      emit(ServiceStateSuccessDeactivateService());
     });
   }
 

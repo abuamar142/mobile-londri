@@ -99,6 +99,7 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
   void _showSortOptions() {
     return showDropdownBottomSheet(
       context: context,
+      title: context.appText.sort_text,
       items: [
         WidgetDropdownBottomSheetItem(
           isSelected: _staffBloc.currentSortField == 'name',
@@ -143,7 +144,6 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
           },
         ),
       ],
-      title: context.appText.sort_text,
     );
   }
 

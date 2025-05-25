@@ -61,7 +61,7 @@ class ServiceStateSuccessCreateService extends ServiceState {}
 
 class ServiceStateSuccessUpdateService extends ServiceState {}
 
-class ServiceStateSuccessDeleteService extends ServiceState {}
+class ServiceStateSuccessDeactivateService extends ServiceState {}
 
 class ServiceStateSuccessActivateService extends ServiceState {}
 

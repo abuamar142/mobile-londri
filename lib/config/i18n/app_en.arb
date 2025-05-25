@@ -146,9 +146,9 @@
   "@service_view_screen_title": {
     "description": "Title for the view service screen"
   },
-  "service_delete_dialog_title": "Delete Service",
-  "@service_delete_dialog_title": {
-    "description": "Title for the delete service dialog"
+  "service_deactivate_dialog_title": "Deactivate Service",
+  "@service_deactivate_dialog_title": {
+    "description": "Title for the deactivate service dialog"
   },
   "service_activate_dialog_title": "Activate Service",
   "@service_activate_dialog_title": {
@@ -166,17 +166,17 @@
   "@service_update_success_message": {
     "description": "Message displayed when service is updated successfully"
   },
-  "service_delete_success_message": "Service deleted successfully",
-  "@service_delete_success_message": {
-    "description": "Message displayed when service is deleted successfully"
+  "service_deactivate_success_message": "Service deactivated successfully",
+  "@service_deactivate_success_message": {
+    "description": "Message displayed when service is deactivated successfully"
   },
   "service_activate_success_message": "Service activated successfully",
   "@service_activate_success_message": {
     "description": "Message displayed when service is activated successfully"
   },
-  "service_delete_confirm_message": "Are you sure you want to delete {serviceName}?",
-  "@service_delete_confirm_message": {
-    "description": "Confirmation message for deleting a service"
+  "service_deactivate_confirm_message": "Are you sure you want to deactivate {serviceName}?",
+  "@service_deactivate_confirm_message": {
+    "description": "Confirmation message for deactivating a service"
   },
   "service_activate_confirm_message": "Are you sure you want to activate {serviceName}?",
   "@service_activate_confirm_message": {

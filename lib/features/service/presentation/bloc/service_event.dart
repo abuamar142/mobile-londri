@@ -44,10 +44,10 @@ class ServiceEventUpdateService extends ServiceEvent {
   List<Object> get props => [service];
 }
 
-class ServiceEventDeleteService extends ServiceEvent {
+class ServiceEventDeactivateService extends ServiceEvent {
   final String id;
 
-  const ServiceEventDeleteService({
+  const ServiceEventDeactivateService({
     required this.id,
   });
 

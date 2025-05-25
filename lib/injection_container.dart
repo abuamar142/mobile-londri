@@ -42,7 +42,7 @@ import 'features/service/data/repositories/service_repository_implementation.dar
 import 'features/service/domain/repositories/service_repository.dart';
 import 'features/service/domain/usecases/service_activate_service.dart';
 import 'features/service/domain/usecases/service_create_service.dart';
-import 'features/service/domain/usecases/service_delete_service.dart';
+import 'features/service/domain/usecases/service_deactivate_service.dart';
 import 'features/service/domain/usecases/service_get_active_services.dart';
 import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
@@ -191,8 +191,8 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ServiceUpdateService>(
       () => ServiceUpdateService(serviceRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ServiceDeleteService>(
-      () => ServiceDeleteService(serviceRepository: serviceLocator()),
+    ..registerLazySingleton<ServiceDeactivateService>(
+      () => ServiceDeactivateService(serviceRepository: serviceLocator()),
     )
     ..registerLazySingleton<ServiceActivateService>(
       () => ServiceActivateService(serviceRepository: serviceLocator()),
@@ -206,7 +206,7 @@ Future<void> initializeDependencies() async {
         serviceGetServiceById: serviceLocator(),
         serviceCreateService: serviceLocator(),
         serviceUpdateService: serviceLocator(),
-        serviceDeleteService: serviceLocator(),
+        serviceDeactivateService: serviceLocator(),
         serviceActivateService: serviceLocator(),
       ),
     )

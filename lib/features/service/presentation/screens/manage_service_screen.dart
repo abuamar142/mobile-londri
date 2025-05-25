@@ -119,8 +119,8 @@ class _ManageServiceScreenState extends State<ManageServiceScreen> {
           } else if (state is ServiceStateSuccessUpdateService) {
             context.showSnackbar(context.appText.service_update_success_message);
             context.pop();
-          } else if (state is ServiceStateSuccessDeleteService) {
-            context.showSnackbar(context.appText.service_delete_success_message);
+          } else if (state is ServiceStateSuccessDeactivateService) {
+            context.showSnackbar(context.appText.service_deactivate_success_message);
             context.pop(true);
           } else if (state is ServiceStateSuccessGetServiceById) {
             _handleServiceDataLoaded();
@@ -194,7 +194,7 @@ class _ManageServiceScreenState extends State<ManageServiceScreen> {
                       child: WidgetButton(
                         label: context.appText.button_delete,
                         backgroundColor: AppColors.error,
-                        onPressed: () => deleteService(
+                        onPressed: () => deactivateService(
                           context: context,
                           service: _currentService!,
                           serviceBloc: _serviceBloc,
