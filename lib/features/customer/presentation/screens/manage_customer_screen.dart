@@ -12,6 +12,8 @@ import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_detail_card.dart';
 import '../../../../core/widgets/widget_detail_card_item.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
@@ -395,7 +397,50 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
 
   Widget _buildGenderSelection(bool enabled) {
     return GestureDetector(
-      onTap: enabled ? () => _showGenderBottomSheet() : null,
+      onTap: enabled
+          ? () => showDropdownBottomSheet(
+                context: context,
+                title: context.appText.gender_label,
+                items: [
+                  WidgetDropdownBottomSheetItem(
+                    isSelected: _selectedGender == Gender.male,
+                    leadingIcon: Icons.man,
+                    title: context.appText.gender_male,
+                    onTap: () {
+                      setState(() {
+                        _selectedGender = Gender.male;
+                      });
+
+                      context.pop();
+                    },
+                  ),
+                  WidgetDropdownBottomSheetItem(
+                    isSelected: _selectedGender == Gender.female,
+                    leadingIcon: Icons.woman,
+                    title: context.appText.gender_female,
+                    onTap: () {
+                      setState(() {
+                        _selectedGender = Gender.female;
+                      });
+
+                      context.pop();
+                    },
+                  ),
+                  WidgetDropdownBottomSheetItem(
+                    isSelected: _selectedGender == Gender.other,
+                    leadingIcon: Icons.person,
+                    title: context.appText.gender_other,
+                    onTap: () {
+                      setState(() {
+                        _selectedGender = Gender.other;
+                      });
+
+                      context.pop();
+                    },
+                  ),
+                ],
+              )
+          : null,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
@@ -429,30 +474,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
     );
   }
 
-  Widget _buildGenderOption(Gender gender) {
-    final bool isSelected = _selectedGender == gender;
-
-    return ListTile(
-      leading: Icon(
-        _getGenderIcon(gender),
-        color: isSelected ? AppColors.primary : AppColors.gray,
-      ),
-      title: Text(
-        _getGenderName(gender),
-        style: AppTextStyle.body1.copyWith(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? AppColors.primary : AppColors.onSecondary,
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _selectedGender = gender;
-        });
-        Navigator.pop(context);
-      },
-    );
-  }
-
   IconData _getGenderIcon(Gender gender) {
     switch (gender) {
       case Gender.male:
@@ -478,49 +499,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
   void _loadCustomerData() => _customerBloc.add(
         CustomerEventGetCustomerById(customerId: widget.customerId!),
       );
-
-  void _showGenderBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSizes.size16),
-        ),
-      ),
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: AppSizes.size16,
-              left: AppSizes.size16,
-              right: AppSizes.size16,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  context.appText.gender_label,
-                  style: AppTextStyle.heading3.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          ),
-          const Divider(thickness: 1),
-          _buildGenderOption(Gender.male),
-          _buildGenderOption(Gender.female),
-          _buildGenderOption(Gender.other),
-          SizedBox(height: AppSizes.size16),
-        ],
-      ),
-    );
-  }
 
   void _handleCustomerDataLoaded(CustomerStateSuccessGetCustomerById state) {
     if (widget.customerId != null) {
