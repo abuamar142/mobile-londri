@@ -113,9 +113,9 @@ class CustomerRepositoryImplementation extends CustomerRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteCustomer(String customerId) async {
+  Future<Either<Failure, void>> activateCustomer(String customerId) async {
     try {
-      await customerRemoteDatasource.deleteCustomer(customerId);
+      await customerRemoteDatasource.activateCustomer(customerId);
 
       return Right(null);
     } on ServerException catch (e) {
@@ -130,9 +130,26 @@ class CustomerRepositoryImplementation extends CustomerRepository {
   }
 
   @override
-  Future<Either<Failure, void>> activateCustomer(String customerId) async {
+  Future<Either<Failure, void>> deactivateCustomer(String customerId) async {
     try {
-      await customerRemoteDatasource.activateCustomer(customerId);
+      await customerRemoteDatasource.deactivateCustomer(customerId);
+
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> hardDeleteCustomer(String customerId) async {
+    try {
+      await customerRemoteDatasource.hardDeleteCustomer(customerId);
 
       return Right(null);
     } on ServerException catch (e) {

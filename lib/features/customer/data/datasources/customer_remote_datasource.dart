@@ -10,8 +10,9 @@ abstract class CustomerRemoteDatasource {
   Future<CustomerModel> readCustomerById(String id);
   Future<void> createCustomer(CustomerModel customer);
   Future<void> updateCustomer(CustomerModel customer);
-  Future<void> deleteCustomer(String id);
   Future<void> activateCustomer(String id);
+  Future<void> deactivateCustomer(String id);
+  Future<void> hardDeleteCustomer(String id);
 }
 
 class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
@@ -25,9 +26,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   Future<List<CustomerModel>> readCustomers() async {
     try {
       final List<Map<String, dynamic>> response = await supabaseClient
-          .from(
-            'customers',
-          )
+          .from('customers')
           .select(
             'id, name, phone, gender, description, created_at, updated_at, deleted_at',
           )
@@ -45,9 +44,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   Future<List<CustomerModel>> readActiveCustomers() async {
     try {
       final List<Map<String, dynamic>> response = await supabaseClient
-          .from(
-            'customers',
-          )
+          .from('customers')
           .select(
             'id, name, phone, gender, description, created_at, updated_at, deleted_at',
           )
@@ -66,9 +63,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   Future<CustomerModel> readCustomerById(String id) async {
     try {
       final Map<String, dynamic> response = await supabaseClient
-          .from(
-            'customers',
-          )
+          .from('customers')
           .select(
             'id, name, phone, gender, description, created_at, updated_at, deleted_at',
           )
@@ -85,11 +80,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   @override
   Future<void> createCustomer(CustomerModel customer) async {
     try {
-      await supabaseClient
-          .from(
-            'customers',
-          )
-          .insert(customer.toJson().cleanNulls());
+      await supabaseClient.from('customers').insert(customer.toJson().cleanNulls());
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -100,12 +91,7 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   @override
   Future<void> updateCustomer(CustomerModel customer) async {
     try {
-      await supabaseClient
-          .from(
-            'customers',
-          )
-          .update(customer.toJson().cleanNulls())
-          .eq('id', customer.id!);
+      await supabaseClient.from('customers').update(customer.toJson().cleanNulls()).eq('id', customer.id!);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -114,17 +100,9 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   }
 
   @override
-  Future<void> deleteCustomer(String id) {
+  Future<void> activateCustomer(String id) async {
     try {
-      return supabaseClient
-          .from(
-        'customers',
-      )
-          .update(
-        {
-          'deleted_at': DateTime.now().toIso8601String(),
-        },
-      ).eq('id', id);
+      await supabaseClient.from('customers').update({'deleted_at': null}).eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -133,17 +111,20 @@ class CustomerRemoteDatasourceImplementation extends CustomerRemoteDatasource {
   }
 
   @override
-  Future<void> activateCustomer(String id) {
+  Future<void> deactivateCustomer(String id) async {
     try {
-      return supabaseClient
-          .from(
-        'customers',
-      )
-          .update(
-        {
-          'deleted_at': null,
-        },
-      ).eq('id', id);
+      await supabaseClient.from('customers').update({'deleted_at': DateTime.now().toIso8601String()}).eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> hardDeleteCustomer(String id) async {
+    try {
+      await supabaseClient.from('customers').delete().eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

@@ -6,10 +6,11 @@ import '../../../../core/error/failure.dart';
 import '../../domain/entities/customer.dart';
 import '../../domain/usecases/customer_activate_customer.dart';
 import '../../domain/usecases/customer_create_customer.dart';
-import '../../domain/usecases/customer_delete_customer.dart';
+import '../../domain/usecases/customer_deactivate_customer.dart';
 import '../../domain/usecases/customer_get_active_customers.dart';
 import '../../domain/usecases/customer_get_customer_by_id.dart';
 import '../../domain/usecases/customer_get_customers.dart';
+import '../../domain/usecases/customer_hard_delete_customer.dart';
 import '../../domain/usecases/customer_update_customer.dart';
 
 part 'customer_event.dart';
@@ -21,8 +22,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   final CustomerGetCustomerById customerGetCustomerById;
   final CustomerCreateCustomer customerCreateCustomer;
   final CustomerUpdateCustomer customerUpdateCustomer;
-  final CustomerDeleteCustomer customerDeleteCustomer;
+  final CustomerDeactivateCustomer customerDeactivateCustomer;
   final CustomerActivateCustomer customerActivateCustomer;
+  final CustomerHardDeleteCustomer customerHardDeleteCustomer;
 
   CustomerBloc({
     required this.customerGetCustomers,
@@ -30,8 +32,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     required this.customerGetCustomerById,
     required this.customerCreateCustomer,
     required this.customerUpdateCustomer,
-    required this.customerDeleteCustomer,
     required this.customerActivateCustomer,
+    required this.customerDeactivateCustomer,
+    required this.customerHardDeleteCustomer,
   }) : super(CustomerStateInitial()) {
     on<CustomerEventGetCustomers>(
       (event, emit) => onCustomerEventGetCustomers(event, emit),
@@ -48,11 +51,14 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     on<CustomerEventUpdateCustomer>(
       (event, emit) => onCustomerEventUpdateCustomer(event, emit),
     );
-    on<CustomerEventDeleteCustomer>(
-      (event, emit) => onCustomerEventDeleteCustomer(event, emit),
-    );
     on<CustomerEventActivateCustomer>(
       (event, emit) => onCustomerEventActivateCustomer(event, emit),
+    );
+    on<CustomerEventDeactivateCustomer>(
+      (event, emit) => onCustomerEventDeactivateCustomer(event, emit),
+    );
+    on<CustomerEventHardDeleteCustomer>(
+      (event, emit) => onCustomerEventHardDeleteCustomer(event, emit),
     );
     on<CustomerEventSearchCustomer>(
       (event, emit) => onCustomerEventSearchCustomer(event, emit),
@@ -237,25 +243,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     });
   }
 
-  void onCustomerEventDeleteCustomer(
-    CustomerEventDeleteCustomer event,
-    Emitter<CustomerState> emit,
-  ) async {
-    emit(CustomerStateLoading());
-
-    Either<Failure, void> result = await customerDeleteCustomer(
-      event.customerId,
-    );
-
-    result.fold((left) {
-      emit(CustomerStateFailure(
-        message: left.message,
-      ));
-    }, (right) {
-      emit(CustomerStateSuccessDeleteCustomer());
-    });
-  }
-
   void onCustomerEventActivateCustomer(
     CustomerEventActivateCustomer event,
     Emitter<CustomerState> emit,
@@ -272,6 +259,45 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       ));
     }, (right) {
       emit(CustomerStateSuccessActivateCustomer());
+      add(CustomerEventGetCustomers());
+    });
+  }
+
+  void onCustomerEventDeactivateCustomer(
+    CustomerEventDeactivateCustomer event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(CustomerStateLoading());
+
+    Either<Failure, void> result = await customerDeactivateCustomer(
+      event.customerId,
+    );
+
+    result.fold((left) {
+      emit(CustomerStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(CustomerStateSuccessDeactivateCustomer());
+    });
+  }
+
+  void onCustomerEventHardDeleteCustomer(
+    CustomerEventHardDeleteCustomer event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(CustomerStateLoading());
+
+    Either<Failure, void> result = await customerHardDeleteCustomer(
+      event.customerId,
+    );
+
+    result.fold((left) {
+      emit(CustomerStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(CustomerStateSuccessHardDeleteCustomer());
       add(CustomerEventGetCustomers());
     });
   }

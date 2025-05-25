@@ -23,7 +23,8 @@ import '../../../auth/domain/entities/role_manager.dart';
 import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
-import '../widgets/widget_delete_customer.dart';
+import '../widgets/widget_deactivate_customer.dart';
+import '../widgets/widget_hard_delete_customer.dart';
 
 enum ManageCustomerMode { add, edit, view }
 
@@ -123,9 +124,14 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
           } else if (state is CustomerStateSuccessUpdateCustomer) {
             context.showSnackbar(context.appText.customer_update_success_message);
             context.pop();
-          } else if (state is CustomerStateSuccessDeleteCustomer) {
-            context.showSnackbar(context.appText.customer_delete_success_message);
-            context.pop(true);
+          } else if (state is CustomerStateSuccessActivateCustomer) {
+            context.showSnackbar(context.appText.customer_activate_success_message);
+          } else if (state is CustomerStateSuccessDeactivateCustomer) {
+            context.showSnackbar(context.appText.customer_deactivate_success_message);
+            context.pop();
+          } else if (state is CustomerStateSuccessHardDeleteCustomer) {
+            context.showSnackbar(context.appText.customer_hard_delete_success_message);
+            context.pop();
           } else if (state is CustomerStateSuccessGetCustomerById) {
             _handleCustomerDataLoaded(state);
           }
@@ -183,21 +189,46 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                       ),
                     ],
                   ),
-                if ((_isViewMode && RoleManager.hasPermission(Permission.deleteCustomer))) AppSizes.spaceHeight12,
-                if ((_isViewMode && RoleManager.hasPermission(Permission.deleteCustomer)))
-                  Row(
+                if (_isViewMode)
+                  Column(
                     children: [
-                      Expanded(
-                        child: WidgetButton(
-                          label: context.appText.button_delete,
-                          backgroundColor: AppColors.error,
-                          onPressed: () => deleteCustomer(
-                            context: context,
-                            customer: _currentCustomer!,
-                            customerBloc: _customerBloc,
+                      AppSizes.spaceHeight12,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: WidgetButton(
+                              label: context.appText.button_deactivate,
+                              backgroundColor: AppColors.warning,
+                              onPressed: () => deactivateCustomer(
+                                context: context,
+                                customer: _currentCustomer!,
+                                customerBloc: _customerBloc,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
+                      if (_isViewMode && RoleManager.hasPermission(Permission.hardDeleteCustomer))
+                        Column(
+                          children: [
+                            AppSizes.spaceHeight12,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: WidgetButton(
+                                    label: context.appText.button_hard_delete,
+                                    backgroundColor: AppColors.error,
+                                    onPressed: () => hardDeleteCustomer(
+                                      context: context,
+                                      customer: _currentCustomer!,
+                                      customerBloc: _customerBloc,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                     ],
                   ),
               ],

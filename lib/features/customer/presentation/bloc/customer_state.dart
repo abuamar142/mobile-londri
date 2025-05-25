@@ -61,9 +61,11 @@ class CustomerStateSuccessCreateCustomer extends CustomerState {}
 
 class CustomerStateSuccessUpdateCustomer extends CustomerState {}
 
-class CustomerStateSuccessDeleteCustomer extends CustomerState {}
-
 class CustomerStateSuccessActivateCustomer extends CustomerState {}
+
+class CustomerStateSuccessDeactivateCustomer extends CustomerState {}
+
+class CustomerStateSuccessHardDeleteCustomer extends CustomerState {}
 
 class CustomerStateFailure extends CustomerState {
   final String message;

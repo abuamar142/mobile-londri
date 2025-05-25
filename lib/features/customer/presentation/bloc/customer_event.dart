@@ -72,10 +72,10 @@ class CustomerEventUpdateCustomer extends CustomerEvent {
       ];
 }
 
-class CustomerEventDeleteCustomer extends CustomerEvent {
+class CustomerEventActivateCustomer extends CustomerEvent {
   final String customerId;
 
-  const CustomerEventDeleteCustomer({
+  const CustomerEventActivateCustomer({
     required this.customerId,
   });
 
@@ -85,10 +85,23 @@ class CustomerEventDeleteCustomer extends CustomerEvent {
       ];
 }
 
-class CustomerEventActivateCustomer extends CustomerEvent {
+class CustomerEventDeactivateCustomer extends CustomerEvent {
   final String customerId;
 
-  const CustomerEventActivateCustomer({
+  const CustomerEventDeactivateCustomer({
+    required this.customerId,
+  });
+
+  @override
+  List<Object> get props => [
+        customerId,
+      ];
+}
+
+class CustomerEventHardDeleteCustomer extends CustomerEvent {
+  final String customerId;
+
+  const CustomerEventHardDeleteCustomer({
     required this.customerId,
   });
 

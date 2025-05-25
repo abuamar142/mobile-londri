@@ -388,17 +388,17 @@
   "@customer_edit_dialog_title": {
     "description": "Title for the edit customer dialog"
   },
-  "customer_delete_dialog_title": "Delete Customer",
-  "@customer_delete_dialog_title": {
-    "description": "Title for the delete customer dialog"
-  },
   "customer_activate_dialog_title": "Activate Customer",
   "@customer_activate_dialog_title": {
     "description": "Title for the activate customer dialog"
   },
-  "customer_ask_super_admin_to_activate": "Please ask super admin to activate the customer",
-  "@customer_ask_super_admin_to_activate": {
-    "description": "Message asking super admin to activate the customer"
+  "customer_deactivate_dialog_title": "Deactivate Customer",
+  "@customer_deactivate_dialog_title": {
+    "description": "Title for the deactivate customer dialog"
+  },
+  "customer_hard_delete_dialog_title": "Hard Delete Customer",
+  "@customer_hard_delete_dialog_title": {
+    "description": "Title for the hard delete customer dialog"
   },
   "customer_add_success_message": "Customer added successfully",
   "@customer_add_success_message": {
@@ -408,21 +408,29 @@
   "@customer_update_success_message": {
     "description": "Message displayed when customer is updated successfully"
   },
-  "customer_delete_success_message": "Customer deleted successfully",
-  "@customer_delete_success_message": {
-    "description": "Message displayed when customer is deleted successfully"
-  },
   "customer_activate_success_message": "Customer activated successfully",
   "@customer_activate_success_message": {
     "description": "Message displayed when customer is activated successfully"
   },
-  "customer_delete_confirm_message": "Are you sure you want to delete {customerName}?",
-  "@customer_delete_confirm_message": {
-    "description": "Confirmation message for deleting a customer"
+  "customer_deactivate_success_message": "Customer deactivated successfully",
+  "@customer_deactivate_success_message": {
+    "description": "Message displayed when customer is deactivated successfully"
+  },
+  "customer_hard_delete_success_message": "Customer deleted permanently",
+  "@customer_hard_delete_success_message": {
+    "description": "Message displayed when customer is deleted permanently"
   },
   "customer_activate_confirm_message": "Are you sure you want to activate {customerName}?",
   "@customer_activate_confirm_message": {
     "description": "Confirmation message for activating a customer"
+  },
+  "customer_deactivate_confirm_message": "Are you sure you want to deactivate {customerName}?",
+  "@customer_deactivate_confirm_message": {
+    "description": "Confirmation message for deactivating a customer"
+  },
+  "customer_hard_delete_confirm_message": "Are you sure you want to delete {customerName} permanently?",
+  "@customer_hard_delete_confirm_message": {
+    "description": "Confirmation message for hard deleting a customer"
   },
   "customer_add_failed_message": "Failed to add customer",
   "@customer_add_failed_message": {

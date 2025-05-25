@@ -11,7 +11,7 @@ class RoleManager {
       Permission.manageTransactions,
       Permission.hardDeleteTransaction,
       Permission.activateCustomer,
-      Permission.deleteCustomer,
+      Permission.hardDeleteCustomer,
     ],
     UserRole.admin: [
       Permission.manageCustomers,
@@ -53,7 +53,7 @@ enum Permission {
   manageStaffs,
   manageCustomers,
   activateCustomer,
-  deleteCustomer,
+  hardDeleteCustomer,
   manageServices,
   manageTransactions,
   hardDeleteTransaction,

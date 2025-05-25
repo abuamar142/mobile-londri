@@ -7,15 +7,13 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
-import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_list_tile.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../../../core/widgets/widget_search_bar.dart';
+import '../../../../core/widgets/widget_scaffold_list.dart';
 import '../../../../injection_container.dart';
 import '../../../../src/generated/i18n/app_localizations.dart';
-import '../../../auth/domain/entities/role_manager.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
 import '../widgets/widget_activate_customer.dart';
@@ -38,6 +36,8 @@ class _CustomersScreenState extends State<CustomersScreen> {
   late final CustomerBloc _customerBloc;
 
   final TextEditingController _searchController = TextEditingController();
+
+  void _getCustomers() => _customerBloc.add(CustomerEventGetCustomers());
 
   @override
   void initState() {
@@ -66,27 +66,33 @@ class _CustomersScreenState extends State<CustomersScreen> {
             context.showSnackbar(context.appText.customer_activate_success_message);
           }
         },
-        child: Scaffold(
-          appBar: WidgetAppBar(title: context.appText.customer_screen_title),
-          body: SafeArea(
-            child: Padding(
-              padding: AppSizes.paddingAll16,
-              child: _buildCustomerList(),
-            ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final result = await pushAddCustomer(context: context);
+        child: WidgetScaffoldList(
+          title: context.appText.customer_screen_title,
+          searchController: _searchController,
+          searchHint: context.appText.customer_search_hint,
+          onChanged: (value) {
+            setState(() {
+              _customerBloc.add(
+                CustomerEventSearchCustomer(query: value),
+              );
+            });
+          },
+          onClear: () {
+            setState(() {
+              _customerBloc.add(
+                CustomerEventSearchCustomer(query: ''),
+              );
+            });
+          },
+          onSortTap: () => _showSortOptions(),
+          buildListItems: _buildCustomerList(),
+          onFloatingActionButtonPressed: () async {
+            final result = await pushAddCustomer(context: context);
 
-              if (result == true) {
-                _getCustomers();
-              }
-            },
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-          ),
+            if (result == true) {
+              _getCustomers();
+            }
+          },
         ),
       ),
     );
@@ -102,107 +108,71 @@ class _CustomersScreenState extends State<CustomersScreen> {
         } else if (state is CustomerStateWithFilteredCustomers) {
           List<Customer> filteredCustomers = state.filteredCustomers;
 
-          if (filteredCustomers.isNotEmpty) {
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: WidgetSearchBar(
-                        controller: _searchController,
-                        hintText: context.appText.customer_search_hint,
-                        onChanged: (value) {
-                          setState(() {
-                            _customerBloc.add(
-                              CustomerEventSearchCustomer(query: value),
-                            );
-                          });
-                        },
-                        onClear: () {
-                          setState(() {
-                            _customerBloc.add(
-                              CustomerEventSearchCustomer(query: ''),
-                            );
-                          });
-                        },
-                      ),
-                    ),
-                    AppSizes.spaceWidth8,
-                    IconButton(
-                      icon: Icon(Icons.sort, size: AppSizes.size24),
-                      onPressed: () => _showSortOptions(),
-                    ),
-                  ],
-                ),
-                AppSizes.spaceHeight16,
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async => _getCustomers(),
-                    child: ListView.separated(
-                      itemCount: filteredCustomers.length,
-                      separatorBuilder: (_, __) => AppSizes.spaceHeight8,
-                      itemBuilder: (context, index) {
-                        final customer = filteredCustomers[index];
-                        final isActive = customer.isActive ?? false;
-
-                        return WidgetListTile(
-                          title: customer.name ?? '',
-                          subtitle: _getCustomerSubtitle(customer),
-                          trailing: (customer.phone != null && customer.phone!.isNotEmpty)
-                              ? IconButton(
-                                  icon: Icon(Icons.message),
-                                  onPressed: () => contactCustomer(customer.phone!),
-                                )
-                              : null,
-                          leadingIcon: _getLeadingIcon(customer),
-                          tileColor: isActive
-                              ? null
-                              : AppColors.gray.withValues(
-                                  alpha: 0.1,
-                                ),
-                          onTap: () async {
-                            if (isActive) {
-                              final result = await pushViewCustomer(
-                                context: context,
-                                customerId: customer.id!.toString(),
-                              );
-
-                              if (result == true) {
-                                _getCustomers();
-                              }
-                            } else {
-                              context.showSnackbar(context.appText.customer_info_activate);
-                            }
-                          },
-                          onLongPress: () {
-                            if (isActive) {
-                              context.showSnackbar(context.appText.customer_info_active);
-                            } else {
-                              if (RoleManager.hasPermission(Permission.activateCustomer)) {
-                                activateCustomer(
-                                  context: context,
-                                  customer: customer,
-                                  customerBloc: _customerBloc,
-                                );
-                              } else {
-                                context.showSnackbar(context.appText.customer_ask_super_admin_to_activate);
-                              }
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+          if (filteredCustomers.isEmpty) {
+            return WidgetEmptyList(
+              emptyMessage: context.appText.customer_empty_message,
+              onRefresh: _getCustomers,
             );
           }
-        }
 
-        return WidgetEmptyList(
-          emptyMessage: context.appText.customer_empty_message,
-          onRefresh: _getCustomers,
-        );
+          return RefreshIndicator(
+            onRefresh: () async => _getCustomers(),
+            child: ListView.separated(
+              itemCount: filteredCustomers.length,
+              separatorBuilder: (_, __) => AppSizes.spaceHeight8,
+              itemBuilder: (context, index) {
+                final customer = filteredCustomers[index];
+                final isActive = customer.isActive ?? false;
+
+                return WidgetListTile(
+                  title: customer.name ?? '',
+                  subtitle: _getCustomerSubtitle(customer),
+                  trailing: (customer.phone != null && customer.phone!.isNotEmpty)
+                      ? IconButton(
+                          icon: Icon(Icons.message),
+                          onPressed: () => contactCustomer(customer.phone!),
+                        )
+                      : null,
+                  leadingIcon: _getLeadingIcon(customer),
+                  tileColor: isActive
+                      ? null
+                      : AppColors.gray.withValues(
+                          alpha: 0.1,
+                        ),
+                  onTap: () async {
+                    if (isActive) {
+                      final result = await pushViewCustomer(
+                        context: context,
+                        customerId: customer.id!.toString(),
+                      );
+
+                      if (result == true) {
+                        _getCustomers();
+                      }
+                    } else {
+                      context.showSnackbar(context.appText.customer_info_activate);
+                    }
+                  },
+                  onLongPress: () {
+                    if (isActive) {
+                      context.showSnackbar(context.appText.customer_info_active);
+                    } else {
+                      activateCustomer(
+                        context: context,
+                        customer: customer,
+                        customerBloc: _customerBloc,
+                      );
+                    }
+                  },
+                );
+              },
+            ),
+          );
+        } else {
+          return WidgetError(
+            message: context.appText.customer_empty_message,
+          );
+        }
       },
     );
   }
@@ -269,8 +239,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
         return Icons.person;
     }
   }
-
-  void _getCustomers() => _customerBloc.add(CustomerEventGetCustomers());
 
   void _showSortOptions() {
     final blocState = _customerBloc.state;

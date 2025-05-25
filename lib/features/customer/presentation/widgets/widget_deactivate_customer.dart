@@ -6,20 +6,20 @@ import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../domain/entities/customer.dart';
 import '../bloc/customer_bloc.dart';
 
-Future<void> deleteCustomer({
+Future<void> deactivateCustomer({
   required BuildContext context,
   required Customer customer,
   required CustomerBloc customerBloc,
 }) async {
   showConfirmationDialog(
     context: context,
-    title: AppLocalizations.of(context)!.customer_delete_dialog_title,
-    content: AppLocalizations.of(context)!.customer_delete_confirm_message(
+    title: AppLocalizations.of(context)!.customer_deactivate_dialog_title,
+    content: AppLocalizations.of(context)!.customer_deactivate_confirm_message(
       customer.name!,
     ),
     onConfirm: () {
       customerBloc.add(
-        CustomerEventDeleteCustomer(
+        CustomerEventDeactivateCustomer(
           customerId: customer.id.toString(),
         ),
       );

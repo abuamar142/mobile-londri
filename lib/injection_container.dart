@@ -24,10 +24,11 @@ import 'features/customer/data/repositories/customer_repository_implementation.d
 import 'features/customer/domain/repositories/customer_repository.dart';
 import 'features/customer/domain/usecases/customer_activate_customer.dart';
 import 'features/customer/domain/usecases/customer_create_customer.dart';
-import 'features/customer/domain/usecases/customer_delete_customer.dart';
+import 'features/customer/domain/usecases/customer_deactivate_customer.dart';
 import 'features/customer/domain/usecases/customer_get_active_customers.dart';
 import 'features/customer/domain/usecases/customer_get_customer_by_id.dart';
 import 'features/customer/domain/usecases/customer_get_customers.dart';
+import 'features/customer/domain/usecases/customer_hard_delete_customer.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/manage_staff/data/datasources/manage_staff_remote_datasource.dart';
@@ -243,11 +244,14 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<CustomerUpdateCustomer>(
       () => CustomerUpdateCustomer(customerRepository: serviceLocator()),
     )
-    ..registerLazySingleton<CustomerDeleteCustomer>(
-      () => CustomerDeleteCustomer(customerRepository: serviceLocator()),
-    )
     ..registerLazySingleton<CustomerActivateCustomer>(
       () => CustomerActivateCustomer(customerRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<CustomerDeactivateCustomer>(
+      () => CustomerDeactivateCustomer(customerRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<CustomerHardDeleteCustomer>(
+      () => CustomerHardDeleteCustomer(customerRepository: serviceLocator()),
     )
 
     // Bloc
@@ -258,8 +262,9 @@ Future<void> initializeDependencies() async {
         customerGetCustomerById: serviceLocator(),
         customerCreateCustomer: serviceLocator(),
         customerUpdateCustomer: serviceLocator(),
-        customerDeleteCustomer: serviceLocator(),
+        customerDeactivateCustomer: serviceLocator(),
         customerActivateCustomer: serviceLocator(),
+        customerHardDeleteCustomer: serviceLocator(),
       ),
     )
 
