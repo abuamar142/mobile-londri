@@ -7,11 +7,10 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
-import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_loading.dart';
-import '../../../../core/widgets/widget_search_bar.dart';
+import '../../../../core/widgets/widget_scaffold_list.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../domain/entities/transaction.dart';
@@ -37,6 +36,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   late final TransactionBloc _transactionBloc;
 
   final TextEditingController _searchController = TextEditingController();
+
+  void _getTransactions() => _transactionBloc.add(TransactionEventGetTransactions());
 
   @override
   void initState() {
@@ -65,33 +66,35 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             context.showSnackbar(context.appText.transaction_restore_success_message);
           }
         },
-        child: Scaffold(
-          appBar: WidgetAppBar(
-            title: context.appText.transaction_screen_title,
-          ),
-          body: SafeArea(
-            child: Padding(
-              padding: AppSizes.paddingAll16,
-              child: _buildTransactionList(),
-            ),
-          ),
-          floatingActionButton: RoleManager.hasPermission(Permission.manageTransactions)
-              ? FloatingActionButton(
-                  onPressed: () async {
-                    final result = await pushAddTransaction(
-                      context: context,
-                    );
+        child: WidgetScaffoldList(
+          title: context.appText.transaction_screen_title,
+          searchController: _searchController,
+          searchHint: context.appText.transaction_search_hint,
+          onChanged: (value) {
+            setState(() {
+              _transactionBloc.add(
+                TransactionEventSearchTransaction(query: value),
+              );
+            });
+          },
+          onClear: () {
+            setState(() {
+              _transactionBloc.add(
+                TransactionEventSearchTransaction(query: ''),
+              );
+            });
+          },
+          onSortTap: _showSortOptions,
+          buildListItems: _buildTransactionList(),
+          onFloatingActionButtonPressed: () async {
+            final result = await pushAddTransaction(
+              context: context,
+            );
 
-                    if (result == true) {
-                      _getTransactions();
-                    }
-                  },
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                )
-              : null,
+            if (result == true) {
+              _getTransactions();
+            }
+          },
         ),
       ),
     );
@@ -107,88 +110,58 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         } else if (state is TransactionStateWithFilteredTransactions) {
           List<Transaction> filteredTransactions = state.filteredTransactions;
 
-          if (filteredTransactions.isNotEmpty) {
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    WidgetSearchBar(
-                      controller: _searchController,
-                      hintText: context.appText.transaction_search_hint,
-                      onChanged: (value) {
-                        setState(() {
-                          _transactionBloc.add(
-                            TransactionEventSearchTransaction(query: value),
-                          );
-                        });
-                      },
-                      onClear: () {
-                        setState(() {
-                          _transactionBloc.add(
-                            TransactionEventSearchTransaction(query: ''),
-                          );
-                        });
-                      },
-                    ),
-                    AppSizes.spaceWidth8,
-                    IconButton(
-                      icon: Icon(Icons.sort, size: AppSizes.size24),
-                      onPressed: () => _showSortOptions(),
-                    ),
-                  ],
-                ),
-                AppSizes.spaceHeight16,
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async => _getTransactions(),
-                    child: ListView.separated(
-                      itemCount: filteredTransactions.length,
-                      separatorBuilder: (_, __) => AppSizes.spaceHeight8,
-                      itemBuilder: (context, index) {
-                        final transaction = filteredTransactions[index];
-                        final isDeleted = transaction.isDeleted ?? false;
-
-                        return WidgetTransactionCard(
-                          transaction: transaction,
-                          onTap: () async {
-                            if (isDeleted) {
-                              final result = await pushViewTransaction(
-                                context: context,
-                                transactionId: transaction.id!,
-                              );
-
-                              if (result == true) {
-                                _getTransactions();
-                              }
-                            } else {
-                              context.showSnackbar(context.appText.transaction_deleted_message);
-                            }
-                          },
-                          onLongPress: () {
-                            if (!isDeleted) {
-                              if (RoleManager.hasPermission(Permission.manageTransactions)) {
-                                restoreTransaction(
-                                  context: context,
-                                  transaction: transaction,
-                                  transactionBloc: _transactionBloc,
-                                );
-                              }
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+          if (filteredTransactions.isEmpty) {
+            return WidgetEmptyList(
+              emptyMessage: context.appText.transaction_empty_message,
+              onRefresh: _getTransactions,
             );
           }
-        }
+          return RefreshIndicator(
+            onRefresh: () async => _getTransactions(),
+            child: ListView.separated(
+              itemCount: filteredTransactions.length,
+              separatorBuilder: (_, __) => AppSizes.spaceHeight8,
+              itemBuilder: (context, index) {
+                final transaction = filteredTransactions[index];
+                final isDeleted = transaction.isDeleted ?? false;
 
-        return WidgetEmptyList(
-          emptyMessage: context.appText.transaction_empty_message,
-          onRefresh: _getTransactions,
-        );
+                return WidgetTransactionCard(
+                  transaction: transaction,
+                  onTap: () async {
+                    if (isDeleted) {
+                      final result = await pushViewTransaction(
+                        context: context,
+                        transactionId: transaction.id!,
+                      );
+
+                      if (result == true) {
+                        _getTransactions();
+                      }
+                    } else {
+                      context.showSnackbar(context.appText.transaction_deleted_message);
+                    }
+                  },
+                  onLongPress: () {
+                    if (!isDeleted) {
+                      if (RoleManager.hasPermission(Permission.manageTransactions)) {
+                        restoreTransaction(
+                          context: context,
+                          transaction: transaction,
+                          transactionBloc: _transactionBloc,
+                        );
+                      }
+                    }
+                  },
+                );
+              },
+            ),
+          );
+        } else {
+          return WidgetEmptyList(
+            emptyMessage: context.appText.transaction_empty_message,
+            onRefresh: _getTransactions,
+          );
+        }
       },
     );
   }
@@ -346,6 +319,4 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       },
     );
   }
-
-  void _getTransactions() => _transactionBloc.add(TransactionEventGetTransactions());
 }
