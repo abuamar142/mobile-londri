@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
-import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_error.dart';
 import '../../../../core/widgets/widget_loading.dart';
@@ -167,156 +167,111 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   void _showSortOptions() {
-    final blocState = _transactionBloc.state;
-    String currentSortField = 'createdAt';
-    bool isAscending = false;
-
-    if (blocState is TransactionStateWithFilteredTransactions) {
-      currentSortField = _transactionBloc.currentSortField;
-      isAscending = _transactionBloc.isAscending;
-    }
-
-    showModalBottomSheet(
+    return showDropdownBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(AppSizes.size16),
-        ),
-      ),
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-              top: AppSizes.size16,
-              left: AppSizes.size16,
-              right: AppSizes.size16,
-            ),
-            child: Row(
-              children: [
-                Text(
-                  context.appText.sort_text,
-                  style: AppTextStyle.heading3.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  isAscending ? context.appText.sort_asc : context.appText.sort_desc,
-                  style: AppTextStyle.body1.copyWith(
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(thickness: 1),
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.3,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildSortOption(
-                    context: context,
-                    title: 'Customer Name',
-                    isSelected: currentSortField == 'customerName',
-                    field: 'customerName',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Service Name',
-                    isSelected: currentSortField == 'serviceName',
-                    field: 'serviceName',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Amount',
-                    isSelected: currentSortField == 'amount',
-                    field: 'amount',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Transaction Status',
-                    isSelected: currentSortField == 'transactionStatus',
-                    field: 'transactionStatus',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Payment Status',
-                    isSelected: currentSortField == 'paymentStatus',
-                    field: 'paymentStatus',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Start Date',
-                    isSelected: currentSortField == 'startDate',
-                    field: 'startDate',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'End Date',
-                    isSelected: currentSortField == 'endDate',
-                    field: 'endDate',
-                    isAscending: isAscending,
-                  ),
-                  _buildSortOption(
-                    context: context,
-                    title: 'Created Date',
-                    isSelected: currentSortField == 'createdAt',
-                    field: 'createdAt',
-                    isAscending: isAscending,
-                  ),
-                ],
+      title: context.appText.sort_text,
+      items: [
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_customer_name,
+          leadingIcon: Icons.person,
+          isSelected: _transactionBloc.currentSortField == 'customerName',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'customerName',
+                ascending: !_transactionBloc.isAscending,
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+            );
 
-  Widget _buildSortOption({
-    required BuildContext context,
-    required String title,
-    required bool isSelected,
-    required String field,
-    required bool isAscending,
-  }) {
-    return ListTile(
-      title: Text(
-        title,
-        style: isSelected
-            ? AppTextStyle.body1.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-              )
-            : AppTextStyle.body1,
-      ),
-      trailing: isSelected
-          ? Icon(
-              isAscending ? Icons.arrow_upward : Icons.arrow_downward,
-              color: AppColors.primary,
-            )
-          : null,
-      onTap: () {
-        bool newAscending = isSelected ? !isAscending : true;
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_service_name,
+          leadingIcon: Icons.local_laundry_service,
+          isSelected: _transactionBloc.currentSortField == 'serviceName',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'serviceName',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
 
-        _transactionBloc.add(
-          TransactionEventSortTransactions(
-            sortBy: field,
-            ascending: newAscending,
-          ),
-        );
-        Navigator.pop(context);
-      },
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_amount,
+          leadingIcon: Icons.attach_money,
+          isSelected: _transactionBloc.currentSortField == 'amount',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'amount',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_payment_status,
+          leadingIcon: Icons.payment,
+          isSelected: _transactionBloc.currentSortField == 'paymentStatus',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'paymentStatus',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_start_date,
+          leadingIcon: Icons.date_range,
+          isSelected: _transactionBloc.currentSortField == 'startDate',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'startDate',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_end_date,
+          leadingIcon: Icons.date_range,
+          isSelected: _transactionBloc.currentSortField == 'endDate',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'endDate',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          title: context.appText.sort_by_created_at,
+          leadingIcon: Icons.date_range,
+          isSelected: _transactionBloc.currentSortField == 'createdAt',
+          onTap: () {
+            _transactionBloc.add(
+              TransactionEventSortTransactions(
+                sortBy: 'createdAt',
+                ascending: !_transactionBloc.isAscending,
+              ),
+            );
+            context.pop();
+          },
+        ),
+      ],
     );
   }
 }

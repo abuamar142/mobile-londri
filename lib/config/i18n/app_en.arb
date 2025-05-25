@@ -555,7 +555,31 @@
   "@sort_by_status": {
     "description": "Sort by status option"
   },
-
+  "sort_by_customer_name": "Customer Name",
+  "@sort_by_customer_name": {
+    "description": "Sort by customer name option"
+  },
+  "sort_by_service_name": "Service Name",
+  "@sort_by_service_name": {
+    "description": "Sort by service name option"
+  },
+  "sort_by_amount": "Amount",
+  "@sort_by_amount": {
+    "description": "Sort by amount option"
+  },
+  "sort_by_payment_status": "Payment Status",
+  "@sort_by_payment_status": {
+    "description": "Sort by payment status option"
+  },
+  "sort_by_start_date": "Start Date",
+  "@sort_by_start_date": {
+    "description": "Sort by start date option"
+  },
+  "sort_by_end_date": "End Date",
+  "@sort_by_end_date": {
+    "description": "Sort by end date option"
+  },
+  
   "@_FORM_LABEL": {},
 
   "form_name_label": "Name",

@@ -158,6 +158,12 @@
   "sort_by_role": "Peran",
   "sort_by_created_at": "Tanggal Dibuat",
   "sort_by_status": "Status",
+  "sort_by_customer_name": "Nama Pelanggan",
+  "sort_by_service_name": "Nama Layanan",
+  "sort_by_amount": "Jumlah",
+  "sort_by_payment_status": "Status Pembayaran",
+  "sort_by_start_date": "Tanggal Mulai",
+  "sort_by_end_date": "Tanggal Selesai",
 
   "@_FORM_LABEL": {},
 
