@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../config/textstyle/app_colors.dart';
 import '../../config/textstyle/app_sizes.dart';
 import '../../config/textstyle/app_textstyle.dart';
 import 'widget_dropdown_bottom_sheet_item.dart';
@@ -9,6 +9,7 @@ void showDropdownBottomSheet({
   required BuildContext context,
   required String title,
   required List<WidgetDropdownBottomSheetItem> items,
+  bool? isAscending,
 }) {
   showModalBottomSheet(
     context: context,
@@ -27,6 +28,7 @@ void showDropdownBottomSheet({
             right: AppSizes.size16,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 title,
@@ -34,11 +36,11 @@ void showDropdownBottomSheet({
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => context.pop(),
-              ),
+              if (isAscending != null)
+                Icon(
+                  isAscending == true ? Icons.arrow_upward : Icons.arrow_downward,
+                  color: AppColors.primary,
+                )
             ],
           ),
         ),

@@ -98,6 +98,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
     return showDropdownBottomSheet(
       context: context,
       title: context.appText.sort_text,
+      isAscending: _serviceBloc.isAscending,
       items: [
         WidgetDropdownBottomSheetItem(
           title: context.appText.sort_by_name,

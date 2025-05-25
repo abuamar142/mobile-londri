@@ -100,6 +100,7 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
     return showDropdownBottomSheet(
       context: context,
       title: context.appText.sort_text,
+      isAscending: _staffBloc.isAscending,
       items: [
         WidgetDropdownBottomSheetItem(
           isSelected: _staffBloc.currentSortField == 'name',
@@ -112,7 +113,6 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
                 ascending: !_staffBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -126,7 +126,6 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
                 ascending: !_staffBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -140,7 +139,6 @@ class _ManageStaffScreenState extends State<ManageStaffScreen> {
                 ascending: !_staffBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
       ],

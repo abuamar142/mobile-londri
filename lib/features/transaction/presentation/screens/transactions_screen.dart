@@ -170,6 +170,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return showDropdownBottomSheet(
       context: context,
       title: context.appText.sort_text,
+      isAscending: _transactionBloc.isAscending,
       items: [
         WidgetDropdownBottomSheetItem(
           title: context.appText.sort_by_customer_name,
@@ -197,8 +198,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -212,7 +211,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -226,7 +224,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -240,7 +237,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -254,7 +250,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -268,7 +263,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ascending: !_transactionBloc.isAscending,
               ),
             );
-            context.pop();
           },
         ),
       ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../config/textstyle/app_colors.dart';
 import '../../config/textstyle/app_textstyle.dart';
@@ -31,7 +32,11 @@ class WidgetDropdownBottomSheetItem extends StatelessWidget {
           color: isSelected ? AppColors.primary : AppColors.onSecondary,
         ),
       ),
-      onTap: onTap,
+      onTap: () {
+        onTap();
+
+        context.pop();
+      },
     );
   }
 }
