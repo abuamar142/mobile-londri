@@ -44,6 +44,17 @@ class ServiceEventUpdateService extends ServiceEvent {
   List<Object> get props => [service];
 }
 
+class ServiceEventActivateService extends ServiceEvent {
+  final String id;
+
+  const ServiceEventActivateService({
+    required this.id,
+  });
+
+  @override
+  List<Object> get props => [id];
+}
+
 class ServiceEventDeactivateService extends ServiceEvent {
   final String id;
 
@@ -55,10 +66,10 @@ class ServiceEventDeactivateService extends ServiceEvent {
   List<Object> get props => [id];
 }
 
-class ServiceEventActivateService extends ServiceEvent {
+class ServiceEventHardDeleteService extends ServiceEvent {
   final String id;
 
-  const ServiceEventActivateService({
+  const ServiceEventHardDeleteService({
     required this.id,
   });
 

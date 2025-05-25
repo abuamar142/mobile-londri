@@ -61,9 +61,11 @@ class ServiceStateSuccessCreateService extends ServiceState {}
 
 class ServiceStateSuccessUpdateService extends ServiceState {}
 
+class ServiceStateSuccessActivateService extends ServiceState {}
+
 class ServiceStateSuccessDeactivateService extends ServiceState {}
 
-class ServiceStateSuccessActivateService extends ServiceState {}
+class ServiceStateSuccessHardDeleteService extends ServiceState {}
 
 class ServiceStateFailure extends ServiceState {
   final String message;

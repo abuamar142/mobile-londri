@@ -46,6 +46,7 @@ import 'features/service/domain/usecases/service_deactivate_service.dart';
 import 'features/service/domain/usecases/service_get_active_services.dart';
 import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
+import 'features/service/domain/usecases/service_hard_delete_service.dart';
 import 'features/service/domain/usecases/service_update_service.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
 import 'features/transaction/data/datasources/transaction_remote_datasource.dart';
@@ -191,11 +192,14 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ServiceUpdateService>(
       () => ServiceUpdateService(serviceRepository: serviceLocator()),
     )
+    ..registerLazySingleton<ServiceActivateService>(
+      () => ServiceActivateService(serviceRepository: serviceLocator()),
+    )
     ..registerLazySingleton<ServiceDeactivateService>(
       () => ServiceDeactivateService(serviceRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ServiceActivateService>(
-      () => ServiceActivateService(serviceRepository: serviceLocator()),
+    ..registerLazySingleton<ServiceHardDeleteService>(
+      () => ServiceHardDeleteService(serviceRepository: serviceLocator()),
     )
 
     // Bloc
@@ -206,8 +210,9 @@ Future<void> initializeDependencies() async {
         serviceGetServiceById: serviceLocator(),
         serviceCreateService: serviceLocator(),
         serviceUpdateService: serviceLocator(),
-        serviceDeactivateService: serviceLocator(),
         serviceActivateService: serviceLocator(),
+        serviceDeactivateService: serviceLocator(),
+        serviceHardDeleteService: serviceLocator(),
       ),
     )
 

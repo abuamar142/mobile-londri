@@ -10,6 +10,7 @@ import '../../domain/usecases/service_deactivate_service.dart';
 import '../../domain/usecases/service_get_active_services.dart';
 import '../../domain/usecases/service_get_service_by_id.dart';
 import '../../domain/usecases/service_get_services.dart';
+import '../../domain/usecases/service_hard_delete_service.dart';
 import '../../domain/usecases/service_update_service.dart';
 
 part 'service_event.dart';
@@ -21,8 +22,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceGetServiceById serviceGetServiceById;
   final ServiceCreateService serviceCreateService;
   final ServiceUpdateService serviceUpdateService;
-  final ServiceDeactivateService serviceDeactivateService;
   final ServiceActivateService serviceActivateService;
+  final ServiceDeactivateService serviceDeactivateService;
+  final ServiceHardDeleteService serviceHardDeleteService;
 
   late List<Service> _allServices;
   String _currentQuery = '';
@@ -38,8 +40,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     required this.serviceGetServiceById,
     required this.serviceCreateService,
     required this.serviceUpdateService,
-    required this.serviceDeactivateService,
     required this.serviceActivateService,
+    required this.serviceDeactivateService,
+    required this.serviceHardDeleteService,
   }) : super(ServiceStateInitial()) {
     on<ServiceEventGetServices>(
       (event, emit) => onServiceEventGetServices(event, emit),
@@ -56,11 +59,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<ServiceEventUpdateService>(
       (event, emit) => onServiceEventUpdateService(event, emit),
     );
+    on<ServiceEventActivateService>(
+      (event, emit) => onServiceEventActivateService(event, emit),
+    );
     on<ServiceEventDeactivateService>(
       (event, emit) => onServiceEventDeactivateService(event, emit),
     );
-    on<ServiceEventActivateService>(
-      (event, emit) => onServiceEventActivateService(event, emit),
+    on<ServiceEventHardDeleteService>(
+      (event, emit) => onServiceEventHardDeleteService(event, emit),
     );
     on<ServiceEventSearchService>(
       (event, emit) => onServiceEventSearchService(event, emit),
@@ -168,6 +174,24 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
   }
 
+  void onServiceEventActivateService(
+    ServiceEventActivateService event,
+    Emitter<ServiceState> emit,
+  ) async {
+    emit(ServiceStateLoading());
+
+    Either<Failure, void> result = await serviceActivateService(event.id);
+
+    result.fold((left) {
+      emit(ServiceStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(ServiceStateSuccessActivateService());
+      add(ServiceEventGetServices());
+    });
+  }
+
   void onServiceEventDeactivateService(
     ServiceEventDeactivateService event,
     Emitter<ServiceState> emit,
@@ -185,21 +209,20 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
   }
 
-  void onServiceEventActivateService(
-    ServiceEventActivateService event,
+  void onServiceEventHardDeleteService(
+    ServiceEventHardDeleteService event,
     Emitter<ServiceState> emit,
   ) async {
     emit(ServiceStateLoading());
 
-    Either<Failure, void> result = await serviceActivateService(event.id);
+    Either<Failure, void> result = await serviceHardDeleteService(event.id);
 
     result.fold((left) {
       emit(ServiceStateFailure(
         message: left.message,
       ));
     }, (right) {
-      emit(ServiceStateSuccessActivateService());
-      add(ServiceEventGetServices());
+      emit(ServiceStateSuccessHardDeleteService());
     });
   }
 

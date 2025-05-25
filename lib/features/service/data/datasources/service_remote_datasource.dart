@@ -10,8 +10,9 @@ abstract class ServiceRemoteDatasource {
   Future<ServiceModel> readServiceById(String id);
   Future<void> createService(ServiceModel service);
   Future<void> updateService(ServiceModel service);
-  Future<void> deactivateService(String id);
   Future<void> activateService(String id);
+  Future<void> deactivateService(String id);
+  Future<void> hardDeleteService(String id);
 }
 
 class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
@@ -90,11 +91,9 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   }
 
   @override
-  Future<void> deactivateService(String id) {
+  Future<void> activateService(String id) async {
     try {
-      return supabaseClient.from('services').update({
-        'deleted_at': DateTime.now().toIso8601String(),
-      }).eq('id', id);
+      await supabaseClient.from('services').update({'deleted_at': null}).eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
@@ -103,11 +102,20 @@ class ServiceRemoteDatasourceImplementation extends ServiceRemoteDatasource {
   }
 
   @override
-  Future<void> activateService(String id) {
+  Future<void> deactivateService(String id) async {
     try {
-      return supabaseClient.from('services').update({
-        'deleted_at': null,
-      }).eq('id', id);
+      await supabaseClient.from('services').update({'deleted_at': DateTime.now().toIso8601String()}).eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> hardDeleteService(String id) async {
+    try {
+      await supabaseClient.from('services').delete().eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

@@ -9,6 +9,7 @@ abstract class ServiceRepository {
   Future<Either<Failure, List<Service>>> getActiveServices();
   Future<Either<Failure, void>> createService(Service service);
   Future<Either<Failure, void>> updateService(Service service);
-  Future<Either<Failure, void>> deactivateService(String id);
   Future<Either<Failure, void>> activateService(String id);
+  Future<Either<Failure, void>> deactivateService(String id);
+  Future<Either<Failure, void>> hardDeleteService(String id);
 }

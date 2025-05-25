@@ -18,7 +18,8 @@ import '../../../../injection_container.dart';
 import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
 import '../../domain/entities/service.dart';
 import '../bloc/service_bloc.dart';
-import '../widgets/widget_delete_service.dart';
+import '../widgets/widget_deactivate_service.dart';
+import '../widgets/widget_hard_delete_service.dart';
 
 enum ManageServiceMode { add, edit, view }
 
@@ -122,6 +123,9 @@ class _ManageServiceScreenState extends State<ManageServiceScreen> {
           } else if (state is ServiceStateSuccessDeactivateService) {
             context.showSnackbar(context.appText.service_deactivate_success_message);
             context.pop(true);
+          } else if (state is ServiceStateSuccessHardDeleteService) {
+            context.showSnackbar(context.appText.service_hard_delete_success_message);
+            context.pop(true);
           } else if (state is ServiceStateSuccessGetServiceById) {
             _handleServiceDataLoaded();
           }
@@ -186,20 +190,40 @@ class _ManageServiceScreenState extends State<ManageServiceScreen> {
                     ),
                   ],
                 ),
-              if (_isViewMode) AppSizes.spaceHeight12,
               if (_isViewMode)
-                Row(
+                Column(
                   children: [
-                    Expanded(
-                      child: WidgetButton(
-                        label: context.appText.button_delete,
-                        backgroundColor: AppColors.error,
-                        onPressed: () => deactivateService(
-                          context: context,
-                          service: _currentService!,
-                          serviceBloc: _serviceBloc,
+                    AppSizes.spaceHeight12,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: WidgetButton(
+                            label: context.appText.button_deactivate,
+                            backgroundColor: AppColors.warning,
+                            onPressed: () => deactivateService(
+                              context: context,
+                              service: _currentService!,
+                              serviceBloc: _serviceBloc,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                    AppSizes.spaceHeight12,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: WidgetButton(
+                            label: context.appText.button_hard_delete,
+                            backgroundColor: AppColors.error,
+                            onPressed: () => hardDeleteService(
+                              context: context,
+                              service: _currentService!,
+                              serviceBloc: _serviceBloc,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

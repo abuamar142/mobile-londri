@@ -89,6 +89,18 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   }
 
   @override
+  Future<Either<Failure, void>> activateService(String id) async {
+    try {
+      await serviceRemoteDatasource.activateService(id);
+      return Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> deactivateService(String id) async {
     try {
       await serviceRemoteDatasource.deactivateService(id);
@@ -101,9 +113,9 @@ class ServiceRepositoryImplementation extends ServiceRepository {
   }
 
   @override
-  Future<Either<Failure, void>> activateService(String id) async {
+  Future<Either<Failure, void>> hardDeleteService(String id) async {
     try {
-      await serviceRemoteDatasource.activateService(id);
+      await serviceRemoteDatasource.hardDeleteService(id);
       return Right(null);
     } on ServerException catch (e) {
       return Left(Failure(message: e.message));

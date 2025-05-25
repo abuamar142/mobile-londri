@@ -154,6 +154,10 @@
   "@service_activate_dialog_title": {
     "description": "Title for the activate service dialog"
   },
+  "service_hard_delete_dialog_title": "Hard Delete Service",
+  "@service_hard_delete_dialog_title": {
+    "description": "Title for the hard delete service dialog"
+  },
   "service_ask_super_admin_to_activate": "Please contact super admin to activate this service",
   "@service_ask_super_admin_to_activate": {
     "description": "Message asking user to contact super admin to activate service"
@@ -174,6 +178,10 @@
   "@service_activate_success_message": {
     "description": "Message displayed when service is activated successfully"
   },
+  "service_hard_delete_success_message": "Service deleted permanently",
+  "@service_hard_delete_success_message": {
+    "description": "Message displayed when service is deleted permanently"
+  },
   "service_deactivate_confirm_message": "Are you sure you want to deactivate {serviceName}?",
   "@service_deactivate_confirm_message": {
     "description": "Confirmation message for deactivating a service"
@@ -181,6 +189,10 @@
   "service_activate_confirm_message": "Are you sure you want to activate {serviceName}?",
   "@service_activate_confirm_message": {
     "description": "Confirmation message for activating a service"
+  },
+  "service_hard_delete_confirm_message": "Are you sure you want to delete {serviceName} permanently?",
+  "@service_hard_delete_confirm_message": {
+    "description": "Confirmation message for hard deleting a service"
   },
   "service_info_activate": "Long press to activate this service",
   "@service_info_activate": {
@@ -941,6 +953,10 @@
   "button_hard_delete": "Delete Permanently",
   "@button_hard_delete": {
     "description": "Text for the hard delete button"
+  },
+  "button_deactivate": "Deactivate",
+  "@button_deactivate": {
+    "description": "Text for the deactivate button"
   },
   "button_login": "Login",
   "@button_login": {
