@@ -129,7 +129,10 @@ class _CustomersScreenState extends State<CustomersScreen> {
                   subtitle: _getCustomerSubtitle(customer),
                   trailing: (customer.phone != null && customer.phone!.isNotEmpty)
                       ? IconButton(
-                          icon: Icon(Icons.message),
+                          icon: Icon(
+                            Icons.message,
+                            color: AppColors.primary,
+                          ),
                           onPressed: () => contactCustomer(customer.phone!),
                         )
                       : null,
