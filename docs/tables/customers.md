@@ -95,7 +95,6 @@ INSERT INTO public.role_permissions (role, permission) VALUES
   ('super_admin', 'customers.delete'),
   ('admin', 'customers.select'),
   ('admin', 'customers.insert'),
-  ('admin', 'customers.update'),
-  ('admin', 'customers.delete');
+  ('admin', 'customers.update');
 
 ```
