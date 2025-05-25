@@ -10,7 +10,7 @@ import '../../features/manage_staff/presentation/screens/manage_staff_screen.dar
 import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
-import '../../features/transaction/presentation/screens/print_transaction_note_screen.dart';
+import '../../features/transaction/presentation/screens/print_transaction_invoice_screen.dart';
 import '../../features/transaction/presentation/screens/printer_settings_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/transaction_detail_screen.dart';
@@ -183,7 +183,7 @@ class AppRoutes {
             name: RouteNames.printTransaction,
             builder: (context, state) {
               final id = state.pathParameters['id']!;
-              return PrintTransactionNoteScreen(transactionId: id);
+              return PrintTransactionInvoiceScreen(transactionId: id);
             },
           ),
         ],

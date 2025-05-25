@@ -23,7 +23,7 @@ import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_bottom_bar.dart';
 import 'printer_settings_screen.dart';
 
-void pushPrintTransactionNoteScreen({
+void pushPrintTransactionInvoiceScreen({
   required BuildContext context,
   required String transactionId,
 }) {
@@ -35,19 +35,19 @@ void pushPrintTransactionNoteScreen({
   );
 }
 
-class PrintTransactionNoteScreen extends StatefulWidget {
+class PrintTransactionInvoiceScreen extends StatefulWidget {
   final String transactionId;
 
-  const PrintTransactionNoteScreen({
+  const PrintTransactionInvoiceScreen({
     super.key,
     required this.transactionId,
   });
 
   @override
-  State<PrintTransactionNoteScreen> createState() => _PrintTransactionNoteScreenState();
+  State<PrintTransactionInvoiceScreen> createState() => _PrintTransactionInvoiceScreenState();
 }
 
-class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen> {
+class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceScreen> {
   final PrinterService _printerService = serviceLocator<PrinterService>();
 
   late final TransactionBloc _transactionBloc;
@@ -140,7 +140,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
                         _buildBusinessForm(),
                         AppSizes.spaceHeight16,
                         Expanded(
-                          child: _buildReceiptPreview(),
+                          child: _buildInvoicePreview(),
                         ),
                       ],
                     ),
@@ -148,9 +148,9 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
                 ),
           bottomNavigationBar: WidgetBottomBar(content: [
             WidgetButton(
-              label: context.appText.printer_print_receipt,
+              label: context.appText.printer_print_invoice,
               isLoading: _isPrinting,
-              onPressed: () => _currentTransaction != null ? _printReceipt() : null,
+              onPressed: () => _currentTransaction != null ? _printInvoice() : null,
             ),
           ]),
         ),
@@ -240,7 +240,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
     );
   }
 
-  Widget _buildReceiptPreview() {
+  Widget _buildInvoicePreview() {
     if (_currentTransaction == null) {
       return Center(
         child: Text(context.appText.printer_no_transaction_data),
@@ -291,30 +291,30 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
 
               Divider(thickness: 1),
 
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_transaction_id,
                 value: "#${_currentTransaction!.id!}",
               ),
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_date,
                 value: _currentTransaction!.createdAt?.formatDateOnly() ?? "-",
               ),
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_customer_name,
                 value: _currentTransaction!.customerName ?? "-",
               ),
 
               Divider(thickness: 1),
 
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_service_name,
                 value: _currentTransaction!.serviceName ?? "-",
               ),
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_weight,
                 value: "${_currentTransaction!.weight} kg",
               ),
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_amount,
                 value: "Rp ${_currentTransaction!.amount?.formatNumber() ?? '0'}",
               ),
@@ -322,23 +322,23 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
               Divider(thickness: 1),
 
               // Status information
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_transaction_status,
                 value: _currentTransaction!.transactionStatus?.value ?? "-",
               ),
-              _buildReceiptRow(
+              _buildInvoiceRow(
                 label: context.appText.invoice_print_payment_status,
                 value: _currentTransaction!.paymentStatus?.value ?? "-",
               ),
 
               if (_currentTransaction!.startDate != null)
-                _buildReceiptRow(
+                _buildInvoiceRow(
                   label: context.appText.invoice_print_start_date,
                   value: _currentTransaction!.startDate?.formatDateOnly() ?? "-",
                 ),
 
               if (_currentTransaction!.endDate != null)
-                _buildReceiptRow(
+                _buildInvoiceRow(
                   label: context.appText.invoice_print_end_date,
                   value: _currentTransaction!.endDate?.formatDateOnly() ?? "-",
                 ),
@@ -350,7 +350,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    context.appText.invoice_print_notes,
+                    context.appText.invoice_print_invoices,
                     style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -384,7 +384,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
     );
   }
 
-  Widget _buildReceiptRow({
+  Widget _buildInvoiceRow({
     required String label,
     required String value,
   }) {
@@ -397,7 +397,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
     );
   }
 
-  Future<void> _printReceipt() async {
+  Future<void> _printInvoice() async {
     if (_currentTransaction == null) {
       context.showSnackbar(context.appText.printer_no_transaction_data);
       return;
@@ -416,7 +416,7 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
     });
 
     try {
-      final result = await _printerService.printReceipt(
+      final result = await _printerService.printInvoice(
         transaction: _currentTransaction!,
         businessName: _businessNameController.text,
         businessAddress: _businessAddressController.text,
@@ -424,9 +424,9 @@ class _PrintTransactionNoteScreenState extends State<PrintTransactionNoteScreen>
       );
 
       if (result) {
-        if (mounted) context.showSnackbar(context.appText.printer_receipt_success);
+        if (mounted) context.showSnackbar(context.appText.printer_invoice_success);
       } else {
-        if (mounted) context.showSnackbar(context.appText.printer_receipt_failed);
+        if (mounted) context.showSnackbar(context.appText.printer_invoice_failed);
       }
     } catch (e) {
       if (mounted) {

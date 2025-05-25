@@ -346,7 +346,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
         ),
         SizedBox(height: AppSizes.size16),
         WidgetDetailCard(
-          title: context.appText.customer_note_card_label,
+          title: context.appText.customer_invoice_card_label,
           content: [
             Padding(
               padding: const EdgeInsets.symmetric(

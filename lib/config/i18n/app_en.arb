@@ -440,9 +440,9 @@
   "@customer_information_card_label": {
     "description": "Label for the customer information card"
   },
-  "customer_note_card_label": "Note",
-  "@customer_note_card_label": {
-    "description": "Label for the customer note card"
+  "customer_invoice_card_label": "Invoice",
+  "@customer_invoice_card_label": {
+    "description": "Label for the customer invoice card"
   },
   "customer_transaction_card_label": "Transaction",
   "@customer_transaction_card_label": {
@@ -780,7 +780,7 @@
   "@printer_test_print_success": {
     "description": "Success message for test print"
   },
-  "printer_test_print_failed": "Failed to print test receipt",
+  "printer_test_print_failed": "Failed to print test invoice",
   "@printer_test_print_failed": {
     "description": "Error message when test print fails"
   },
@@ -788,17 +788,17 @@
   "@printer_print_error": {
     "description": "Error message when printing fails"
   },
-  "printer_print_receipt": "Print Receipt",
-  "@printer_print_receipt": {
-    "description": "Button text for printing receipt"
+  "printer_print_invoice": "Print Invoice",
+  "@printer_print_invoice": {
+    "description": "Button text for printing invoice"
   },
-  "printer_receipt_success": "Receipt printed successfully",
-  "@printer_receipt_success": {
-    "description": "Success message when receipt is printed"
+  "printer_invoice_success": "Invoice printed successfully",
+  "@printer_invoice_success": {
+    "description": "Success message when invoice is printed"
   },
-  "printer_receipt_failed": "Failed to print receipt",
-  "@printer_receipt_failed": {
-    "description": "Error message when receipt printing fails"
+  "printer_invoice_failed": "Failed to print invoice",
+  "@printer_invoice_failed": {
+    "description": "Error message when invoice printing fails"
   },
   "printer_permissions_required": "Bluetooth permissions are required for printer functionality",
   "@printer_permissions_required": {
@@ -832,9 +832,9 @@
   "@printer_business_phone_hint": {
     "description": "Hint text for business phone field"
   },
-  "printer_receipt_preview": "Receipt Preview",
-  "@printer_receipt_preview": {
-    "description": "Title for receipt preview section"
+  "printer_invoice_preview": "Invoice Preview",
+  "@printer_invoice_preview": {
+    "description": "Title for invoice preview section"
   },
   "printer_no_transaction_data": "No transaction data available",
   "@printer_no_transaction_data": {
@@ -844,7 +844,7 @@
   "@printer_please_connect": {
     "description": "Message asking to connect to a printer"
   },
-  "print_transaction_screen_title": "Print Transaction Receipt",
+  "print_transaction_screen_title": "Print Transaction Invoice",
   "@print_transaction_screen_title": {
     "description": "Title for the print transaction screen"
   },
@@ -899,9 +899,9 @@
   "@invoice_print_staff_name": {
     "description": "Label for the staff name in the invoice"
   },
-  "invoice_print_notes": "Notes",
-  "@invoice_print_notes": {
-    "description": "Label for the notes in the invoice"
+  "invoice_print_invoices": "Invoices",
+  "@invoice_print_invoices": {
+    "description": "Label for the invoices in the invoice"
   },
   "invoice_print_thank_you": "Thank you for choosing {businessName}!",
   "@invoice_print_thank_you": {

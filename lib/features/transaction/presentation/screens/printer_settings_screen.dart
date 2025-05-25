@@ -140,7 +140,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
         serviceName: "Regular Wash",
         weight: 3.5,
         amount: 70000,
-        description: "Test receipt printing",
+        description: "Test invoice printing",
         transactionStatus: TransactionStatus.onProgress,
         paymentStatus: PaymentStatus.paid,
         startDate: DateTime.now(),
@@ -152,7 +152,7 @@ class _PrinterSettingsScreenState extends State<PrinterSettingsScreen> {
         createdAt: DateTime.now(),
       );
 
-      final result = await _printerService.printReceipt(
+      final result = await _printerService.printInvoice(
         transaction: sampleTransaction,
         businessName: "Laundry Now",
         businessAddress: "Jl. Jalan",

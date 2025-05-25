@@ -188,7 +188,7 @@ class PrinterService {
     }
   }
 
-  Future<bool> printReceipt({
+  Future<bool> printInvoice({
     required Transaction transaction,
     required String businessName,
     required String businessAddress,
@@ -201,7 +201,7 @@ class PrinterService {
     try {
       // Set printer configuration
       await PrintBluetoothThermal.writeBytes(
-        await getReceiptBytes(
+        await getInvoiceBytes(
           transaction: transaction,
           businessName: businessName,
           businessAddress: businessAddress,
@@ -211,12 +211,12 @@ class PrinterService {
 
       return true;
     } catch (e) {
-      debugPrint('Error printing receipt: $e');
+      debugPrint('Error printing invoice: $e');
       return false;
     }
   }
 
-  Future<List<int>> getReceiptBytes({
+  Future<List<int>> getInvoiceBytes({
     required Transaction transaction,
     required String businessName,
     required String businessAddress,
@@ -224,7 +224,7 @@ class PrinterService {
   }) async {
     List<int> bytes = [];
 
-    // Add ESC/POS commands for receipt formatting
+    // Add ESC/POS commands for invoice formatting
     // Center align and text size commands
     bytes += [27, 97, 1]; // Center align
     bytes += [27, 33, 16]; // Double height text
@@ -235,7 +235,7 @@ class PrinterService {
     bytes += latin1.encode('$businessAddress\n');
     bytes += latin1.encode('$businessPhone\n\n');
 
-    // Receipt title
+    // Invoice title
     bytes += [27, 33, 16]; // Double height text
     bytes += latin1.encode('RECEIPT\n');
     bytes += [27, 33, 0]; // Normal text
@@ -274,9 +274,9 @@ class PrinterService {
 
     bytes += latin1.encode('--------------------------------\n');
 
-    // Notes section
+    // Invoices section
     if (transaction.description != null && transaction.description!.isNotEmpty) {
-      bytes += latin1.encode('Notes:\n${transaction.description}\n');
+      bytes += latin1.encode('Invoices:\n${transaction.description}\n');
       bytes += latin1.encode('--------------------------------\n');
     }
 

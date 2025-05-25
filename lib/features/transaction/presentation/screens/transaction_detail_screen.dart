@@ -24,7 +24,7 @@ import '../widgets/widget_delete_transaction.dart';
 import '../widgets/widget_payment_status_badge.dart';
 import '../widgets/widget_transaction_status_badge.dart';
 import 'manage_transaction_screen.dart';
-import 'print_transaction_note_screen.dart';
+import 'print_transaction_invoice_screen.dart';
 
 Future<bool> pushViewTransaction({
   required BuildContext context,
@@ -83,12 +83,12 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
             appBar: WidgetAppBar(
               label: context.appText.transaction_detail_screen_title,
               action: IconButton(
-                onPressed: () => pushPrintTransactionNoteScreen(
+                onPressed: () => pushPrintTransactionInvoiceScreen(
                   context: context,
                   transactionId: widget.transactionId,
                 ),
                 icon: const Icon(Icons.print),
-                tooltip: context.appText.printer_print_receipt,
+                tooltip: context.appText.printer_print_invoice,
               ),
             ),
             body: _buildBody(state),

@@ -162,9 +162,9 @@ class WidgetTransactionCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Note ID
+                  // Invoice ID
                   Text(
-                    "Note: ${transaction.id ?? 'N/A'}",
+                    "Invoice: ${transaction.id ?? 'N/A'}",
                     style: AppTextStyle.tileSubtitle.copyWith(
                       fontSize: AppSizes.size12,
                       color: AppColors.gray,
