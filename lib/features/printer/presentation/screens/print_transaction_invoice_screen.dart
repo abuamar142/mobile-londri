@@ -9,7 +9,6 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
-import '../../../../core/services/printer_service.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/price_formatter.dart';
@@ -18,9 +17,10 @@ import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
-import '../../domain/entities/transaction.dart';
-import '../bloc/transaction_bloc.dart';
-import '../widgets/widget_bottom_bar.dart';
+import '../../../transaction/domain/entities/transaction.dart';
+import '../../../transaction/presentation/bloc/transaction_bloc.dart';
+import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
+import '../bloc/printer_bloc.dart';
 import 'printer_settings_screen.dart';
 
 void pushPrintTransactionInvoiceScreen({
@@ -48,34 +48,22 @@ class PrintTransactionInvoiceScreen extends StatefulWidget {
 }
 
 class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceScreen> {
-  final PrinterService _printerService = serviceLocator<PrinterService>();
-
   late final TransactionBloc _transactionBloc;
+  late final PrinterBloc _printerBloc;
 
   final TextEditingController _businessNameController = TextEditingController(text: 'Londri');
   final TextEditingController _businessAddressController = TextEditingController(text: 'Jl. Raya No. 123, Jakarta');
   final TextEditingController _businessPhoneController = TextEditingController(text: '0812-3456-7890');
 
   Transaction? _currentTransaction;
-  BluetoothInfo? _selectedPrinter;
-
   bool _isLoading = true;
-  bool _isPrinting = false;
 
   @override
   void initState() {
     super.initState();
-
     _transactionBloc = serviceLocator<TransactionBloc>();
+    _printerBloc = serviceLocator<PrinterBloc>();
     _loadData();
-
-    _printerService.selectedDeviceStream.listen((device) {
-      if (mounted) {
-        setState(() {
-          _selectedPrinter = device;
-        });
-      }
-    });
   }
 
   @override
@@ -83,39 +71,54 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
     _businessNameController.dispose();
     _businessAddressController.dispose();
     _businessPhoneController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _transactionBloc,
-      child: BlocListener<TransactionBloc, TransactionState>(
-        listener: (context, state) {
-          if (state is TransactionStateSuccessGetTransactionById) {
-            setState(() {
-              _currentTransaction = state.transaction;
-              _isLoading = false;
-            });
-          } else if (state is TransactionStateFailure) {
-            context.showSnackbar(state.message);
-            setState(() {
-              _isLoading = false;
-            });
-          }
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _transactionBloc),
+        BlocProvider.value(value: _printerBloc),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<TransactionBloc, TransactionState>(
+            listener: (context, state) {
+              if (state is TransactionStateSuccessGetTransactionById) {
+                setState(() {
+                  _currentTransaction = state.transaction;
+                  _isLoading = false;
+                });
+              } else if (state is TransactionStateFailure) {
+                context.showSnackbar(state.message);
+                setState(() {
+                  _isLoading = false;
+                });
+              }
+            },
+          ),
+          BlocListener<PrinterBloc, PrinterState>(
+            listener: (context, state) {
+              if (state is PrinterStateSuccess) {
+                context.showSnackbar(state.message);
+                if (state.message.contains('Invoice printed successfully')) {
+                  context.pop();
+                }
+              } else if (state is PrinterStateFailure) {
+                context.showSnackbar(state.message);
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           appBar: WidgetAppBar(
             title: context.appText.print_transaction_screen_title,
             action: IconButton(
               onPressed: () async {
                 final result = await pushPrinterSettings(context: context);
-
-                if (result && mounted) {
-                  setState(() {
-                    _selectedPrinter = _printerService.selectedDevice;
-                  });
+                if (result) {
+                  _printerBloc.add(PrinterEventGetPairedDevices());
                 }
               },
               icon: Icon(Icons.settings),
@@ -123,7 +126,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
             ),
           ),
           body: _isLoading
-              ? WidgetLoading(usingPadding: true)
+              ? const WidgetLoading(usingPadding: true)
               : SafeArea(
                   child: Padding(
                     padding: EdgeInsets.all(AppSizes.size16),
@@ -146,73 +149,90 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
                     ),
                   ),
                 ),
-          bottomNavigationBar: WidgetBottomBar(content: [
-            WidgetButton(
-              label: context.appText.printer_print_invoice,
-              isLoading: _isPrinting,
-              onPressed: () => _currentTransaction != null ? _printInvoice() : null,
-            ),
-          ]),
+          bottomNavigationBar: BlocBuilder<PrinterBloc, PrinterState>(
+            builder: (context, state) {
+              final bool isPrinting = state is PrinterStatePrinting;
+
+              return WidgetBottomBar(content: [
+                WidgetButton(
+                  label: context.appText.printer_print_invoice,
+                  isLoading: isPrinting,
+                  onPressed: _currentTransaction != null ? () => _printInvoice(context) : () {},
+                ),
+              ]);
+            },
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPrinterStatus() {
-    final bool isConnected = _printerService.isConnected;
+    return BlocBuilder<PrinterBloc, PrinterState>(
+      builder: (context, state) {
+        bool isConnected = false;
+        BluetoothInfo? selectedPrinter;
 
-    return Container(
-      padding: EdgeInsets.all(AppSizes.size12),
-      decoration: BoxDecoration(
-        color: isConnected ? AppColors.success.withValues(alpha: 0.1) : AppColors.warning.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(AppSizes.size8),
-        border: Border.all(
-          color: isConnected ? AppColors.success : AppColors.warning,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
-            color: isConnected ? AppColors.success : AppColors.warning,
+        if (state is PrinterStatePairedDevicesLoaded) {
+          isConnected = state.isConnected;
+          selectedPrinter = state.selectedDevice;
+        } else if (state is PrinterStateConnected) {
+          isConnected = true;
+          selectedPrinter = state.device;
+        }
+
+        return Container(
+          padding: EdgeInsets.all(AppSizes.size12),
+          decoration: BoxDecoration(
+            color: isConnected ? AppColors.success.withValues(alpha: 0.1) : AppColors.warning.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(AppSizes.size8),
+            border: Border.all(
+              color: isConnected ? AppColors.success : AppColors.warning,
+              width: 1,
+            ),
           ),
-          AppSizes.spaceWidth8,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isConnected ? context.appText.printer_status_connected(_selectedPrinter!.name) : context.appText.printer_status_not_connected,
-                  style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              Icon(
+                isConnected ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
+                color: isConnected ? AppColors.success : AppColors.warning,
+              ),
+              AppSizes.spaceWidth8,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isConnected ? context.appText.printer_status_connected(selectedPrinter!.name) : context.appText.printer_status_not_connected,
+                      style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    if (isConnected && selectedPrinter != null)
+                      Text(
+                        selectedPrinter.name,
+                        style: AppTextStyle.body2,
+                      ),
+                  ],
                 ),
-                if (isConnected && _selectedPrinter != null)
-                  Text(
-                    _selectedPrinter!.name,
-                    style: AppTextStyle.body2,
-                  ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: AppSizes.size120,
-            height: AppSizes.size40,
-            child: WidgetButton(
-              label: isConnected ? context.appText.button_change : context.appText.button_connect,
-              backgroundColor: isConnected ? AppColors.success : AppColors.primary,
-              onPressed: () async {
-                final result = await pushPrinterSettings(context: context);
+              ),
+              SizedBox(
+                width: AppSizes.size132,
+                height: AppSizes.size40,
+                child: WidgetButton(
+                  label: isConnected ? context.appText.button_change : context.appText.button_connect,
+                  backgroundColor: isConnected ? AppColors.success : AppColors.primary,
+                  onPressed: () async {
+                    final result = await pushPrinterSettings(context: context);
 
-                if (result && mounted) {
-                  setState(() {
-                    _selectedPrinter = _printerService.selectedDevice;
-                  });
-                }
-              },
-            ),
+                    if (result) {
+                      _printerBloc.add(PrinterEventGetPairedDevices());
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -397,48 +417,22 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
     );
   }
 
-  Future<void> _printInvoice() async {
+  void _printInvoice(BuildContext context) {
     if (_currentTransaction == null) {
       context.showSnackbar(context.appText.printer_no_transaction_data);
       return;
     }
 
-    if (!_printerService.isConnected) {
-      final bool reconnected = await _printerService.connectToSavedPrinter();
-      if (!reconnected) {
-        if (mounted) context.showSnackbar(context.appText.printer_please_connect);
-        return;
-      }
-    }
-
-    setState(() {
-      _isPrinting = true;
-    });
-
-    try {
-      final result = await _printerService.printInvoice(
-        transaction: _currentTransaction!,
-        businessName: _businessNameController.text,
-        businessAddress: _businessAddressController.text,
-        businessPhone: _businessPhoneController.text,
-      );
-
-      if (result) {
-        if (mounted) context.showSnackbar(context.appText.printer_invoice_success);
-      } else {
-        if (mounted) context.showSnackbar(context.appText.printer_invoice_failed);
-      }
-    } catch (e) {
-      if (mounted) {
-        context.showSnackbar(
-          context.appText.printer_print_error(e.toString()),
+    context.read<PrinterBloc>().add(
+          PrinterEventPrintInvoice(
+            transaction: _currentTransaction!,
+            businessName: _businessNameController.text,
+            businessAddress: _businessAddressController.text,
+            businessPhone: _businessPhoneController.text,
+          ),
         );
-      }
-    } finally {
-      setState(() {
-        _isPrinting = false;
-      });
-    }
+
+    return;
   }
 
   Future<void> _loadData() async {
@@ -446,11 +440,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
       _isLoading = true;
     });
 
-    await _printerService.init();
-    _selectedPrinter = _printerService.selectedDevice;
-
-    _transactionBloc.add(
-      TransactionEventGetTransactionById(id: widget.transactionId),
-    );
+    _printerBloc.add(PrinterEventInitialize());
+    _transactionBloc.add(TransactionEventGetTransactionById(id: widget.transactionId));
   }
 }

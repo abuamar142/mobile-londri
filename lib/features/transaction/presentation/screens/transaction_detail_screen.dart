@@ -17,6 +17,7 @@ import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/role_manager.dart';
+import '../../../printer/presentation/screens/print_transaction_invoice_screen.dart';
 import '../../domain/entities/transaction.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_bottom_bar.dart';
@@ -24,7 +25,6 @@ import '../widgets/widget_delete_transaction.dart';
 import '../widgets/widget_payment_status_badge.dart';
 import '../widgets/widget_transaction_status_badge.dart';
 import 'manage_transaction_screen.dart';
-import 'print_transaction_invoice_screen.dart';
 
 Future<bool> pushViewTransaction({
   required BuildContext context,

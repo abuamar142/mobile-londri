@@ -38,6 +38,7 @@ import 'features/manage_staff/domain/usecases/manage_staff_activate_staff.dart';
 import 'features/manage_staff/domain/usecases/manage_staff_deactivate_staff.dart';
 import 'features/manage_staff/domain/usecases/manage_staff_get_users.dart';
 import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
+import 'features/printer/presentation/bloc/printer_bloc.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
@@ -321,6 +322,15 @@ Future<void> initializeDependencies() async {
         transactionDeleteTransaction: serviceLocator(),
         transactionHardDeleteTransaction: serviceLocator(),
         transactionRestoreTransaction: serviceLocator(),
+      ),
+    )
+
+    // Feature - Printer
+    // Bloc
+    ..registerFactory<PrinterBloc>(
+      () => PrinterBloc(
+        printerService: serviceLocator(),
+        permissionService: serviceLocator(),
       ),
     );
 
