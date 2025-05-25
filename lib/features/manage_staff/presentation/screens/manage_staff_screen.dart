@@ -15,25 +15,25 @@ import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_search_bar.dart';
 import '../../../../injection_container.dart';
 import '../../domain/entities/user.dart';
-import '../bloc/manage_employee_bloc.dart';
-import '../widgets/widget_activate_employee.dart';
-import '../widgets/widget_deactivate_employee.dart';
+import '../bloc/manage_staff_bloc.dart';
+import '../widgets/widget_activate_staff.dart';
+import '../widgets/widget_deactivate_staff.dart';
 
-void pushManageEmployee({
+void pushManageStaff({
   required BuildContext context,
 }) {
-  context.pushNamed(RouteNames.manageEmployee);
+  context.pushNamed(RouteNames.manageStaff);
 }
 
-class ManageEmployeeScreen extends StatefulWidget {
-  const ManageEmployeeScreen({super.key});
+class ManageStaffScreen extends StatefulWidget {
+  const ManageStaffScreen({super.key});
 
   @override
-  State<ManageEmployeeScreen> createState() => _ManageEmployeeScreenState();
+  State<ManageStaffScreen> createState() => _ManageStaffScreenState();
 }
 
-class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
-  late final ManageEmployeeBloc _employeeBloc;
+class _ManageStaffScreenState extends State<ManageStaffScreen> {
+  late final ManageStaffBloc _staffBloc;
 
   final TextEditingController _searchController = TextEditingController();
 
@@ -41,7 +41,7 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
   void initState() {
     super.initState();
 
-    _employeeBloc = serviceLocator<ManageEmployeeBloc>();
+    _staffBloc = serviceLocator<ManageStaffBloc>();
     _getUsers();
   }
 
@@ -54,20 +54,20 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: _employeeBloc,
-      child: BlocListener<ManageEmployeeBloc, ManageEmployeeState>(
+      value: _staffBloc,
+      child: BlocListener<ManageStaffBloc, ManageStaffState>(
         listener: (context, state) {
-          if (state is ManageEmployeeFailure) {
+          if (state is ManageStaffFailure) {
             context.showSnackbar(state.message);
-          } else if (state is ManageEmployeeSuccessActivateEmployee) {
-            context.showSnackbar(context.appText.manage_employee_success_activate_message(state.name));
-          } else if (state is ManageEmployeeSuccessDeactivateEmployee) {
-            context.showSnackbar(context.appText.manage_employee_success_deactivate_message(state.name));
+          } else if (state is ManageStaffSuccessActivateStaff) {
+            context.showSnackbar(context.appText.manage_staff_success_activate_message(state.name));
+          } else if (state is ManageStaffSuccessDeactivateStaff) {
+            context.showSnackbar(context.appText.manage_staff_success_deactivate_message(state.name));
           }
         },
         child: Scaffold(
           appBar: WidgetAppBar(
-            label: context.appText.manage_employee_screen_title,
+            label: context.appText.manage_staff_screen_title,
           ),
           body: SafeArea(
             child: Padding(
@@ -81,7 +81,7 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
                   _buildHeader(),
                   AppSizes.spaceHeight16,
                   Expanded(
-                    child: _buildEmployeeList(),
+                    child: _buildStaffList(),
                   ),
                 ],
               ),
@@ -97,11 +97,11 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
       children: [
         WidgetSearchBar(
           controller: _searchController,
-          hintText: context.appText.manage_employee_search_hint,
+          hintText: context.appText.manage_staff_search_hint,
           onChanged: (value) {
             setState(() {
-              _employeeBloc.add(
-                ManageEmployeeEventSearchUser(
+              _staffBloc.add(
+                ManageStaffEventSearchUser(
                   query: value,
                 ),
               );
@@ -109,8 +109,8 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
           },
           onClear: () {
             setState(() {
-              _employeeBloc.add(
-                ManageEmployeeEventSearchUser(
+              _staffBloc.add(
+                ManageStaffEventSearchUser(
                   query: '',
                 ),
               );
@@ -126,19 +126,19 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
     );
   }
 
-  Widget _buildEmployeeList() {
-    return BlocBuilder<ManageEmployeeBloc, ManageEmployeeState>(
+  Widget _buildStaffList() {
+    return BlocBuilder<ManageStaffBloc, ManageStaffState>(
       builder: (context, state) {
-        if (state is ManageEmployeeLoading) {
+        if (state is ManageStaffLoading) {
           return WidgetLoading(usingPadding: true);
-        } else if (state is ManageEmployeeFailure) {
+        } else if (state is ManageStaffFailure) {
           return WidgetError(message: state.message);
-        } else if (state is ManageEmployeeStateWithFilteredUsers) {
+        } else if (state is ManageStaffStateWithFilteredUsers) {
           List<User> filteredUsers = state.filteredUsers;
 
           if (filteredUsers.isEmpty) {
             return WidgetEmptyList(
-              emptyMessage: context.appText.manage_employee_empty_message,
+              emptyMessage: context.appText.manage_staff_empty_message,
               onRefresh: _getUsers,
             );
           }
@@ -158,14 +158,14 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
                   leadingIcon: isAdmin ? Icons.admin_panel_settings : Icons.person,
                   tileColor: isAdmin ? AppColors.success.withValues(alpha: 0.2) : null,
                   onTap: () => isAdmin
-                      ? context.showSnackbar(context.appText.manage_employee_active_tap_info(user.name))
-                      : context.showSnackbar(context.appText.manage_employee_non_active_tap_info(user.name)),
+                      ? context.showSnackbar(context.appText.manage_staff_active_tap_info(user.name))
+                      : context.showSnackbar(context.appText.manage_staff_non_active_tap_info(user.name)),
                   onLongPress: () => isAdmin
-                      ? deactivateEmployee(
+                      ? deactivateStaff(
                           context: context,
                           user: user,
                         )
-                      : activateEmployee(
+                      : activateStaff(
                           context: context,
                           user: user,
                         ),
@@ -175,7 +175,7 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
           );
         } else {
           return WidgetError(
-            message: context.appText.manage_employee_empty_message,
+            message: context.appText.manage_staff_empty_message,
           );
         }
       },
@@ -208,8 +208,8 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
       onTap: () {
         bool newAscending = isSelected ? !isAscending : true;
 
-        _employeeBloc.add(
-          ManageEmployeeEventSortUsers(
+        _staffBloc.add(
+          ManageStaffEventSortUsers(
             sortBy: field,
             ascending: newAscending,
           ),
@@ -220,16 +220,16 @@ class _ManageEmployeeScreenState extends State<ManageEmployeeScreen> {
     );
   }
 
-  void _getUsers() => _employeeBloc.add(ManageEmployeeEventGetUsers());
+  void _getUsers() => _staffBloc.add(ManageStaffEventGetUsers());
 
   void _showSortOptions() {
-    final blocState = _employeeBloc.state;
+    final blocState = _staffBloc.state;
     String currentSortField = 'name';
     bool isAscending = true;
 
-    if (blocState is ManageEmployeeStateWithFilteredUsers) {
-      currentSortField = _employeeBloc.currentSortField;
-      isAscending = _employeeBloc.isAscending;
+    if (blocState is ManageStaffStateWithFilteredUsers) {
+      currentSortField = _staffBloc.currentSortField;
+      isAscending = _staffBloc.isAscending;
     }
 
     showModalBottomSheet(

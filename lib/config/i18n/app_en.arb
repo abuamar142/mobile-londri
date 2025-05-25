@@ -75,49 +75,49 @@
 
   "@_MANAGE_EMPLOYEE": {},
 
-  "manage_employee_screen_title": "Manage Employee",
-  "@manage_employee_screen_title": {
-    "description": "Title for the manage employee screen"
+  "manage_staff_screen_title": "Manage Staff",
+  "@manage_staff_screen_title": {
+    "description": "Title for the manage staff screen"
   },
-  "manage_employee_empty_message": "No employee found",
-  "@manage_employee_empty_message": {
-    "description": "Message displayed when no employee is found"
+  "manage_staff_empty_message": "No staff found",
+  "@manage_staff_empty_message": {
+    "description": "Message displayed when no staff is found"
   },
-  "manage_employee_search_hint": "Search name or email",
-  "@manage_employee_search_hint": {
-    "description": "Hint text for the employee search input"
+  "manage_staff_search_hint": "Search name or email",
+  "@manage_staff_search_hint": {
+    "description": "Hint text for the staff search input"
   },
-  "manage_employee_activate_employee": "Activate Employee",
-  "@manage_employee_activate_employee": {
-    "description": "Text for activating employee"
+  "manage_staff_activate_staff": "Activate Staff",
+  "@manage_staff_activate_staff": {
+    "description": "Text for activating staff"
   },
-  "manage_employee_deactivate_employee": "Deactivate Employee",
-  "@manage_employee_deactivate_employee": {
-    "description": "Text for deactivating employee"
+  "manage_staff_deactivate_staff": "Deactivate Staff",
+  "@manage_staff_deactivate_staff": {
+    "description": "Text for deactivating staff"
   },
-  "manage_employee_activate_dialog_confirm_message": "Are you sure you want to activate {employeeName}?",
-  "@manage_employee_activate_dialog_confirm_message": {
-    "description": "Confirmation message for activating an employee"
+  "manage_staff_activate_dialog_confirm_message": "Are you sure you want to activate {staffName}?",
+  "@manage_staff_activate_dialog_confirm_message": {
+    "description": "Confirmation message for activating an staff"
   },
-  "manage_employee_deactivate_dialog_confirm_message": "Are you sure you want to deactivate {employeeName}?",
-  "@manage_employee_deactivate_dialog_confirm_message": {
-    "description": "Confirmation message for deactivating an employee"
+  "manage_staff_deactivate_dialog_confirm_message": "Are you sure you want to deactivate {staffName}?",
+  "@manage_staff_deactivate_dialog_confirm_message": {
+    "description": "Confirmation message for deactivating an staff"
   },
-  "manage_employee_success_activate_message": "Success activated {employeeName}",
-  "@manage_employee_success_activate_message": {
-    "description": "Message displayed when employee is activated successfully"
+  "manage_staff_success_activate_message": "Success activated {staffName}",
+  "@manage_staff_success_activate_message": {
+    "description": "Message displayed when staff is activated successfully"
   },
-  "manage_employee_success_deactivate_message": "Success deactivated {employeeName}",
-  "@manage_employee_success_deactivate_message": {
-    "description": "Message displayed when employee is deactivated successfully"
+  "manage_staff_success_deactivate_message": "Success deactivated {staffName}",
+  "@manage_staff_success_deactivate_message": {
+    "description": "Message displayed when staff is deactivated successfully"
   },
-  "manage_employee_active_tap_info": "{employeeName} is Employee, long press to deactivate",
-  "@manage_employee_active_tap_info": {
-    "description": "Info message for active employee"
+  "manage_staff_active_tap_info": "{staffName} is Staff, long press to deactivate",
+  "@manage_staff_active_tap_info": {
+    "description": "Info message for active staff"
   },
-  "manage_employee_non_active_tap_info": "{employeeName} is Non Active Employee, long press to activate",
-  "@manage_employee_non_active_tap_info": {
-    "description": "Info message for non-active employee"
+  "manage_staff_non_active_tap_info": "{staffName} is Non Active Staff, long press to activate",
+  "@manage_staff_non_active_tap_info": {
+    "description": "Info message for non-active staff"
   },
 
   "@_SERVICE": {},
@@ -974,9 +974,9 @@
   "@button_connect": {
     "description": "Text for the connect button"
   },
-  "button_manage_employee": "Manage Employee",
-  "@button_manage_employee": {
-    "description": "Text for the manage employee button"
+  "button_manage_staff": "Manage Staff",
+  "@button_manage_staff": {
+    "description": "Text for the manage staff button"
   },
   "button_manage_customer": "Manage Customer",
   "@button_manage_customer": {

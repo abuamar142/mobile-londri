@@ -33,42 +33,26 @@ class TransactionModel extends Transaction {
       userId: json['user_id'],
       userName: json['users'] != null ? json['users']['name'] : null,
       customerId: json['customer_id'],
-      customerName:
-          json['customers'] != null ? json['customers']['name'] : null,
+      customerName: json['customers'] != null ? json['customers']['name'] : null,
       serviceId: json['service_id'],
       serviceName: json['services'] != null ? json['services']['name'] : null,
-      weight: json['weight'] != null
-          ? double.parse(json['weight'].toString())
-          : null,
+      weight: json['weight'] != null ? double.parse(json['weight'].toString()) : null,
       amount: json['amount'],
       description: json['description'],
-      transactionStatus: json['transaction_status'] != null
-          ? TransactionStatus.fromString(json['transaction_status'])
-          : TransactionStatus.onProgress,
-      paymentStatus: json['payment_status'] != null
-          ? PaymentStatus.fromString(json['payment_status'])
-          : PaymentStatus.notPaidYet,
-      startDate: json['start_date'] != null
-          ? DateTime.parse(json['start_date'])
-          : null,
-      endDate:
-          json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : DateTime.now(),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      transactionStatus: json['transaction_status'] != null ? TransactionStatus.fromString(json['transaction_status']) : TransactionStatus.onProgress,
+      paymentStatus: json['payment_status'] != null ? PaymentStatus.fromString(json['payment_status']) : PaymentStatus.notPaidYet,
+      startDate: json['start_date'] != null ? DateTime.parse(json['start_date']) : null,
+      endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
+      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : DateTime.now(),
+      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'employee_id': userId,
+      'staff_id': userId,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,

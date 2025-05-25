@@ -8,7 +8,7 @@ import 'config/routes/app_routes.dart';
 import 'config/theme/app_themes.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
-import 'features/manage_employee/presentation/bloc/manage_employee_bloc.dart';
+import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'injection_container.dart';
@@ -29,7 +29,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
-        BlocProvider(create: (context) => serviceLocator<ManageEmployeeBloc>()),
+        BlocProvider(create: (context) => serviceLocator<ManageStaffBloc>()),
         BlocProvider(create: (context) => serviceLocator<ServiceBloc>()),
         BlocProvider(create: (context) => serviceLocator<CustomerBloc>()),
         BlocProvider(create: (context) => serviceLocator<TransactionBloc>()),

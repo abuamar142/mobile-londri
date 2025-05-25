@@ -6,7 +6,7 @@ import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/customer/presentation/screens/manage_customer_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
-import '../../features/manage_employee/presentation/screens/manage_employee_screen.dart';
+import '../../features/manage_staff/presentation/screens/manage_staff_screen.dart';
 import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
 import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
@@ -23,7 +23,7 @@ class RouteNames {
   static const String login = 'login';
   static const String register = 'register';
   static const String home = 'home';
-  static const String manageEmployee = 'manage-employee';
+  static const String manageStaff = 'manage-staff';
   static const String services = 'services';
   static const String addService = 'add-service';
   static const String viewService = 'view-service';
@@ -75,10 +75,10 @@ class AppRoutes {
         },
       ),
       GoRoute(
-        path: '/manage-employee',
-        name: RouteNames.manageEmployee,
+        path: '/manage-staff',
+        name: RouteNames.manageStaff,
         builder: (context, state) {
-          return const ManageEmployeeScreen();
+          return const ManageStaffScreen();
         },
       ),
       GoRoute(

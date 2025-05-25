@@ -30,13 +30,13 @@ import 'features/customer/domain/usecases/customer_get_customer_by_id.dart';
 import 'features/customer/domain/usecases/customer_get_customers.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
-import 'features/manage_employee/data/datasources/manage_employee_remote_datasource.dart';
-import 'features/manage_employee/data/repositories/manage_employee_repository_implementation.dart';
-import 'features/manage_employee/domain/repositories/manage_employee_repository.dart';
-import 'features/manage_employee/domain/usecases/manage_employee_activate_employee.dart';
-import 'features/manage_employee/domain/usecases/manage_employee_deactivate_employee.dart';
-import 'features/manage_employee/domain/usecases/manage_employee_get_users.dart';
-import 'features/manage_employee/presentation/bloc/manage_employee_bloc.dart';
+import 'features/manage_staff/data/datasources/manage_staff_remote_datasource.dart';
+import 'features/manage_staff/data/repositories/manage_staff_repository_implementation.dart';
+import 'features/manage_staff/domain/repositories/manage_staff_repository.dart';
+import 'features/manage_staff/domain/usecases/manage_staff_activate_staff.dart';
+import 'features/manage_staff/domain/usecases/manage_staff_deactivate_staff.dart';
+import 'features/manage_staff/domain/usecases/manage_staff_get_users.dart';
+import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
@@ -135,32 +135,32 @@ Future<void> initializeDependencies() async {
 
     // Feature - User Role
     // DataSources
-    ..registerLazySingleton<ManageEmployeeRemoteDatasource>(
-      () => ManageEmployeeRemoteDataSourceImplementation(supabaseClient: serviceLocator()),
+    ..registerLazySingleton<ManageStaffRemoteDatasource>(
+      () => ManageStaffRemoteDataSourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
-    ..registerLazySingleton<ManageEmployeeRepository>(
-      () => ManageEmployeeRepositoryImplementation(manageEmployeeRemoteDatasource: serviceLocator()),
+    ..registerLazySingleton<ManageStaffRepository>(
+      () => ManageStaffRepositoryImplementation(manageStaffRemoteDatasource: serviceLocator()),
     )
 
     // UseCases
-    ..registerLazySingleton<ManageEmployeeGetUsers>(
-      () => ManageEmployeeGetUsers(manageEmployeeRepository: serviceLocator()),
+    ..registerLazySingleton<ManageStaffGetUsers>(
+      () => ManageStaffGetUsers(manageStaffRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ManageEmployeeActivateEmployee>(
-      () => ManageEmployeeActivateEmployee(manageEmployeeRepository: serviceLocator()),
+    ..registerLazySingleton<ManageStaffActivateStaff>(
+      () => ManageStaffActivateStaff(manageStaffRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ManageEmployeeDeactivateEmployee>(
-      () => ManageEmployeeDeactivateEmployee(manageEmployeeRepository: serviceLocator()),
+    ..registerLazySingleton<ManageStaffDeactivateStaff>(
+      () => ManageStaffDeactivateStaff(manageStaffRepository: serviceLocator()),
     )
 
     // Bloc
-    ..registerFactory<ManageEmployeeBloc>(
-      () => ManageEmployeeBloc(
-        manageEmployeeGetUsers: serviceLocator(),
-        manageEmployeeActivateEmployee: serviceLocator(),
-        manageEmployeeDeactivateEmployee: serviceLocator(),
+    ..registerFactory<ManageStaffBloc>(
+      () => ManageStaffBloc(
+        manageStaffGetUsers: serviceLocator(),
+        manageStaffActivateStaff: serviceLocator(),
+        manageStaffDeactivateStaff: serviceLocator(),
       ),
     )
 

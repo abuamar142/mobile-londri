@@ -52,14 +52,12 @@ class WidgetTransactionCard extends StatelessWidget {
                 children: [
                   // Transaction status
                   WidgetTransactionStatusBadge(
-                    status: transaction.transactionStatus ??
-                        TransactionStatus.onProgress,
+                    status: transaction.transactionStatus ?? TransactionStatus.onProgress,
                   ),
 
                   // Payment status
                   WidgetPaymentStatusBadge(
-                    status:
-                        transaction.paymentStatus ?? PaymentStatus.notPaidYet,
+                    status: transaction.paymentStatus ?? PaymentStatus.notPaidYet,
                   ),
                 ],
               ),
@@ -134,9 +132,7 @@ class WidgetTransactionCard extends StatelessWidget {
                 children: [
                   // Start date
                   Text(
-                    transaction.startDate != null
-                        ? transaction.startDate!.formatDateOnly()
-                        : '?',
+                    transaction.startDate != null ? transaction.startDate!.formatDateOnly() : '?',
                     style: AppTextStyle.tileSubtitle.copyWith(
                       fontSize: AppSizes.size12,
                       color: AppColors.gray,
@@ -152,9 +148,7 @@ class WidgetTransactionCard extends StatelessWidget {
 
                   // End date
                   Text(
-                    transaction.endDate != null
-                        ? transaction.endDate!.formatDateOnly()
-                        : '-',
+                    transaction.endDate != null ? transaction.endDate!.formatDateOnly() : '-',
                     style: AppTextStyle.tileSubtitle.copyWith(
                       fontSize: AppSizes.size12,
                       color: AppColors.gray,
@@ -179,7 +173,7 @@ class WidgetTransactionCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
 
-                  // Employee ID
+                  // Staff ID
                   Text(
                     "Staff: ${transaction.userName ?? 'N/A'}",
                     style: AppTextStyle.tileSubtitle.copyWith(

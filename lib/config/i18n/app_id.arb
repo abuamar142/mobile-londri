@@ -24,17 +24,17 @@
 
   "@_MANAGE_EMPLOYEE": {},
 
-  "manage_employee_screen_title": "Kelola Pegawai",
-  "manage_employee_empty_message": "Tidak ada pegawai ditemukan",
-  "manage_employee_search_hint": "Cari nama atau email",
-  "manage_employee_activate_employee": "Aktifkan Pegawai",
-  "manage_employee_deactivate_employee": "Nonaktifkan Pegawai",
-  "manage_employee_activate_dialog_confirm_message": "Apakah Anda yakin ingin mengaktifkan {employeeName}?",
-  "manage_employee_deactivate_dialog_confirm_message": "Apakah Anda yakin ingin menonaktifkan {employeeName}?",
-  "manage_employee_success_activate_message": "Berhasil mengaktifkan {employeeName}",
-  "manage_employee_success_deactivate_message": "Berhasil menonaktifkan {employeeName}",
-  "manage_employee_active_tap_info": "{employeeName} adalah Pegawai, tekan lama untuk menonaktifkan",
-  "manage_employee_non_active_tap_info": "{employeeName} adalah User biasa, tekan lama untuk mengaktifkan sebagai Pegawai",
+  "manage_staff_screen_title": "Kelola Pegawai",
+  "manage_staff_empty_message": "Tidak ada pegawai ditemukan",
+  "manage_staff_search_hint": "Cari nama atau email",
+  "manage_staff_activate_staff": "Aktifkan Pegawai",
+  "manage_staff_deactivate_staff": "Nonaktifkan Pegawai",
+  "manage_staff_activate_dialog_confirm_message": "Apakah Anda yakin ingin mengaktifkan {staffName}?",
+  "manage_staff_deactivate_dialog_confirm_message": "Apakah Anda yakin ingin menonaktifkan {staffName}?",
+  "manage_staff_success_activate_message": "Berhasil mengaktifkan {staffName}",
+  "manage_staff_success_deactivate_message": "Berhasil menonaktifkan {staffName}",
+  "manage_staff_active_tap_info": "{staffName} adalah Pegawai, tekan lama untuk menonaktifkan",
+  "manage_staff_non_active_tap_info": "{staffName} adalah User biasa, tekan lama untuk mengaktifkan sebagai Pegawai",
 
   "@_SERVICE": {},
 
@@ -279,7 +279,7 @@
   "button_change": "Ubah",
   "button_print": "Cetak",
   "button_connect": "Hubungkan",
-  "button_manage_employee": "Kelola Pegawai",
+  "button_manage_staff": "Kelola Pegawai",
   "button_manage_customer": "Kelola Pelanggan",
   "button_manage_transaction": "Kelola Transaksi",
   "button_manage_service": "Kelola Layanan"

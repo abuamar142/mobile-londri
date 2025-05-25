@@ -5,7 +5,7 @@ class RoleManager {
 
   static final Map<UserRole, List<Permission>> rolePermissions = {
     UserRole.superAdmin: [
-      Permission.manageEmployees,
+      Permission.manageStaffs,
       Permission.manageCustomers,
       Permission.manageServices,
       Permission.manageTransactions,
@@ -50,7 +50,7 @@ class RoleManager {
 }
 
 enum Permission {
-  manageEmployees,
+  manageStaffs,
   manageCustomers,
   activateCustomer,
   deleteCustomer,
