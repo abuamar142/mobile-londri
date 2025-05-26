@@ -94,8 +94,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
   }
 
   void _onTabChanged() {
-    if (!_tabController.indexIsChanging) return;
-
     final tabIndex = _tabController.index;
     final tabName = _tabNames[tabIndex];
 
