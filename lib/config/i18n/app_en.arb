@@ -217,6 +217,30 @@
   "@transaction_screen_title": {
     "description": "Title for the transaction screen"
   },
+  "transaction_screen_tab_inactive": "Inactive",
+  "@transaction_screen_tab_inactive": {
+    "description": "Tab label for inactive transactions"
+  },
+  "transaction_screen_tab_active": "Active",
+  "@transaction_screen_tab_active": {
+    "description": "Tab label for active transactions"
+  },
+  "transaction_screen_tab_all": "All",
+  "@transaction_screen_tab_all": {
+    "description": "Tab label for all transactions"
+  },
+  "transaction_screen_tab_on_progress": "On Progress",
+  "@transaction_screen_tab_on_progress": {
+    "description": "Tab label for transactions that are in progress"
+  },
+  "transaction_screen_tab_ready_for_pickup": "Ready for Pickup",
+  "@transaction_screen_tab_ready_for_pickup": {
+    "description": "Tab label for transactions that are ready for pickup"
+  },
+  "transaction_screen_tab_picked_up": "Picked Up",
+  "@transaction_screen_tab_picked_up": {
+    "description": "Tab label for transactions that have been picked up"
+  },
   "transaction_search_hint": "Search transaction",
   "@transaction_search_hint": {
     "description": "Hint text for the transaction search input"
@@ -232,6 +256,26 @@
   "transaction_empty_message": "No transaction found",
   "@transaction_empty_message": {
     "description": "Message displayed when no transaction is found"
+  },
+  "transaction_empty_inactive_message": "No inactive transaction found",
+  "@transaction_empty_inactive_message": {
+    "description": "Message displayed when no inactive transaction is found"
+  },
+  "transaction_empty_active_message": "No active transaction found",
+  "@transaction_empty_active_message": {
+    "description": "Message displayed when no active transaction is found"
+  },
+  "transaction_empty_on_progress_message": "No transaction in progress found",
+  "@transaction_empty_on_progress_message": {
+    "description": "Message displayed when no transaction in progress is found"
+  },
+  "transaction_empty_ready_for_pickup_message": "No transaction ready for pickup found",
+  "@transaction_empty_ready_for_pickup_message": {
+    "description": "Message displayed when no transaction ready for pickup is found"
+  },
+  "transaction_empty_picked_up_message": "No transaction picked up found",
+  "@transaction_empty_picked_up_message": {
+    "description": "Message displayed when no transaction picked up is found"
   },
   "transaction_add_screen_title": "Add Transaction",
   "@transaction_add_screen_title": {

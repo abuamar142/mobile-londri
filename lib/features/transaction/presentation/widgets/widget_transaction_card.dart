@@ -31,7 +31,7 @@ class WidgetTransactionCard extends StatelessWidget {
       onLongPress: onLongPress,
       child: Container(
         decoration: BoxDecoration(
-          color: isDeleted ? Colors.white : AppColors.gray.withAlpha(50),
+          color: !isDeleted ? Colors.white : AppColors.gray.withAlpha(50),
           borderRadius: BorderRadius.circular(AppSizes.size12),
           boxShadow: [
             BoxShadow(

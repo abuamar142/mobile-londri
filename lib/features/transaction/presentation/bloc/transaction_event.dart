@@ -4,7 +4,7 @@ abstract class TransactionEvent extends Equatable {
   const TransactionEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TransactionEventGetTransactions extends TransactionEvent {}
@@ -75,26 +75,33 @@ class TransactionEventRestoreTransaction extends TransactionEvent {
   List<Object> get props => [id];
 }
 
-class TransactionEventSearchTransaction extends TransactionEvent {
-  final String query;
+class TransactionEventFilter extends TransactionEvent {
+  final String? searchQuery;
+  final String? sortBy;
+  final bool? ascending;
+  final TransactionStatus? transactionStatus;
+  final bool? isIncludeInactive;
+  final int? tabIndex;
+  final String? tabName;
 
-  const TransactionEventSearchTransaction({
-    required this.query,
+  const TransactionEventFilter({
+    this.searchQuery,
+    this.sortBy,
+    this.ascending,
+    this.transactionStatus,
+    this.isIncludeInactive,
+    this.tabIndex,
+    this.tabName,
   });
 
   @override
-  List<Object> get props => [query];
-}
-
-class TransactionEventSortTransactions extends TransactionEvent {
-  final String sortBy;
-  final bool ascending;
-
-  const TransactionEventSortTransactions({
-    required this.sortBy,
-    required this.ascending,
-  });
-
-  @override
-  List<Object> get props => [sortBy, ascending];
+  List<Object?> get props => [
+        searchQuery,
+        sortBy,
+        ascending,
+        transactionStatus,
+        isIncludeInactive,
+        tabIndex,
+        tabName,
+      ];
 }

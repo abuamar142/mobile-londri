@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../../../core/utils/log_dev.dart';
 import '../../domain/entities/transaction.dart';
+import '../../domain/entities/transaction_status.dart';
 import '../../domain/usecases/transaction_create_transaction.dart';
 import '../../domain/usecases/transaction_delete_transaction.dart';
 import '../../domain/usecases/transaction_get_transaction_by_id.dart';
@@ -24,13 +26,22 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionHardDeleteTransaction transactionHardDeleteTransaction;
   final TransactionRestoreTransaction transactionRestoreTransaction;
 
-  late List<Transaction> _allTransactions;
+  late List<Transaction> _allTransactions = [];
   String _currentQuery = '';
   String _currentSortField = 'createdAt';
   bool _isAscending = false;
+  TransactionStatus? _selectedStatus;
+  bool? _isIncludeInactive;
+
+  int _currentTabIndex = 1; // Default to "All" tab
+  String _currentTabName = 'All';
 
   String get currentSortField => _currentSortField;
   bool get isAscending => _isAscending;
+  TransactionStatus? get selectedStatus => _selectedStatus;
+  bool? get includeInactive => _isIncludeInactive;
+  int get currentTabIndex => _currentTabIndex;
+  String get currentTabName => _currentTabName;
 
   TransactionBloc({
     required this.transactionGetTransactions,
@@ -41,36 +52,17 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.transactionHardDeleteTransaction,
     required this.transactionRestoreTransaction,
   }) : super(TransactionStateInitial()) {
-    on<TransactionEventGetTransactions>(
-      (event, emit) => onTransactionEventGetTransactions(event, emit),
-    );
-    on<TransactionEventGetTransactionById>(
-      (event, emit) => onTransactionEventGetTransactionById(event, emit),
-    );
-    on<TransactionEventCreateTransaction>(
-      (event, emit) => onTransactionEventCreateTransaction(event, emit),
-    );
-    on<TransactionEventUpdateTransaction>(
-      (event, emit) => onTransactionEventUpdateTransaction(event, emit),
-    );
-    on<TransactionEventDeleteTransaction>(
-      (event, emit) => onTransactionEventDeleteTransaction(event, emit),
-    );
-    on<TransactionEventHardDeleteTransaction>(
-      (event, emit) => onTransactionEventHardDeleteTransaction(event, emit),
-    );
-    on<TransactionEventRestoreTransaction>(
-      (event, emit) => onTransactionEventRestoreTransaction(event, emit),
-    );
-    on<TransactionEventSearchTransaction>(
-      (event, emit) => onTransactionEventSearchTransaction(event, emit),
-    );
-    on<TransactionEventSortTransactions>(
-      (event, emit) => onTransactionEventSortTransactions(event, emit),
-    );
+    on<TransactionEventGetTransactions>(_onTransactionEventGetTransactions);
+    on<TransactionEventGetTransactionById>(_onTransactionEventGetTransactionById);
+    on<TransactionEventCreateTransaction>(_onTransactionEventCreateTransaction);
+    on<TransactionEventUpdateTransaction>(_onTransactionEventUpdateTransaction);
+    on<TransactionEventDeleteTransaction>(_onTransactionEventDeleteTransaction);
+    on<TransactionEventHardDeleteTransaction>(_onTransactionEventHardDeleteTransaction);
+    on<TransactionEventRestoreTransaction>(_onTransactionEventRestoreTransaction);
+    on<TransactionEventFilter>(_onTransactionEventFilter);
   }
 
-  void onTransactionEventGetTransactions(
+  Future<void> _onTransactionEventGetTransactions(
     TransactionEventGetTransactions event,
     Emitter<TransactionState> emit,
   ) async {
@@ -79,24 +71,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, List<Transaction>> result = await transactionGetTransactions();
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       _allTransactions = right;
-      emit(TransactionStateWithFilteredTransactions(
-        allTransactions: _allTransactions,
-        filteredTransactions: _sortAndFilter(
-          _allTransactions,
-          _currentQuery,
-          _currentSortField,
-          _isAscending,
-        ),
-      ));
+      _emitFilteredState(emit);
     });
   }
 
-  void onTransactionEventGetTransactionById(
+  Future<void> _onTransactionEventGetTransactionById(
     TransactionEventGetTransactionById event,
     Emitter<TransactionState> emit,
   ) async {
@@ -105,17 +87,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, Transaction> result = await transactionGetTransactionById(event.id);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
-      emit(TransactionStateSuccessGetTransactionById(
-        transaction: right,
-      ));
+      emit(TransactionStateSuccessGetTransactionById(transaction: right));
     });
   }
 
-  void onTransactionEventCreateTransaction(
+  Future<void> _onTransactionEventCreateTransaction(
     TransactionEventCreateTransaction event,
     Emitter<TransactionState> emit,
   ) async {
@@ -124,15 +102,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, void> result = await transactionCreateTransaction(event.transaction);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       emit(TransactionStateSuccessCreateTransaction());
     });
   }
 
-  void onTransactionEventUpdateTransaction(
+  Future<void> _onTransactionEventUpdateTransaction(
     TransactionEventUpdateTransaction event,
     Emitter<TransactionState> emit,
   ) async {
@@ -141,15 +117,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, void> result = await transactionUpdateTransaction(event.transaction);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       emit(TransactionStateSuccessUpdateTransaction());
     });
   }
 
-  void onTransactionEventDeleteTransaction(
+  Future<void> _onTransactionEventDeleteTransaction(
     TransactionEventDeleteTransaction event,
     Emitter<TransactionState> emit,
   ) async {
@@ -158,15 +132,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, void> result = await transactionDeleteTransaction(event.id);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       emit(TransactionStateSuccessDeleteTransaction());
     });
   }
 
-  void onTransactionEventHardDeleteTransaction(
+  Future<void> _onTransactionEventHardDeleteTransaction(
     TransactionEventHardDeleteTransaction event,
     Emitter<TransactionState> emit,
   ) async {
@@ -175,15 +147,13 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, void> result = await transactionHardDeleteTransaction(event.id);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       emit(TransactionStateSuccessDeleteTransaction());
     });
   }
 
-  void onTransactionEventRestoreTransaction(
+  Future<void> _onTransactionEventRestoreTransaction(
     TransactionEventRestoreTransaction event,
     Emitter<TransactionState> emit,
   ) async {
@@ -192,74 +162,101 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Either<Failure, void> result = await transactionRestoreTransaction(event.id);
 
     result.fold((left) {
-      emit(TransactionStateFailure(
-        message: left.message,
-      ));
+      emit(TransactionStateFailure(message: left.message));
     }, (right) {
       emit(TransactionStateSuccessRestoreTransaction());
-      add(
-        TransactionEventGetTransactions(),
-      );
+      add(TransactionEventGetTransactions());
     });
   }
 
-  void onTransactionEventSearchTransaction(
-    TransactionEventSearchTransaction event,
+  Future<void> _onTransactionEventFilter(
+    TransactionEventFilter event,
     Emitter<TransactionState> emit,
-  ) {
-    _currentQuery = event.query;
-    final filtered = _sortAndFilter(
-      _allTransactions,
-      _currentQuery,
-      _currentSortField,
-      _isAscending,
-    );
+  ) async {
+    // Update filter parameters if provided
+    if (event.searchQuery != null) {
+      _currentQuery = event.searchQuery!;
+    }
+    if (event.sortBy != null) {
+      _currentSortField = event.sortBy!;
+    }
+    if (event.ascending != null) {
+      _isAscending = event.ascending!;
+    }
+    if (event.transactionStatus != null || event.isIncludeInactive != null) {
+      _selectedStatus = event.transactionStatus;
+      _isIncludeInactive = event.isIncludeInactive;
+    }
+    if (event.isIncludeInactive == null) {
+      _isIncludeInactive = null;
+    }
+    if (event.tabIndex != null) {
+      _currentTabIndex = event.tabIndex!;
+    }
+    if (event.tabName != null) {
+      _currentTabName = event.tabName!;
+    }
+
+    _emitFilteredState(emit);
+  }
+
+  void _emitFilteredState(Emitter<TransactionState> emit) {
+    final filteredTransactions = _applyAllFilters(_allTransactions);
 
     emit(TransactionStateWithFilteredTransactions(
       allTransactions: _allTransactions,
-      filteredTransactions: filtered,
+      filteredTransactions: filteredTransactions,
+      searchQuery: _currentQuery,
+      sortField: _currentSortField,
+      isAscending: _isAscending,
+      selectedStatus: _selectedStatus,
+      isIncludeInactive: _isIncludeInactive,
+      currentTabIndex: _currentTabIndex,
+      tabName: _currentTabName,
     ));
   }
 
-  void onTransactionEventSortTransactions(
-    TransactionEventSortTransactions event,
-    Emitter<TransactionState> emit,
-  ) {
-    _currentSortField = event.sortBy;
-    _isAscending = event.ascending;
+  List<Transaction> _applyAllFilters(List<Transaction> transactions) {
+    List<Transaction> filtered = List.from(transactions);
 
-    final filtered = _sortAndFilter(
-      _allTransactions,
-      _currentQuery,
-      _currentSortField,
-      _isAscending,
-    );
+    logDev('_isIncludeInactive: $_isIncludeInactive');
 
-    emit(TransactionStateWithFilteredTransactions(
-      allTransactions: _allTransactions,
-      filteredTransactions: filtered,
-    ));
+    // Filter by active/inactive status
+    if (_isIncludeInactive == true) {
+      filtered = filtered.where((transaction) => transaction.isDeleted == true).toList();
+    } else if (_isIncludeInactive == false) {
+      filtered = filtered.where((transaction) => transaction.isDeleted == false).toList();
+    }
+
+    // Filter by transaction status (only apply if we have a specific status)
+    if (_selectedStatus != null) {
+      filtered = filtered.where((transaction) => transaction.transactionStatus == _selectedStatus).toList();
+    }
+
+    // Apply search filter
+    if (_currentQuery.isNotEmpty) {
+      filtered = filtered.where((transaction) {
+        final customerName = transaction.customerName?.toLowerCase() ?? '';
+        final serviceName = transaction.serviceName?.toLowerCase() ?? '';
+        final transactionId = transaction.id?.toLowerCase() ?? '';
+        final description = transaction.description?.toLowerCase() ?? '';
+        final query = _currentQuery.toLowerCase();
+
+        return customerName.contains(query) || serviceName.contains(query) || transactionId.contains(query) || description.contains(query);
+      }).toList();
+    }
+
+    // Apply sorting
+    return _applySorting(filtered);
   }
 
-  List<Transaction> _sortAndFilter(
-    List<Transaction> transactions,
-    String query,
-    String sortField,
-    bool ascending,
-  ) {
-    final lowerQuery = query.toLowerCase();
-    List<Transaction> filtered = transactions
-        .where((transaction) =>
-            (transaction.id?.toLowerCase().contains(lowerQuery) ?? false) ||
-            (transaction.customerName?.toLowerCase().contains(lowerQuery) ?? false) ||
-            (transaction.serviceName?.toLowerCase().contains(lowerQuery) ?? false) ||
-            (transaction.description?.toLowerCase().contains(lowerQuery) ?? false))
-        .toList();
+  List<Transaction> _applySorting(List<Transaction> transactions) {
+    List<Transaction> sorted = List.from(transactions);
 
-    filtered.sort((a, b) {
+    sorted.sort((a, b) {
       int result;
 
-      switch (sortField) {
+      switch (_currentSortField) {
         case 'customerName':
           result = (a.customerName ?? '').compareTo(b.customerName ?? '');
           break;
@@ -288,9 +285,9 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
           result = (a.createdAt ?? DateTime.now()).compareTo(b.createdAt ?? DateTime.now());
       }
 
-      return ascending ? result : -result;
+      return _isAscending ? result : -result;
     });
 
-    return filtered;
+    return sorted;
   }
 }

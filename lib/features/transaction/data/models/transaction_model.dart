@@ -24,7 +24,7 @@ class TransactionModel extends Transaction {
     required this.updatedAt,
     this.deletedAt,
   }) : super(
-          isDeleted: deletedAt == null,
+          isDeleted: deletedAt != null,
         );
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
