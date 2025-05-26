@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
-import '../../../../core/utils/log_dev.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../../domain/usecases/transaction_create_transaction.dart';
@@ -218,8 +217,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
 
   List<Transaction> _applyAllFilters(List<Transaction> transactions) {
     List<Transaction> filtered = List.from(transactions);
-
-    logDev('_isIncludeInactive: $_isIncludeInactive');
 
     // Filter by active/inactive status
     if (_isIncludeInactive == true) {
