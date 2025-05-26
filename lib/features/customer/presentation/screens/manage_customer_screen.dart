@@ -441,8 +441,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                       setState(() {
                         _selectedGender = Gender.male;
                       });
-
-                      context.pop();
                     },
                   ),
                   WidgetDropdownBottomSheetItem(
@@ -453,8 +451,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                       setState(() {
                         _selectedGender = Gender.female;
                       });
-
-                      context.pop();
                     },
                   ),
                   WidgetDropdownBottomSheetItem(
@@ -465,8 +461,6 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                       setState(() {
                         _selectedGender = Gender.other;
                       });
-
-                      context.pop();
                     },
                   ),
                 ],
