@@ -16,6 +16,7 @@ class WidgetTextFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final int maxLines;
   final bool readOnly;
+  final Iterable<String>? autofillHints;
 
   const WidgetTextFormField({
     super.key,
@@ -31,6 +32,7 @@ class WidgetTextFormField extends StatelessWidget {
     this.onChanged,
     this.maxLines = 1,
     this.readOnly = false,
+    this.autofillHints,
   });
 
   @override
@@ -48,6 +50,7 @@ class WidgetTextFormField extends StatelessWidget {
       },
       maxLines: maxLines,
       readOnly: readOnly,
+      autofillHints: autofillHints,
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

@@ -109,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hint: context.appText.form_email_hint,
                           keyboardType: TextInputType.emailAddress,
                           isLoading: state is AuthStateLoading,
+                          autofillHints: const [AutofillHints.email],
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return context.appText.form_email_required_message;
@@ -131,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
                             onPressed: _togglePasswordVisibility,
                           ),
+                          autofillHints: const [AutofillHints.password],
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return context.appText.form_password_required_message;
