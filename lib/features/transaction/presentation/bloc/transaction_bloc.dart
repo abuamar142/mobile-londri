@@ -32,8 +32,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   TransactionStatus? _selectedStatus;
   bool? _isIncludeInactive;
 
-  int _currentTabIndex = 1; // Default to "All" tab
-  String _currentTabName = 'All';
+  int _currentTabIndex = 2;
+  String _currentTabName = 'Active';
 
   String get currentSortField => _currentSortField;
   bool get isAscending => _isAscending;
@@ -73,7 +73,16 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       emit(TransactionStateFailure(message: left.message));
     }, (right) {
       _allTransactions = right;
-      _emitFilteredState(emit);
+
+      add(TransactionEventFilter(
+        searchQuery: _currentQuery,
+        sortBy: _currentSortField,
+        ascending: _isAscending,
+        transactionStatus: _selectedStatus,
+        isIncludeInactive: false,
+        tabIndex: _currentTabIndex,
+        tabName: _currentTabName,
+      ));
     });
   }
 

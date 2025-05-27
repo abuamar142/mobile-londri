@@ -86,9 +86,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
 
       // Set initial filter to show active transactions
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _transactionBloc.add(
-          const TransactionEventFilter(isIncludeInactive: false), // Show Active
-        );
+        _transactionBloc.add(TransactionEventGetTransactions());
       });
     }
   }
@@ -201,16 +199,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
                 // Search bar
                 Padding(
                   padding: EdgeInsets.all(AppSizes.size16),
-                  child: WidgetSearchBar(
-                    controller: _searchController,
-                    hintText: context.appText.transaction_search_hint,
-                    onChanged: (value) {
-                      _transactionBloc.add(TransactionEventFilter(searchQuery: value));
-                    },
-                    onClear: () {
-                      _searchController.clear();
-                      _transactionBloc.add(const TransactionEventFilter(searchQuery: ''));
-                    },
+                  child: Row(
+                    children: [
+                      WidgetSearchBar(
+                        controller: _searchController,
+                        hintText: context.appText.transaction_search_hint,
+                        onChanged: (value) {
+                          _transactionBloc.add(TransactionEventFilter(searchQuery: value));
+                        },
+                        onClear: () {
+                          _searchController.clear();
+                          _transactionBloc.add(const TransactionEventFilter(searchQuery: ''));
+                        },
+                      ),
+                    ],
                   ),
                 ),
 
