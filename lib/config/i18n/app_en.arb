@@ -654,6 +654,38 @@
   "@form_price_label": {
     "description": "Label for the price input field"
   },
+  "form_select_customer_label": "Select Customer",
+  "@form_select_customer_label": {
+    "description": "Label for the select customer input field"
+  },
+  "form_select_service_label": "Select Service",
+  "@form_select_service_label": {
+    "description": "Label for the select service input field"
+  },
+  "form_weight_label": "Weight in Kg",
+  "@form_weight_label": {
+    "description": "Label for the weight input field"
+  },
+  "form_amount_label": "Amount",
+  "@form_amount_label": {
+    "description": "Label for the amount input field"
+  },
+  "form_start_date_label": "Start Date",
+  "@form_start_date_label": {
+    "description": "Label for the start date input field"
+  },
+  "form_end_date_label": "End Date",
+  "@form_end_date_label": {
+    "description": "Label for the end date input field"
+  },
+  "form_transaction_status_label": "Transaction Status",
+  "@form_transaction_status_label": {
+    "description": "Label for the transaction status input field"
+  },
+  "form_payment_status_label": "Payment Status",
+  "@form_payment_status_label": {
+    "description": "Label for the payment status input field"
+  },
 
   "@_CARD": {},
 
@@ -732,6 +764,38 @@
   "@form_description_hint": {
     "description": "Hint text for the description input field"
   },
+  "form_select_customer_hint": "Select a customer",
+  "@form_select_customer_hint": {
+    "description": "Hint text for the select customer input field"
+  },
+  "form_select_service_hint": "Select a service",
+  "@form_select_service_hint": {
+    "description": "Hint text for the select service input field"
+  },
+  "form_weight_hint": "Enter the weight in Kg",
+  "@form_weight_hint": {
+    "description": "Hint text for the weight input field"
+  },
+  "form_amount_hint": "Enter the amount",
+  "@form_amount_hint": {
+    "description": "Hint text for the amount input field"
+  },
+  "form_start_date_hint": "Select the start date",
+  "@form_start_date_hint": {
+    "description": "Hint text for the start date input field"
+  },
+  "form_end_date_hint": "Select the end date",
+  "@form_end_date_hint": {
+    "description": "Hint text for the end date input field"
+  },
+  "form_transaction_status_hint": "Select the transaction status",
+  "@form_transaction_status_hint": {
+    "description": "Hint text for the transaction status input field"
+  },
+  "form_payment_status_hint": "Select the payment status",
+  "@form_payment_status_hint": {
+    "description": "Hint text for the payment status input field"
+  },
 
   "@_FORM_MESSAGE": {},
 
@@ -786,6 +850,38 @@
   "form_price_digits_only_message": "Price must contain only digits",
   "@form_price_digits_only_message": {
     "description": "Message displayed when price contains non-digit characters"
+  },
+  "form_select_customer_required_message": "Customer is required",
+  "@form_select_customer_required_message": {
+    "description": "Message displayed when customer selection is required"
+  },
+  "form_select_service_required_message": "Service is required",
+  "@form_select_service_required_message": {
+    "description": "Message displayed when service selection is required"
+  },
+  "form_weight_required_message": "Weight is required",
+  "@form_weight_required_message": {
+    "description": "Message displayed when weight is required"
+  },
+  "form_weight_digits_only_message": "Weight must contain only digits",
+  "@form_weight_digits_only_message": {
+    "description": "Message displayed when weight contains non-digit characters"
+  },
+  "form_amount_required_message": "Amount is required",
+  "@form_amount_required_message": {
+    "description": "Message displayed when amount is required"
+  },
+  "form_amount_digits_only_message": "Amount must contain only digits",
+  "@form_amount_digits_only_message": {
+    "description": "Message displayed when amount contains non-digit characters"
+  },
+  "form_start_date_required_message": "Start date is required",
+  "@form_start_date_required_message": {
+    "description": "Message displayed when start date is required"
+  },
+  "form_end_date_required_message": "End date is required",
+  "@form_end_date_required_message": {
+    "description": "Message displayed when end date is required"
   },
 
   "@_GENDER": {},

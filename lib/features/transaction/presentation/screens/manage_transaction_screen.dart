@@ -219,8 +219,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         BlocBuilder<CustomerBloc, CustomerState>(
           builder: (context, state) {
             return WidgetTextFormField(
-              label: 'Select Customer',
-              hint: 'Select a customer',
+              label: context.appText.form_select_customer_label,
+              hint: context.appText.form_select_customer_hint,
               controller: _customerController,
               isEnabled: isFormEnabled,
               readOnly: true,
@@ -232,7 +232,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   : null,
               validator: (value) {
                 if (_selectedCustomer == null) {
-                  return 'Customer is required';
+                  return context.appText.form_select_customer_required_message;
                 }
                 return null;
               },
@@ -245,15 +245,15 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return WidgetTextFormField(
-              label: 'Select Service',
-              hint: 'Select a service',
+              label: context.appText.form_select_service_label,
+              hint: context.appText.form_select_service_hint,
               controller: _serviceController,
               isEnabled: isFormEnabled,
               readOnly: true,
               suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectService(context), icon: Icon(Icons.arrow_drop_down)) : null,
               validator: (value) {
                 if (_selectedService == null) {
-                  return 'Service is required';
+                  return context.appText.form_select_service_required_message;
                 }
                 return null;
               },
@@ -264,8 +264,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
         // Weight Field
         WidgetTextFormField(
-          label: 'Weight',
-          hint: 'Enter weight',
+          label: context.appText.form_weight_label,
+          hint: context.appText.form_weight_hint,
           controller: _weightController,
           isEnabled: isFormEnabled,
           keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -279,10 +279,10 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Weight is required';
+              return context.appText.form_weight_required_message;
             }
             if (double.tryParse(value) == null) {
-              return 'Please enter a valid weight';
+              return context.appText.form_weight_digits_only_message;
             }
             return null;
           },
@@ -291,17 +291,17 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
         // Amount Field
         WidgetTextFormField(
-          label: 'Amount',
-          hint: 'Enter amount',
+          label: context.appText.form_amount_label,
+          hint: context.appText.form_amount_hint,
           controller: _amountController,
           isEnabled: isFormEnabled,
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Amount is required';
+              return context.appText.form_amount_required_message;
             }
             if (int.tryParse(value) == null) {
-              return 'Please enter a valid amount';
+              return context.appText.form_amount_digits_only_message;
             }
             return null;
           },
@@ -323,15 +323,15 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           children: [
             Expanded(
               child: WidgetTextFormField(
-                label: 'Start Date',
-                hint: 'Select start date',
+                label: context.appText.form_start_date_label,
+                hint: context.appText.form_start_date_hint,
                 controller: _startDateController,
                 isEnabled: isFormEnabled,
                 readOnly: true,
                 suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectStartDate(context), icon: Icon(Icons.calendar_today)) : null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Start date is required';
+                    return context.appText.form_start_date_required_message;
                   }
                   return null;
                 },
@@ -340,15 +340,15 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             AppSizes.spaceWidth12,
             Expanded(
               child: WidgetTextFormField(
-                label: 'End Date',
-                hint: 'Select end date',
+                label: context.appText.form_end_date_label,
+                hint: context.appText.form_end_date_hint,
                 controller: _endDateController,
                 isEnabled: isFormEnabled,
                 readOnly: true,
                 suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectEndDate(context), icon: Icon(Icons.calendar_today)) : null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'End date is required';
+                    return context.appText.form_end_date_required_message;
                   }
                   return null;
                 },
@@ -361,14 +361,14 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         // Status Selection
         if (_isEditMode) ...[
           Text(
-            'Transaction Status',
+            context.appText.form_transaction_status_label,
             style: AppTextStyle.label,
           ),
           AppSizes.spaceHeight8,
           _buildTransactionStatusSelector(isFormEnabled),
           AppSizes.spaceHeight16,
           Text(
-            'Payment Status',
+            context.appText.form_payment_status_label,
             style: AppTextStyle.label,
           ),
           AppSizes.spaceHeight8,
