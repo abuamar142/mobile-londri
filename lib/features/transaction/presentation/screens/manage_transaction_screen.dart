@@ -269,6 +269,14 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           controller: _weightController,
           isEnabled: isFormEnabled,
           keyboardType: TextInputType.numberWithOptions(decimal: true),
+          onChanged: (value) {
+            if (_selectedService != null && value.isNotEmpty) {
+              final weight = double.tryParse(value) ?? 0;
+              _calculateAmount(weight, _selectedService!.price ?? 0);
+            } else {
+              _amountController.clear();
+            }
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Weight is required';
