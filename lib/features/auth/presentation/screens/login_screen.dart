@@ -101,56 +101,58 @@ class _LoginScreenState extends State<LoginScreen> {
                   AppSizes.spaceHeight24,
                   Form(
                     key: _formKey,
-                    child: Column(
-                      children: [
-                        WidgetTextFormField(
-                          controller: _emailController,
-                          label: context.appText.form_email_label,
-                          hint: context.appText.form_email_hint,
-                          keyboardType: TextInputType.emailAddress,
-                          isLoading: state is AuthStateLoading,
-                          autofillHints: const [AutofillHints.email],
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.appText.form_email_required_message;
-                            } else if (!value.isValidEmail()) {
-                              return context.appText.form_email_invalid_message;
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        AppSizes.spaceHeight12,
-                        WidgetTextFormField(
-                          controller: _passwordController,
-                          label: context.appText.form_password_label,
-                          hint: context.appText.form_password_hint,
-                          keyboardType: TextInputType.visiblePassword,
-                          isLoading: state is AuthStateLoading,
-                          obscureText: !_isPasswordVisible,
-                          suffixIcon: IconButton(
-                            icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
-                            onPressed: _togglePasswordVisibility,
+                    child: AutofillGroup(
+                      child: Column(
+                        children: [
+                          WidgetTextFormField(
+                            controller: _emailController,
+                            label: context.appText.form_email_label,
+                            hint: context.appText.form_email_hint,
+                            keyboardType: TextInputType.emailAddress,
+                            isLoading: state is AuthStateLoading,
+                            autofillHints: const [AutofillHints.email],
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return context.appText.form_email_required_message;
+                              } else if (!value.isValidEmail()) {
+                                return context.appText.form_email_invalid_message;
+                              } else {
+                                return null;
+                              }
+                            },
                           ),
-                          autofillHints: const [AutofillHints.password],
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return context.appText.form_password_required_message;
-                            }
-                            if (value.length < 8) {
-                              return context.appText.form_password_min_length_message;
-                            }
-                            return null;
-                          },
-                        ),
-                        AppSizes.spaceHeight24,
-                        WidgetButton(
-                          label: context.appText.button_login,
-                          isLoading: state is AuthStateLoading,
-                          onPressed: _onLogin,
-                        ),
-                        AppSizes.spaceHeight12,
-                      ],
+                          AppSizes.spaceHeight12,
+                          WidgetTextFormField(
+                            controller: _passwordController,
+                            label: context.appText.form_password_label,
+                            hint: context.appText.form_password_hint,
+                            keyboardType: TextInputType.visiblePassword,
+                            isLoading: state is AuthStateLoading,
+                            obscureText: !_isPasswordVisible,
+                            suffixIcon: IconButton(
+                              icon: Icon(_isPasswordVisible ? Icons.visibility_off : Icons.visibility),
+                              onPressed: _togglePasswordVisibility,
+                            ),
+                            autofillHints: const [AutofillHints.password],
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return context.appText.form_password_required_message;
+                              }
+                              if (value.length < 8) {
+                                return context.appText.form_password_min_length_message;
+                              }
+                              return null;
+                            },
+                          ),
+                          AppSizes.spaceHeight24,
+                          WidgetButton(
+                            label: context.appText.button_login,
+                            isLoading: state is AuthStateLoading,
+                            onPressed: _onLogin,
+                          ),
+                          AppSizes.spaceHeight12,
+                        ],
+                      ),
                     ),
                   ),
                   RichText(
