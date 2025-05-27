@@ -19,8 +19,8 @@ class TransactionStateWithFilteredTransactions extends TransactionState {
   final bool isAscending;
   final TransactionStatus? selectedStatus;
   final bool? isIncludeInactive;
-  final int currentTabIndex; // Tambahkan metadata tab
-  final String tabName; // Tambahkan nama tab untuk debugging
+  final int currentTabIndex;
+  final String tabName;
 
   const TransactionStateWithFilteredTransactions({
     required this.allTransactions,

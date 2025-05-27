@@ -86,9 +86,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
 
       // Set initial filter to show active transactions
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _transactionBloc.add(
-          const TransactionEventFilter(isIncludeInactive: false), // Show Active
-        );
+        _transactionBloc.add(TransactionEventGetTransactions());
       });
     }
   }
