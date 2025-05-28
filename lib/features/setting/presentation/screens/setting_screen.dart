@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:settings_ui/settings_ui.dart';
 
 import '../../../../config/i18n/i18n.dart';
-import '../../../../config/textstyle/app_sizes.dart';
+import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../injection_container.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -22,13 +22,10 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   void initState() {
     super.initState();
-
-    AppLocales.localeNotifier.addListener(_onLocaleChanged);
   }
 
   @override
   void dispose() {
-    AppLocales.localeNotifier.removeListener(_onLocaleChanged);
     _transactionStatusController.dispose();
 
     super.dispose();
@@ -47,40 +44,16 @@ class _SettingScreenState extends State<SettingScreen> {
                 SettingsSection(
                   tiles: [
                     SettingsTile(
-                      title: Text(
-                        context.appText.setting_language_label,
-                        style: AppTextStyle.label,
-                      ),
-                      trailing: SizedBox(
-                        width: 200,
-                        child: DropdownButton<Locale>(
-                          isExpanded: true,
-                          value: AppLocales.localeNotifier.value,
-                          onChanged: (Locale? newLocale) {
-                            if (newLocale != null) {
-                              serviceLocator<AppLocales>().setLocale(
-                                newLocale,
-                              );
-
-                              context.showSnackbar(context.appText.locale_change_success_message);
-                            }
-                          },
-                          items: AppLocalizations.supportedLocales
-                              .map<DropdownMenuItem<Locale>>(
-                                (Locale locale) => DropdownMenuItem<Locale>(
-                                  value: locale,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(AppSizes.size8),
-                                    child: Text(
-                                      locale.languageCode == 'en' ? context.appText.setting_language_en : context.appText.setting_language_id,
-                                      style: AppTextStyle.body,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                      title: Text(context.appText.setting_language_label, style: AppTextStyle.label),
+                      trailing: Text(
+                        AppLocales.localeNotifier.value.languageCode == 'en' ? context.appText.setting_language_en : context.appText.setting_language_id,
+                        style: AppTextStyle.body1.copyWith(
+                          color: AppColors.primary,
                         ),
                       ),
+                      onPressed: (BuildContext context) {
+                        _showLanguageOptions();
+                      },
                     ),
                   ],
                 ),
@@ -92,7 +65,34 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  void _onLocaleChanged() {
-    context.pushNamed('home');
+  void _showLanguageOptions() {
+    return showDropdownBottomSheet(
+      context: context,
+      title: context.appText.setting_language_label,
+      items: [
+        WidgetDropdownBottomSheetItem(
+          isSelected: AppLocales.localeNotifier.value.languageCode == 'en',
+          leadingIcon: Icons.language,
+          title: context.appText.setting_language_en,
+          onTap: () {
+            setState(() {
+              serviceLocator<AppLocales>().setLocale(const Locale('en', 'US'));
+              context.showSnackbar(context.appText.locale_change_success_message);
+            });
+          },
+        ),
+        WidgetDropdownBottomSheetItem(
+          isSelected: AppLocales.localeNotifier.value.languageCode == 'id',
+          leadingIcon: Icons.language,
+          title: context.appText.setting_language_id,
+          onTap: () {
+            setState(() {
+              serviceLocator<AppLocales>().setLocale(const Locale('id', 'ID'));
+              context.showSnackbar(context.appText.locale_change_success_message);
+            });
+          },
+        ),
+      ],
+    );
   }
 }
