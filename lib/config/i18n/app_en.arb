@@ -245,6 +245,10 @@
   "@transaction_search_hint": {
     "description": "Hint text for the transaction search input"
   },
+  "transaction_deleted_on_all_tab": "Please go to 'Inactive' to restore deleted transaction",
+  "@transaction_deleted_on_all_tab": {
+    "description": "Message displayed when a transaction is deleted and user is advised to go to inactive tab to restore it"
+  },
   "transaction_deleted_message": "Transaction deleted, long press to restore",
   "@transaction_deleted_message": {
     "description": "Message displayed when transaction is deleted"
@@ -361,49 +365,33 @@
   "@transaction_item_empty_service_name": {
     "description": "Message displayed when the service name is empty in a transaction item"
   },
-  "transaction_status_pending": "Pending",
-  "@transaction_status_pending": {
-    "description": "Status for pending transaction"
-  },
-  "transaction_status_received": "Received",
-  "@transaction_status_received": {
-    "description": "Status for received transaction"
-  },
-  "transaction_status_in_progress": "In Progress",
-  "@transaction_status_in_progress": {
-    "description": "Status for in-progress transaction"
-  },
-  "transaction_status_washing": "Washing",
-  "@transaction_status_washing": {
-    "description": "Status for washing transaction"
-  },
-  "transaction_status_drying": "Drying",
-  "@transaction_status_drying": {
-    "description": "Status for drying transaction"
-  },
-  "transaction_status_ironing": "Ironing",
-  "@transaction_status_ironing": {
-    "description": "Status for ironing transaction"
+  "transaction_status_on_progress": "On Progress",
+  "@transaction_status_on_progress": {
+    "description": "Label for the on progress transaction status"
   },
   "transaction_status_ready_for_pickup": "Ready for Pickup",
   "@transaction_status_ready_for_pickup": {
-    "description": "Status for ready for pickup transaction"
+    "description": "Label for the ready for pickup transaction status"
   },
   "transaction_status_picked_up": "Picked Up",
   "@transaction_status_picked_up": {
-    "description": "Status for picked up transaction"
+    "description": "Label for the picked up transaction status"
   },
-  "transaction_status_cancelled": "Cancelled",
-  "@transaction_status_cancelled": {
-    "description": "Status for cancelled transaction"
+  "transaction_status_other": "Other",
+  "@transaction_status_other": {
+    "description": "Label for other transaction status"
   },
-  "transaction_status_delayed": "Delayed",
-  "@transaction_status_delayed": {
-    "description": "Status for delayed transaction"
+  "transaction_payment_status_not_paid_yet": "Not Paid Yet",
+  "@transaction_payment_status_not_paid_yet": {
+    "description": "Label for the not paid yet payment status"
   },
-  "transaction_status_default": "Status not found",
-  "@transaction_status_default": {
-    "description": "Default status for transaction"
+  "transaction_payment_status_paid": "Paid",
+  "@transaction_payment_status_paid": {
+    "description": "Label for the paid payment status"
+  },
+  "transaction_payment_status_other": "Other",
+  "@transaction_payment_status_other": {
+    "description": "Label for other payment status"
   },
   
   "@_CUSTOMER": {},
@@ -526,15 +514,17 @@
     "description": "Message displayed when language is changed successfully"
   },
 
-  "transaction_status_change_success_message": "Transaction status changed successfully",
-  "@transaction_status_change_success_message": {
-    "description": "Message displayed when transaction status is changed successfully"
+  "service_change_success_message": "Default service changed to {serviceName} successfully",
+  "@service_change_success_message": {
+    "description": "Message displayed when service is changed successfully"
   },
 
   "home_screen_title": "Home",
   "@home_screen_title": {
     "description": "Title for the home screen"
   },
+
+  "@_SETTING": {},
 
   "setting_screen_title": "Setting",
   "@setting_screen_title": {
@@ -552,9 +542,13 @@
   "@setting_language_id": {
     "description": "Indonesian"
   },
-  "setting_transaction_status_label": "Transaction Status",
-  "@setting_transaction_status_label": {
-    "description": "Label for the transaction status setting"
+  "setting_service_label": "Service",
+  "@setting_service_label": {
+    "description": "Label for the service setting"
+  },
+  "setting_service_empty_message": "No service found",
+  "@setting_service_empty_message": {
+    "description": "Message displayed when no service is found in settings"
   },
 
   "error_occurred_message": "An error occurred",
@@ -563,6 +557,7 @@
   },
 
   "@_SORT": {},
+
   "sort_text": "Sort",
   "@sort_text": {
     "description": "Text for the sort option"
@@ -882,6 +877,10 @@
   "form_end_date_required_message": "End date is required",
   "@form_end_date_required_message": {
     "description": "Message displayed when end date is required"
+  },
+  "form_end_date_after_start_date_message": "End date must be after start date",
+  "@form_end_date_after_start_date_message": {
+    "description": "Message displayed when end date is not after start date"
   },
 
   "@_GENDER": {},

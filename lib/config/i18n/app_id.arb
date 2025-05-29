@@ -71,6 +71,7 @@
   "transaction_screen_tab_ready_for_pickup": "Siap Diambil",
   "transaction_screen_tab_picked_up": "Sudah Diambil",
   "transaction_search_hint": "Cari transaksi",
+  "transaction_deleted_on_all_tab": "Pindah ke tab 'Tidak Aktif' untuk mengembalikan transaksi yang dihapus",
   "transaction_deleted_message": "Transaksi sudah dihapus, tekan lama untuk mengembalikan",
   "transaction_empty_message": "Tidak ada transaksi ditemukan",
   "transaction_empty_inactive_message": "Tidak ada transaksi tidak aktif ditemukan",
@@ -100,17 +101,13 @@
   "transaction_item_end_date_label": "Selesai : {endDate}",
   "transaction_item_empty_customer_name": "Pelanggan tidak ditemukan",
   "transaction_item_empty_service_name": "Layanan tidak ditemukan",
-  "transaction_status_pending": "Menunggu",
-  "transaction_status_received": "Diterima",
-  "transaction_status_in_progress": "Sedang Diproses",
-  "transaction_status_washing": "Sedang Dicuci",
-  "transaction_status_drying": "Sedang Dikeringkan",
-  "transaction_status_ironing": "Sedang Disetrika",
+  "transaction_status_on_progress": "Sedang Diproses",
   "transaction_status_ready_for_pickup": "Siap Diambil",
   "transaction_status_picked_up": "Sudah Diambil",
-  "transaction_status_cancelled": "Dibatalkan",
-  "transaction_status_delayed": "Tertunda",
-  "transaction_status_default": "Status tidak ditemukan",
+  "transaction_status_other": "Lainnya",
+  "transaction_payment_status_not_paid_yet": "Belum Dibayar",
+  "transaction_payment_status_paid": "Sudah Dibayar",
+  "transaction_payment_status_other": "Lainnya",
 
   "@_CUSTOMER": {},
 
@@ -146,15 +143,18 @@
 
   "locale_change_success_message": "Bahasa berhasil diubah",
 
-  "transaction_status_change_success_message": "Status transaksi berhasil diubah",
+  "service_change_success_message": "Layanan bawaan berhasil diubah ke {serviceName}",
 
   "home_screen_title": "Beranda",
+
+  "@_SETTING": {},
 
   "setting_screen_title": "Pengaturan",
   "setting_language_label": "Bahasa",
   "setting_language_en": "Bahasa Inggris",
   "setting_language_id": "Bahasa Indonesia",
-  "setting_transaction_status_label": "Status Transaksi",
+  "setting_service_label": "Layanan",
+  "setting_service_empty_message": "Tidak ada layanan ditemukan",
 
   "error_occurred_message": "Terjadi kesalahan",
 
@@ -249,6 +249,7 @@
   "form_amount_digits_only_message": "Total harus berupa angka",
   "form_start_date_required_message": "Tanggal mulai tidak boleh kosong",
   "form_end_date_required_message": "Tanggal selesai tidak boleh kosong",
+  "form_end_date_after_start_date_message": "Tanggal selesai harus setelah tanggal mulai",
 
   "@_GENDER": {},
   "gender_label": "Jenis Kelamin",

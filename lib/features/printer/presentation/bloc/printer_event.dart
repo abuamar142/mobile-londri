@@ -23,12 +23,14 @@ class PrinterEventConnectToDevice extends PrinterEvent {
 class PrinterEventDisconnectDevice extends PrinterEvent {}
 
 class PrinterEventPrintInvoice extends PrinterEvent {
+  final BuildContext context;
   final Transaction transaction;
   final String businessName;
   final String businessAddress;
   final String businessPhone;
 
   const PrinterEventPrintInvoice({
+    required this.context,
     required this.transaction,
     required this.businessName,
     required this.businessAddress,
@@ -36,9 +38,16 @@ class PrinterEventPrintInvoice extends PrinterEvent {
   });
 
   @override
-  List<Object?> get props => [transaction, businessName, businessAddress, businessPhone];
+  List<Object?> get props => [context, transaction, businessName, businessAddress, businessPhone];
 }
 
-class PrinterEventPrintTest extends PrinterEvent {}
+class PrinterEventPrintTest extends PrinterEvent {
+  final BuildContext context;
+
+  const PrinterEventPrintTest({required this.context});
+
+  @override
+  List<Object?> get props => [context];
+}
 
 class PrinterEventClearSavedPrinter extends PrinterEvent {}

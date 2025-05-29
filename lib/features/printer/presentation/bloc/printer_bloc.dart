@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../../core/services/permission_service.dart';
 import '../../../../core/services/printer_service.dart';
+import '../../../transaction/domain/entities/payment_status.dart';
 import '../../../transaction/domain/entities/transaction.dart';
 import '../../../transaction/domain/entities/transaction_status.dart';
 
@@ -140,6 +142,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
 
     try {
       final success = await printerService.printInvoice(
+        context: event.context,
         transaction: event.transaction,
         businessName: event.businessName,
         businessAddress: event.businessAddress,
@@ -184,6 +187,7 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
       );
 
       final success = await printerService.printInvoice(
+        context: event.context,
         transaction: sampleTransaction,
         businessName: "Laundry Now",
         businessAddress: "Jl. Jalan",

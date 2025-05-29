@@ -54,7 +54,7 @@ class TransactionStateWithFilteredTransactions extends TransactionState {
   bool get isReadyTab => currentTabIndex == 4;
   bool get isPickedUpTab => currentTabIndex == 5;
 
-  bool get canRestoreTransactions => isInactiveTab || isAllTab;
+  bool get canRestoreTransactions => isInactiveTab;
 }
 
 class TransactionStateSuccessGetTransactionById extends TransactionState {

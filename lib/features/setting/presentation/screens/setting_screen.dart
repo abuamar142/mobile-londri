@@ -52,7 +52,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                       onPressed: (BuildContext context) {
-                        _showLanguageOptions();
+                        _showLanguageOptions(context);
                       },
                     ),
                   ],
@@ -65,7 +65,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  void _showLanguageOptions() {
+  void _showLanguageOptions(BuildContext context) {
     return showDropdownBottomSheet(
       context: context,
       title: context.appText.setting_language_label,

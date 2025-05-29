@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/transaction/domain/entities/payment_status.dart';
 import '../../features/transaction/domain/entities/transaction.dart';
+import '../../features/transaction/domain/entities/transaction_status.dart';
 
 class PrinterService {
   static const String _printerKeyPref = 'selected_printer_address';
@@ -189,6 +191,7 @@ class PrinterService {
   }
 
   Future<bool> printInvoice({
+    required BuildContext context,
     required Transaction transaction,
     required String businessName,
     required String businessAddress,
@@ -202,6 +205,7 @@ class PrinterService {
       // Set printer configuration
       await PrintBluetoothThermal.writeBytes(
         await getInvoiceBytes(
+          context: context,
           transaction: transaction,
           businessName: businessName,
           businessAddress: businessAddress,
@@ -217,6 +221,7 @@ class PrinterService {
   }
 
   Future<List<int>> getInvoiceBytes({
+    required BuildContext context,
     required Transaction transaction,
     required String businessName,
     required String businessAddress,
@@ -261,8 +266,8 @@ class PrinterService {
     bytes += latin1.encode('--------------------------------\n');
 
     // Status information
-    bytes += latin1.encode('Status: ${transaction.transactionStatus?.value ?? "-"}\n');
-    bytes += latin1.encode('Payment: ${transaction.paymentStatus?.value ?? "-"}\n');
+    bytes += latin1.encode('Status: ${getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.onProgress)}\n');
+    bytes += latin1.encode('Payment: ${getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.notPaidYet)}\n');
 
     if (transaction.startDate != null) {
       bytes += latin1.encode('Start Date: ${transaction.startDate!.toString().substring(0, 10)}\n');

@@ -46,7 +46,6 @@ void showDropdownBottomSheet({
         ),
         const Divider(thickness: 1),
         ...items,
-        SizedBox(height: AppSizes.size16),
       ],
     ),
   );

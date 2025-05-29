@@ -11,12 +11,13 @@ class WidgetTextFormField extends StatelessWidget {
   final bool isLoading;
   final bool obscureText;
   final TextInputType keyboardType;
-  final IconButton? suffixIcon;
+  final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final Function(String)? onChanged;
   final int maxLines;
   final bool readOnly;
   final Iterable<String>? autofillHints;
+  final VoidCallback? onTap;
 
   const WidgetTextFormField({
     super.key,
@@ -33,11 +34,13 @@ class WidgetTextFormField extends StatelessWidget {
     this.maxLines = 1,
     this.readOnly = false,
     this.autofillHints,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: onTap ?? () {},
       controller: controller,
       obscureText: obscureText,
       enabled: isEnabled && !isLoading,
@@ -52,7 +55,7 @@ class WidgetTextFormField extends StatelessWidget {
       readOnly: readOnly,
       autofillHints: autofillHints,
       decoration: InputDecoration(
-        labelText: label,
+        labelText: readOnly ? null : label,
         hintText: hint,
         labelStyle: AppTextStyle.body1,
         hintStyle: AppTextStyle.body1,

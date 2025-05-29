@@ -5,6 +5,7 @@ import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/price_formatter.dart';
+import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import 'widget_payment_status_badge.dart';
@@ -31,7 +32,7 @@ class WidgetTransactionCard extends StatelessWidget {
       onLongPress: onLongPress,
       child: Container(
         decoration: BoxDecoration(
-          color: !isDeleted ? Colors.white : AppColors.gray.withAlpha(50),
+          color: !isDeleted ? AppColors.onPrimary : AppColors.gray.withAlpha(50),
           borderRadius: BorderRadius.circular(AppSizes.size12),
           boxShadow: [
             BoxShadow(

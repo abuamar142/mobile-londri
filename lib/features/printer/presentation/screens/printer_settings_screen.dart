@@ -94,7 +94,9 @@ class _PrinterSettingsScreenContent extends StatelessWidget {
                         final isConnected = state is PrinterStatePairedDevicesLoaded ? state.isConnected : state is PrinterStateConnected;
 
                         if (isConnected) {
-                          serviceLocator<PrinterBloc>().add(PrinterEventPrintTest());
+                          serviceLocator<PrinterBloc>().add(PrinterEventPrintTest(
+                            context: context,
+                          ));
                         } else {
                           context.showSnackbar(context.appText.printer_please_connect);
                         }

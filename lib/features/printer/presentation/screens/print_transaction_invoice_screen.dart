@@ -17,7 +17,9 @@ import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
+import '../../../transaction/domain/entities/payment_status.dart';
 import '../../../transaction/domain/entities/transaction.dart';
+import '../../../transaction/domain/entities/transaction_status.dart';
 import '../../../transaction/presentation/bloc/transaction_bloc.dart';
 import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
 import '../bloc/printer_bloc.dart';
@@ -344,11 +346,11 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
               // Status information
               _buildInvoiceRow(
                 label: context.appText.invoice_print_transaction_status,
-                value: _currentTransaction!.transactionStatus?.value ?? "-",
+                value: getTransactionStatusValue(context, _currentTransaction!.transactionStatus ?? TransactionStatus.onProgress),
               ),
               _buildInvoiceRow(
                 label: context.appText.invoice_print_payment_status,
-                value: _currentTransaction!.paymentStatus?.value ?? "-",
+                value: getPaymentStatusValue(context, _currentTransaction!.paymentStatus ?? PaymentStatus.notPaidYet),
               ),
 
               if (_currentTransaction!.startDate != null)
@@ -425,6 +427,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
 
     context.read<PrinterBloc>().add(
           PrinterEventPrintInvoice(
+            context: context,
             transaction: _currentTransaction!,
             businessName: _businessNameController.text,
             businessAddress: _businessAddressController.text,

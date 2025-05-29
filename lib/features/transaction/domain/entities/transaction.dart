@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+import 'payment_status.dart';
 import 'transaction_status.dart';
 
 class Transaction extends Equatable {

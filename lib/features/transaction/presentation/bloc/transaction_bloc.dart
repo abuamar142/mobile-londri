@@ -79,7 +79,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         sortBy: _currentSortField,
         ascending: _isAscending,
         transactionStatus: _selectedStatus,
-        isIncludeInactive: false,
+        isIncludeInactive: _isIncludeInactive,
         tabIndex: _currentTabIndex,
         tabName: _currentTabName,
       ));
@@ -195,15 +195,14 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       _selectedStatus = event.transactionStatus;
       _isIncludeInactive = event.isIncludeInactive;
     }
-    if (event.isIncludeInactive == null) {
-      _isIncludeInactive = null;
-    }
     if (event.tabIndex != null) {
       _currentTabIndex = event.tabIndex!;
     }
     if (event.tabName != null) {
       _currentTabName = event.tabName!;
     }
+
+    _isIncludeInactive = event.isIncludeInactive;
 
     _emitFilteredState(emit);
   }

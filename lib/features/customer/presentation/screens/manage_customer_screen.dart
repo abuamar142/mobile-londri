@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:londri/features/customer/presentation/widgets/widget_dropdown.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
@@ -466,35 +467,10 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                 ],
               )
           : null,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(
-          vertical: AppSizes.size12,
-          horizontal: AppSizes.size16,
-        ),
-        child: Row(
-          children: [
-            Icon(
-              _getGenderIcon(_selectedGender),
-              size: AppSizes.size24,
-              color: enabled ? AppColors.onSecondary : AppColors.gray,
-            ),
-            SizedBox(width: AppSizes.size12),
-            Expanded(
-              child: Text(
-                _getGenderName(_selectedGender),
-                style: AppTextStyle.textField.copyWith(
-                  color: enabled ? AppColors.onSecondary : AppColors.gray,
-                ),
-              ),
-            ),
-            if (enabled)
-              Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.onSecondary,
-              ),
-          ],
-        ),
+      child: WidgetDropdown(
+        icon: _getGenderIcon(_selectedGender),
+        label: _getGenderName(_selectedGender),
+        isEnable: enabled,
       ),
     );
   }

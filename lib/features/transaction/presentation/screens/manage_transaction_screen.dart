@@ -11,14 +11,18 @@ import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/auth.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
+import '../../../customer/presentation/widgets/widget_dropdown.dart';
 import '../../../service/domain/entities/service.dart';
 import '../../../service/presentation/bloc/service_bloc.dart';
+import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
@@ -96,8 +100,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   TransactionStatus _transactionStatus = TransactionStatus.onProgress;
   PaymentStatus _paymentStatus = PaymentStatus.notPaidYet;
 
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now().add(const Duration(days: 3));
+  DateTime _startDate = DateTime.now().toLocal();
+  DateTime _endDate = DateTime.now().add(const Duration(days: 3)).toLocal();
 
   bool get _isAddMode => widget.mode == ManageTransactionMode.add;
   bool get _isEditMode => widget.mode == ManageTransactionMode.edit;
@@ -209,6 +213,17 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     }
   }
 
+  IconData _getGenderIcon(Gender gender) {
+    switch (gender) {
+      case Gender.male:
+        return Icons.man;
+      case Gender.female:
+        return Icons.woman;
+      default:
+        return Icons.person;
+    }
+  }
+
   Widget _buildFormFields() {
     final bool isFormEnabled = _transactionBloc.state is! TransactionStateLoading;
 
@@ -218,24 +233,11 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         // Customer Selector
         BlocBuilder<CustomerBloc, CustomerState>(
           builder: (context, state) {
-            return WidgetTextFormField(
-              label: context.appText.form_select_customer_label,
-              hint: context.appText.form_select_customer_hint,
-              controller: _customerController,
-              isEnabled: isFormEnabled,
-              readOnly: true,
-              suffixIcon: isFormEnabled
-                  ? IconButton(
-                      onPressed: () => _selectCustomer(context),
-                      icon: Icon(Icons.arrow_drop_down),
-                    )
-                  : null,
-              validator: (value) {
-                if (_selectedCustomer == null) {
-                  return context.appText.form_select_customer_required_message;
-                }
-                return null;
-              },
+            return WidgetDropdown(
+              icon: _getGenderIcon(_selectedCustomer?.gender ?? Gender.other),
+              label: _selectedCustomer?.name ?? context.appText.form_select_customer_label,
+              isEnable: isFormEnabled,
+              showModalBottomSheet: () => _selectCustomer(context),
             );
           },
         ),
@@ -245,18 +247,30 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return WidgetTextFormField(
-              label: context.appText.form_select_service_label,
-              hint: context.appText.form_select_service_hint,
-              controller: _serviceController,
+              label: context.appText.form_select_customer_label,
+              hint: context.appText.form_select_customer_hint,
+              controller: _customerController,
               isEnabled: isFormEnabled,
               readOnly: true,
-              suffixIcon: isFormEnabled ? IconButton(onPressed: () => _selectService(context), icon: Icon(Icons.arrow_drop_down)) : null,
+              suffixIcon: Icon(Icons.arrow_drop_down),
               validator: (value) {
-                if (_selectedService == null) {
-                  return context.appText.form_select_service_required_message;
+                if (_selectedCustomer == null) {
+                  return context.appText.form_select_customer_required_message;
                 }
                 return null;
               },
+              onTap: () => isFormEnabled ? _selectCustomer(context) : null,
+            );
+          },
+        ),
+        AppSizes.spaceHeight12,
+        BlocBuilder<ServiceBloc, ServiceState>(
+          builder: (context, state) {
+            return WidgetDropdown(
+              icon: Icons.assignment,
+              label: _selectedService?.name ?? context.appText.form_select_service_label,
+              isEnable: isFormEnabled,
+              showModalBottomSheet: () => _selectService(context),
             );
           },
         ),
@@ -316,7 +330,15 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           isEnabled: isFormEnabled,
           maxLines: 3,
         ),
-        AppSizes.spaceHeight12,
+
+        AppSizes.spaceHeight16,
+
+        Divider(
+          thickness: 1,
+          color: AppColors.primary,
+        ),
+
+        AppSizes.spaceHeight16,
 
         // Date Fields
         Row(
@@ -350,96 +372,116 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   if (value == null || value.isEmpty) {
                     return context.appText.form_end_date_required_message;
                   }
+                  if (_startDate.isAfter(_endDate)) {
+                    return context.appText.form_end_date_after_start_date_message;
+                  }
                   return null;
                 },
               ),
             ),
           ],
         ),
+
+        AppSizes.spaceHeight12,
+
+        // Transaction Status Selection
+        WidgetDropdown(
+          icon: _transactionStatus.icon,
+          label: getTransactionStatusValue(context, _transactionStatus),
+          isEnable: isFormEnabled,
+          showModalBottomSheet: () => _showTransactionStatusOptions(),
+        ),
         AppSizes.spaceHeight16,
 
-        // Status Selection
-        if (_isEditMode) ...[
-          Text(
-            context.appText.form_transaction_status_label,
-            style: AppTextStyle.label,
-          ),
-          AppSizes.spaceHeight8,
-          _buildTransactionStatusSelector(isFormEnabled),
-          AppSizes.spaceHeight16,
-          Text(
-            context.appText.form_payment_status_label,
-            style: AppTextStyle.label,
-          ),
-          AppSizes.spaceHeight8,
-          _buildPaymentStatusSelector(isFormEnabled),
-        ],
+        // Payment Status Selection
+        WidgetDropdown(
+          icon: _paymentStatus.icon,
+          label: getPaymentStatusValue(context, _paymentStatus),
+          isEnable: isFormEnabled,
+          showModalBottomSheet: () => _showPaymentStatusOptions(),
+        ),
       ],
     );
   }
 
-  Widget _buildTransactionStatusSelector(bool isEnabled) {
-    return Wrap(
-      spacing: AppSizes.size8,
-      runSpacing: AppSizes.size8,
-      children: TransactionStatus.values.map((status) {
-        final isSelected = _transactionStatus == status;
-        return ChoiceChip(
-          label: Text(
-            status.value,
-            style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.onSecondary,
-            ),
-          ),
-          selected: isSelected,
-          onSelected: isEnabled
-              ? (selected) {
-                  if (selected) {
-                    setState(() {
-                      _transactionStatus = status;
-                    });
-                  }
-                }
-              : null,
-          backgroundColor: AppColors.gray.withValues(
-            alpha: 0.1,
-          ),
-          selectedColor: AppColors.primary,
-        );
-      }).toList(),
-    );
+  void _showTransactionStatusOptions() {
+    return showDropdownBottomSheet(context: context, title: context.appText.form_transaction_status_hint, items: [
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.onProgress,
+        leadingIcon: TransactionStatus.onProgress.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.onProgress),
+        onTap: () {
+          setState(() {
+            _transactionStatus = TransactionStatus.onProgress;
+          });
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.readyForPickup,
+        leadingIcon: TransactionStatus.readyForPickup.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.readyForPickup),
+        onTap: () {
+          setState(() {
+            _transactionStatus = TransactionStatus.readyForPickup;
+          });
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.pickedUp,
+        leadingIcon: TransactionStatus.pickedUp.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.pickedUp),
+        onTap: () {
+          setState(() {
+            _transactionStatus = TransactionStatus.pickedUp;
+          });
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.other,
+        leadingIcon: TransactionStatus.other.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.other),
+        onTap: () {
+          setState(() {
+            _transactionStatus = TransactionStatus.other;
+          });
+        },
+      ),
+    ]);
   }
 
-  Widget _buildPaymentStatusSelector(bool isEnabled) {
-    return Wrap(
-      spacing: AppSizes.size8,
-      runSpacing: AppSizes.size8,
-      children: PaymentStatus.values.map((status) {
-        final isSelected = _paymentStatus == status;
-        return ChoiceChip(
-          label: Text(
-            status.value,
-            style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.onSecondary,
-            ),
-          ),
-          selected: isSelected,
-          onSelected: isEnabled
-              ? (selected) {
-                  if (selected) {
-                    setState(() {
-                      _paymentStatus = status;
-                    });
-                  }
-                }
-              : null,
-          backgroundColor: AppColors.gray.withValues(
-            alpha: 0.1,
-          ),
-          selectedColor: status == PaymentStatus.paid ? AppColors.success : AppColors.warning,
-        );
-      }).toList(),
-    );
+  void _showPaymentStatusOptions() {
+    return showDropdownBottomSheet(context: context, title: context.appText.form_payment_status_hint, items: [
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.notPaidYet,
+        leadingIcon: PaymentStatus.notPaidYet.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.notPaidYet),
+        onTap: () {
+          setState(() {
+            _paymentStatus = PaymentStatus.notPaidYet;
+          });
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.paid,
+        leadingIcon: PaymentStatus.paid.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.paid),
+        onTap: () {
+          setState(() {
+            _paymentStatus = PaymentStatus.paid;
+          });
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.other,
+        leadingIcon: PaymentStatus.other.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.other),
+        onTap: () {
+          setState(() {
+            _paymentStatus = PaymentStatus.other;
+          });
+        },
+      ),
+    ]);
   }
 
   void _selectCustomer(BuildContext context) async {
@@ -467,7 +509,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   Padding(
                     padding: EdgeInsets.all(AppSizes.size16),
                     child: Text(
-                      'Select Customer',
+                      context.appText.form_select_customer_hint,
                       style: AppTextStyle.heading3,
                     ),
                   ),
@@ -598,7 +640,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
                   Padding(
                     padding: EdgeInsets.all(AppSizes.size16),
                     child: Text(
-                      'Select Service',
+                      context.appText.form_select_service_hint,
                       style: AppTextStyle.heading3,
                     ),
                   ),
@@ -747,7 +789,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
           name: transaction.serviceName,
         );
       } else {
-        context.showSnackbar(context.appText.transaction_status_default);
+        context.showSnackbar(context.appText.transaction_status_other);
         context.pop();
       }
     }
@@ -775,8 +817,8 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         weight: double.tryParse(_weightController.text),
         amount: int.tryParse(_amountController.text),
         description: _descriptionController.text,
-        transactionStatus: _isAddMode ? TransactionStatus.onProgress : _transactionStatus,
-        paymentStatus: _isAddMode ? PaymentStatus.notPaidYet : _paymentStatus,
+        transactionStatus: _transactionStatus,
+        paymentStatus: _paymentStatus,
         startDate: _startDate,
         endDate: _endDate,
         isDeleted: _currentTransaction?.isDeleted ?? true,

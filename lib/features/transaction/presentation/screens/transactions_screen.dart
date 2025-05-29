@@ -106,7 +106,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
         break;
       case 1: // All - show both active and inactive transactions
         _transactionBloc.add(TransactionEventFilter(
-          isIncludeInactive: null, // null means show all
+          isIncludeInactive: null,
           transactionStatus: null,
           tabIndex: tabIndex,
           tabName: tabName,
@@ -172,6 +172,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
             context.showSnackbar(state.message);
           } else if (state is TransactionStateSuccessRestoreTransaction) {
             context.showSnackbar(context.appText.transaction_restore_success_message);
+
+            // Change the tab to "Active" after restoring a transaction
+            _tabController.index = 2;
           }
         },
         child: Scaffold(
@@ -289,7 +292,9 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
                     }
                   },
                   onLongPress: () {
-                    if (isDeleted && state.canRestoreTransactions) {
+                    if (_tabController.index == 1) {
+                      context.showSnackbar(context.appText.transaction_deleted_on_all_tab);
+                    } else if (isDeleted && state.canRestoreTransactions) {
                       restoreTransaction(
                         context: context,
                         transaction: transaction,

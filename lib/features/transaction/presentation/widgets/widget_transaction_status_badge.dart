@@ -15,36 +15,19 @@ class WidgetTransactionStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color backgroundColor;
-    Color textColor = Colors.white;
-
-    switch (status) {
-      case TransactionStatus.onProgress:
-        backgroundColor = AppColors.gray;
-        break;
-      case TransactionStatus.readyForPickup:
-        backgroundColor = AppColors.warning;
-        break;
-      case TransactionStatus.pickedUp:
-        backgroundColor = AppColors.success;
-        break;
-      default:
-        backgroundColor = AppColors.error;
-    }
-
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSizes.size8,
         vertical: AppSizes.size4,
       ),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: status.backgroundColor,
         borderRadius: BorderRadius.circular(AppSizes.size16),
       ),
       child: Text(
-        status.value,
+        getTransactionStatusValue(context, status),
         style: AppTextStyle.caption.copyWith(
-          color: textColor,
+          color: AppColors.onPrimary,
           fontWeight: FontWeight.bold,
         ),
       ),

@@ -1,3 +1,4 @@
+import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 
