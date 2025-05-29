@@ -224,11 +224,15 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
                         controller: _searchController,
                         hintText: context.appText.transaction_search_hint,
                         onChanged: (value) {
-                          _transactionBloc.add(TransactionEventFilter(searchQuery: value));
+                          setState(() {
+                            _transactionBloc.add(TransactionEventFilter(searchQuery: value));
+                          });
                         },
                         onClear: () {
-                          _searchController.clear();
-                          _transactionBloc.add(const TransactionEventFilter(searchQuery: ''));
+                          setState(() {
+                            _searchController.clear();
+                            _transactionBloc.add(const TransactionEventFilter(searchQuery: ''));
+                          });
                         },
                       ),
                     ],
