@@ -77,3 +77,16 @@ class ServiceStateFailure extends ServiceState {
   @override
   List<Object> get props => [message];
 }
+
+class ServiceStateSuccessCreateDefaultService extends ServiceState {}
+
+class ServiceStateSuccessGetDefaultService extends ServiceState {
+  final Service service;
+
+  const ServiceStateSuccessGetDefaultService({
+    required this.service,
+  });
+
+  @override
+  List<Object> get props => [service];
+}

@@ -100,3 +100,16 @@ class ServiceEventSortServices extends ServiceEvent {
   @override
   List<Object> get props => [sortBy, ascending];
 }
+
+class ServiceEventCreateDefaultService extends ServiceEvent {
+  final Service service;
+
+  const ServiceEventCreateDefaultService({
+    required this.service,
+  });
+
+  @override
+  List<Object> get props => [service];
+}
+
+class ServiceEventGetDefaultService extends ServiceEvent {}

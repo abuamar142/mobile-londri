@@ -39,13 +39,16 @@ import 'features/manage_staff/domain/usecases/manage_staff_deactivate_staff.dart
 import 'features/manage_staff/domain/usecases/manage_staff_get_users.dart';
 import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
 import 'features/printer/presentation/bloc/printer_bloc.dart';
+import 'features/service/data/datasources/service_local_datasource.dart';
 import 'features/service/data/datasources/service_remote_datasource.dart';
 import 'features/service/data/repositories/service_repository_implementation.dart';
 import 'features/service/domain/repositories/service_repository.dart';
 import 'features/service/domain/usecases/service_activate_service.dart';
+import 'features/service/domain/usecases/service_create_default_service.dart';
 import 'features/service/domain/usecases/service_create_service.dart';
 import 'features/service/domain/usecases/service_deactivate_service.dart';
 import 'features/service/domain/usecases/service_get_active_services.dart';
+import 'features/service/domain/usecases/service_get_default_service.dart';
 import 'features/service/domain/usecases/service_get_service_by_id.dart';
 import 'features/service/domain/usecases/service_get_services.dart';
 import 'features/service/domain/usecases/service_hard_delete_service.dart';
@@ -172,10 +175,16 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ServiceRemoteDatasource>(
       () => ServiceRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
+    ..registerLazySingleton<ServiceLocalDatasource>(
+      () => ServiceLocalDatasourceImplementation(sharedPreferences: serviceLocator()),
+    )
 
     // Repositories
     ..registerLazySingleton<ServiceRepository>(
-      () => ServiceRepositoryImplementation(serviceRemoteDatasource: serviceLocator()),
+      () => ServiceRepositoryImplementation(
+        serviceRemoteDatasource: serviceLocator(),
+        serviceLocalDatasource: serviceLocator(),
+      ),
     )
 
     // UseCases
@@ -203,6 +212,12 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ServiceHardDeleteService>(
       () => ServiceHardDeleteService(serviceRepository: serviceLocator()),
     )
+    ..registerLazySingleton<ServiceCreateDefaultService>(
+      () => ServiceCreateDefaultService(serviceRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<ServiceGetDefaultService>(
+      () => ServiceGetDefaultService(serviceRepository: serviceLocator()),
+    )
 
     // Bloc
     ..registerFactory(
@@ -215,6 +230,8 @@ Future<void> initializeDependencies() async {
         serviceActivateService: serviceLocator(),
         serviceDeactivateService: serviceLocator(),
         serviceHardDeleteService: serviceLocator(),
+        serviceCreateDefaultService: serviceLocator(),
+        serviceGetDefaultService: serviceLocator(),
       ),
     )
 

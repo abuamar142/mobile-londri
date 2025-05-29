@@ -5,9 +5,11 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/service.dart';
 import '../../domain/usecases/service_activate_service.dart';
+import '../../domain/usecases/service_create_default_service.dart';
 import '../../domain/usecases/service_create_service.dart';
 import '../../domain/usecases/service_deactivate_service.dart';
 import '../../domain/usecases/service_get_active_services.dart';
+import '../../domain/usecases/service_get_default_service.dart';
 import '../../domain/usecases/service_get_service_by_id.dart';
 import '../../domain/usecases/service_get_services.dart';
 import '../../domain/usecases/service_hard_delete_service.dart';
@@ -25,6 +27,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceActivateService serviceActivateService;
   final ServiceDeactivateService serviceDeactivateService;
   final ServiceHardDeleteService serviceHardDeleteService;
+  final ServiceCreateDefaultService serviceCreateDefaultService;
+  final ServiceGetDefaultService serviceGetDefaultService;
 
   late List<Service> _allServices;
   String _currentQuery = '';
@@ -43,6 +47,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     required this.serviceActivateService,
     required this.serviceDeactivateService,
     required this.serviceHardDeleteService,
+    required this.serviceCreateDefaultService,
+    required this.serviceGetDefaultService,
   }) : super(ServiceStateInitial()) {
     on<ServiceEventGetServices>(
       (event, emit) => onServiceEventGetServices(event, emit),
@@ -73,6 +79,12 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     );
     on<ServiceEventSortServices>(
       (event, emit) => onServiceEventSortServices(event, emit),
+    );
+    on<ServiceEventCreateDefaultService>(
+      (event, emit) => onServiceEventCreateDefaultService(event, emit),
+    );
+    on<ServiceEventGetDefaultService>(
+      (event, emit) => onServiceEventGetDefaultService(event, emit),
     );
   }
 
@@ -296,5 +308,41 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
 
     return filtered;
+  }
+
+  void onServiceEventCreateDefaultService(
+    ServiceEventCreateDefaultService event,
+    Emitter<ServiceState> emit,
+  ) async {
+    emit(ServiceStateLoading());
+
+    Either<Failure, void> result = await serviceCreateDefaultService(event.service);
+
+    result.fold((left) {
+      emit(ServiceStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(ServiceStateSuccessCreateDefaultService());
+    });
+  }
+
+  void onServiceEventGetDefaultService(
+    ServiceEventGetDefaultService event,
+    Emitter<ServiceState> emit,
+  ) async {
+    emit(ServiceStateLoading());
+
+    Either<Failure, Service> result = await serviceGetDefaultService();
+
+    result.fold((left) {
+      emit(ServiceStateFailure(
+        message: left.message,
+      ));
+    }, (right) {
+      emit(ServiceStateSuccessGetDefaultService(
+        service: right,
+      ));
+    });
   }
 }
