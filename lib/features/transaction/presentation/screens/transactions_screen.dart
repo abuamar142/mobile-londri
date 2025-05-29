@@ -72,7 +72,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
 
     if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
       _searchController.text = widget.searchQuery!;
-      _transactionBloc.add(TransactionEventFilter(searchQuery: widget.searchQuery!));
+      _transactionBloc.add(
+        TransactionEventFilter(
+          searchQuery: widget.searchQuery!,
+          isIncludeInactive: false,
+        ),
+      );
     }
   }
 

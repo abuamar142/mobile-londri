@@ -30,7 +30,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   String _currentSortField = 'createdAt';
   bool _isAscending = false;
   TransactionStatus? _selectedStatus;
-  bool? _isIncludeInactive;
+  bool? _isIncludeInactive = false;
 
   int _currentTabIndex = 2;
   String _currentTabName = 'Active';
