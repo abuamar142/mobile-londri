@@ -19,6 +19,7 @@ import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/role_manager.dart';
+import '../../../transaction/presentation/screens/transactions_screen.dart';
 import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
 import '../../domain/entities/customer.dart';
 import '../../domain/entities/gender.dart';
@@ -413,8 +414,11 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                     WidgetTextButton(
                       label: context.appText.customer_redirect_to_transaction_screen,
                       color: AppColors.primary,
-                      onPressed: () {
-                        // TODO: Implement navigation to transaction screen based on customer ID
+                      onPressed: () async {
+                        pushTransactions(
+                          context: context,
+                          searchQuery: _currentCustomer?.name,
+                        );
                       },
                     )
                   ],

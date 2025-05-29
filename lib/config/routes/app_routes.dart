@@ -150,7 +150,15 @@ class AppRoutes {
       GoRoute(
         path: '/transactions',
         name: RouteNames.transactions,
-        builder: (context, state) => const TransactionsScreen(),
+        builder: (context, state) {
+          final searchQuery = state.uri.queryParameters['search'];
+
+          if (searchQuery != null && searchQuery.isNotEmpty) {
+            return TransactionsScreen(searchQuery: searchQuery);
+          } else {
+            return const TransactionsScreen();
+          }
+        },
         routes: [
           GoRoute(
             path: 'add',

@@ -23,12 +23,23 @@ import 'manage_transaction_screen.dart';
 
 void pushTransactions({
   required BuildContext context,
+  String? searchQuery,
 }) {
-  context.pushNamed(RouteNames.transactions);
+  context.pushNamed(
+    RouteNames.transactions,
+    queryParameters: {
+      'search': searchQuery,
+    },
+  );
 }
 
 class TransactionsScreen extends StatefulWidget {
-  const TransactionsScreen({super.key});
+  final String? searchQuery;
+
+  const TransactionsScreen({
+    super.key,
+    this.searchQuery,
+  });
 
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
@@ -58,6 +69,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
     super.initState();
     _transactionBloc = serviceLocator<TransactionBloc>();
     _getTransactions();
+
+    if (widget.searchQuery != null && widget.searchQuery!.isNotEmpty) {
+      _searchController.text = widget.searchQuery!;
+      _transactionBloc.add(TransactionEventFilter(searchQuery: widget.searchQuery!));
+    }
   }
 
   @override
