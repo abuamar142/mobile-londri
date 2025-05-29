@@ -136,7 +136,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           onPressed: () => contactCustomer(customer.phone!),
                         )
                       : null,
-                  leadingIcon: customer.gender?.icon,
+                  leadingIcon: isActive ? customer.gender?.icon : Icons.person_off,
                   tileColor: isActive
                       ? null
                       : AppColors.gray.withValues(
