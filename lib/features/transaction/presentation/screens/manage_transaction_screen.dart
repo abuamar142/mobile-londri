@@ -246,26 +246,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         // Service Selector
         BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
-            return WidgetTextFormField(
-              label: context.appText.form_select_customer_label,
-              hint: context.appText.form_select_customer_hint,
-              controller: _customerController,
-              isEnabled: isFormEnabled,
-              readOnly: true,
-              suffixIcon: Icon(Icons.arrow_drop_down),
-              validator: (value) {
-                if (_selectedCustomer == null) {
-                  return context.appText.form_select_customer_required_message;
-                }
-                return null;
-              },
-              onTap: () => isFormEnabled ? _selectCustomer(context) : null,
-            );
-          },
-        ),
-        AppSizes.spaceHeight12,
-        BlocBuilder<ServiceBloc, ServiceState>(
-          builder: (context, state) {
             return WidgetDropdown(
               icon: Icons.assignment,
               label: _selectedService?.name ?? context.appText.form_select_service_label,
