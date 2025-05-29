@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:londri/features/customer/presentation/widgets/widget_dropdown.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
@@ -19,12 +18,13 @@ import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
-import '../../../../src/generated/i18n/app_localizations.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../../transaction/presentation/widgets/widget_bottom_bar.dart';
 import '../../domain/entities/customer.dart';
+import '../../domain/entities/gender.dart';
 import '../bloc/customer_bloc.dart';
 import '../widgets/widget_deactivate_customer.dart';
+import '../widgets/widget_dropdown.dart';
 import '../widgets/widget_hard_delete_customer.dart';
 
 enum ManageCustomerMode { add, edit, view }
@@ -335,7 +335,7 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   ),
                 ),
                 child: Icon(
-                  _getGenderIcon(_selectedGender),
+                  _selectedGender.icon,
                   size: AppSizes.size40,
                   color: AppColors.primary,
                 ),
@@ -372,9 +372,9 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   : null,
             ),
             WidgetDetailCardItem(
-              icon: _getGenderIcon(_selectedGender),
+              icon: _selectedGender.icon,
               label: context.appText.gender_label,
-              value: _getGenderName(_selectedGender),
+              value: getGenderValue(context, _selectedGender),
             ),
           ],
         ),
@@ -436,8 +436,8 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                 items: [
                   WidgetDropdownBottomSheetItem(
                     isSelected: _selectedGender == Gender.male,
-                    leadingIcon: Icons.man,
-                    title: context.appText.gender_male,
+                    leadingIcon: Gender.male.icon,
+                    title: getGenderValue(context, Gender.male),
                     onTap: () {
                       setState(() {
                         _selectedGender = Gender.male;
@@ -446,8 +446,8 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   ),
                   WidgetDropdownBottomSheetItem(
                     isSelected: _selectedGender == Gender.female,
-                    leadingIcon: Icons.woman,
-                    title: context.appText.gender_female,
+                    leadingIcon: Gender.female.icon,
+                    title: getGenderValue(context, Gender.female),
                     onTap: () {
                       setState(() {
                         _selectedGender = Gender.female;
@@ -456,8 +456,8 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
                   ),
                   WidgetDropdownBottomSheetItem(
                     isSelected: _selectedGender == Gender.other,
-                    leadingIcon: Icons.person,
-                    title: context.appText.gender_other,
+                    leadingIcon: Gender.other.icon,
+                    title: getGenderValue(context, Gender.other),
                     onTap: () {
                       setState(() {
                         _selectedGender = Gender.other;
@@ -468,33 +468,11 @@ class _ManageCustomerScreenState extends State<ManageCustomerScreen> {
               )
           : null,
       child: WidgetDropdown(
-        icon: _getGenderIcon(_selectedGender),
-        label: _getGenderName(_selectedGender),
+        icon: _selectedGender.icon,
+        label: getGenderValue(context, _selectedGender),
         isEnable: enabled,
       ),
     );
-  }
-
-  IconData _getGenderIcon(Gender gender) {
-    switch (gender) {
-      case Gender.male:
-        return Icons.man;
-      case Gender.female:
-        return Icons.woman;
-      default:
-        return Icons.person;
-    }
-  }
-
-  String _getGenderName(Gender gender) {
-    switch (gender) {
-      case Gender.male:
-        return AppLocalizations.of(context)!.gender_male;
-      case Gender.female:
-        return AppLocalizations.of(context)!.gender_female;
-      default:
-        return AppLocalizations.of(context)!.gender_other;
-    }
   }
 
   void _loadCustomerData() => _customerBloc.add(

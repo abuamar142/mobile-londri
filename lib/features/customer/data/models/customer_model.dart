@@ -1,4 +1,5 @@
 import '../../domain/entities/customer.dart';
+import '../../domain/entities/gender.dart';
 
 class CustomerModel extends Customer {
   final DateTime updatedAt;
@@ -22,18 +23,11 @@ class CustomerModel extends Customer {
       id: json['id'] ?? 0,
       name: json['name'],
       phone: json['phone'],
-      gender: json['gender'] != null
-          ? Gender.values.firstWhere(
-              (e) => e.name == json['gender'],
-              orElse: () => Gender.other,
-            )
-          : Gender.other,
+      gender: json['gender'] != null ? Gender.fromString(json['gender']) : Gender.other,
       description: json['description'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
     );
   }
 

@@ -1,17 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum Gender { male, female, other }
-
-String getGenderText(Gender gender) {
-  switch (gender) {
-    case Gender.male:
-      return 'Male';
-    case Gender.female:
-      return 'Female';
-    default:
-      return 'Other';
-  }
-}
+import 'gender.dart';
 
 class Customer extends Equatable {
   final int? id;

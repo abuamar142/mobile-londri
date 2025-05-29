@@ -18,6 +18,7 @@ import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/auth.dart';
 import '../../../customer/domain/entities/customer.dart';
+import '../../../customer/domain/entities/gender.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
 import '../../../customer/presentation/widgets/widget_dropdown.dart';
 import '../../../service/domain/entities/service.dart';
@@ -213,17 +214,6 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     }
   }
 
-  IconData _getGenderIcon(Gender gender) {
-    switch (gender) {
-      case Gender.male:
-        return Icons.man;
-      case Gender.female:
-        return Icons.woman;
-      default:
-        return Icons.person;
-    }
-  }
-
   Widget _buildFormFields() {
     final bool isFormEnabled = _transactionBloc.state is! TransactionStateLoading;
 
@@ -234,7 +224,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         BlocBuilder<CustomerBloc, CustomerState>(
           builder: (context, state) {
             return WidgetDropdown(
-              icon: _getGenderIcon(_selectedCustomer?.gender ?? Gender.other),
+              icon: _selectedCustomer?.gender?.icon ?? Gender.other.icon,
               label: _selectedCustomer?.name ?? context.appText.form_select_customer_label,
               isEnable: isFormEnabled,
               showModalBottomSheet: () => _selectCustomer(context),

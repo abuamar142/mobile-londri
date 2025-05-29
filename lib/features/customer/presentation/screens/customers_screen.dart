@@ -136,7 +136,7 @@ class _CustomersScreenState extends State<CustomersScreen> {
                           onPressed: () => contactCustomer(customer.phone!),
                         )
                       : null,
-                  leadingIcon: _getLeadingIcon(customer),
+                  leadingIcon: customer.gender?.icon,
                   tileColor: isActive
                       ? null
                       : AppColors.gray.withValues(
@@ -225,22 +225,6 @@ class _CustomersScreenState extends State<CustomersScreen> {
     }
 
     return parts.isEmpty ? '-' : parts.join(' • ');
-  }
-
-  IconData _getLeadingIcon(Customer customer) {
-    if (!(customer.isActive ?? true)) {
-      return Icons.person_off;
-    }
-
-    switch (customer.gender) {
-      case Gender.male:
-        return Icons.man;
-      case Gender.female:
-        return Icons.woman;
-      case Gender.other:
-      default:
-        return Icons.person;
-    }
   }
 
   void _showSortOptions() {
