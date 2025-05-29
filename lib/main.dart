@@ -6,6 +6,7 @@ import '../../../../src/generated/i18n/app_localizations.dart';
 import 'config/i18n/i18n.dart';
 import 'config/routes/app_routes.dart';
 import 'config/theme/app_themes.dart';
+import 'core/constants/app_consts.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
@@ -41,7 +42,7 @@ class MainApp extends StatelessWidget {
         builder: (context, locale, child) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'Londri',
+            title: appName,
             routerConfig: AppRoutes.routes,
             themeMode: ThemeMode.light,
             theme: AppThemes.lightTheme,
