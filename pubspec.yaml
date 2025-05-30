@@ -56,6 +56,7 @@ dependencies:
 
   # Thermal Printer
   print_bluetooth_thermal: ^1.1.6
+  flutter_esc_pos_utils: ^1.0.1
 
   # Permission Handler
   permission_handler: ^12.0.0+1

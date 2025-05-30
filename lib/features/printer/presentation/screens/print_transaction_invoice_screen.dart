@@ -53,9 +53,9 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
   late final TransactionBloc _transactionBloc;
   late final PrinterBloc _printerBloc;
 
-  final TextEditingController _businessNameController = TextEditingController(text: 'Londri');
-  final TextEditingController _businessAddressController = TextEditingController(text: 'Jl. Raya No. 123, Jakarta');
-  final TextEditingController _businessPhoneController = TextEditingController(text: '0812-3456-7890');
+  final TextEditingController _businessNameController = TextEditingController(text: 'Laundry LB Fresh');
+  final TextEditingController _businessAddressController = TextEditingController(text: 'Jl. Cuwiri, Krapyak');
+  final TextEditingController _businessPhoneController = TextEditingController(text: '0822-2367-6677');
 
   Transaction? _currentTransaction;
   bool _isLoading = true;
@@ -269,152 +269,73 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
       );
     }
 
+    final transaction = _currentTransaction!;
+    final dateToday = DateTime.now().formatDateOnly();
+    final startDate = transaction.startDate?.formatddMMyyyy() ?? '-';
+    final endDate = transaction.endDate?.formatddMMyyyy() ?? '-';
+    final staffName = transaction.userName ?? '-';
+
+    final Map<String, String> data = {
+      context.appText.invoice_print_customer_name: transaction.customerName ?? '-',
+      context.appText.invoice_print_service_name: transaction.serviceName ?? '-',
+      context.appText.invoice_print_weight: '${transaction.weight ?? '-'} kg',
+      context.appText.invoice_print_amount: 'Rp ${transaction.amount?.formatNumber() ?? '0'}',
+      context.appText.invoice_print_notes: transaction.description ?? '-',
+      context.appText.invoice_print_staff_name: staffName,
+    };
+
+    final maxKeyLength = data.keys.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSizes.size8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
+          color: AppColors.onPrimary,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.gray.withValues(alpha: 0.2), width: 1),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(AppSizes.size16),
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            fontFamily: 'Courier New',
+            fontSize: 12,
+            color: AppColors.onSecondary,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                _businessNameController.text,
-                style: AppTextStyle.heading3.copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                _businessAddressController.text,
-                style: AppTextStyle.body1,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                _businessPhoneController.text,
-                style: AppTextStyle.body1,
-                textAlign: TextAlign.center,
-              ),
-
-              AppSizes.spaceHeight16,
-
-              Text(
-                context.appText.invoice_print_title,
-                style: AppTextStyle.heading3.copyWith(fontWeight: FontWeight.bold),
-              ),
-
-              Divider(thickness: 1),
-
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_transaction_id,
-                value: "#${_currentTransaction!.id!}",
-              ),
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_date,
-                value: _currentTransaction!.createdAt?.formatDateOnly() ?? "-",
-              ),
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_customer_name,
-                value: _currentTransaction!.customerName ?? "-",
-              ),
-
-              Divider(thickness: 1),
-
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_service_name,
-                value: _currentTransaction!.serviceName ?? "-",
-              ),
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_weight,
-                value: "${_currentTransaction!.weight} kg",
-              ),
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_amount,
-                value: "Rp ${_currentTransaction!.amount?.formatNumber() ?? '0'}",
-              ),
-
-              Divider(thickness: 1),
-
-              // Status information
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_transaction_status,
-                value: getTransactionStatusValue(context, _currentTransaction!.transactionStatus ?? TransactionStatus.onProgress),
-              ),
-              _buildInvoiceRow(
-                label: context.appText.invoice_print_payment_status,
-                value: getPaymentStatusValue(context, _currentTransaction!.paymentStatus ?? PaymentStatus.notPaidYet),
-              ),
-
-              if (_currentTransaction!.startDate != null)
-                _buildInvoiceRow(
-                  label: context.appText.invoice_print_start_date,
-                  value: _currentTransaction!.startDate?.formatDateOnly() ?? "-",
+              Text(_businessNameController.text, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(_businessAddressController.text),
+              Text(_businessPhoneController.text),
+              const SizedBox(height: 8),
+              const Divider(thickness: 1),
+              Text(context.appText.invoice_print_title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text("#${transaction.id ?? '-'} | $dateToday"),
+              const Divider(thickness: 1),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: data.entries.map((e) {
+                    final paddedKey = e.key.padRight(maxKeyLength);
+                    return Text('$paddedKey : ${e.value}');
+                  }).toList(),
                 ),
-
-              if (_currentTransaction!.endDate != null)
-                _buildInvoiceRow(
-                  label: context.appText.invoice_print_end_date,
-                  value: _currentTransaction!.endDate?.formatDateOnly() ?? "-",
-                ),
-
-              Divider(thickness: 1),
-
-              if (_currentTransaction!.description != null && _currentTransaction!.description!.isNotEmpty) ...[
-                AppSizes.spaceHeight8,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    context.appText.invoice_print_invoices,
-                    style: AppTextStyle.body1.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                AppSizes.spaceHeight4,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _currentTransaction!.description!,
-                    style: AppTextStyle.body1,
-                  ),
-                ),
-                AppSizes.spaceHeight8,
-              ],
-
-              AppSizes.spaceHeight16,
-              Text(
-                context.appText.invoice_print_thank_you(_businessNameController.text),
-                style: AppTextStyle.body1.copyWith(fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
               ),
-              AppSizes.spaceHeight4,
+              const Divider(thickness: 1),
+              Text('$startDate -> $endDate'),
+              const SizedBox(height: 4),
               Text(
-                '${context.appText.invoice_print_staff_name}: ${_currentTransaction!.userName ?? "-"}',
-                style: AppTextStyle.caption.copyWith(fontStyle: FontStyle.italic),
-                textAlign: TextAlign.center,
+                '${getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other)}'
+                ' | '
+                '${getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other)}',
               ),
+              const Divider(thickness: 1),
+              const SizedBox(height: 8),
+              Text(context.appText.invoice_print_thank_you),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInvoiceRow({
-    required String label,
-    required String value,
-  }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: Text(
-        '$label: $value',
-        style: AppTextStyle.body1,
       ),
     );
   }

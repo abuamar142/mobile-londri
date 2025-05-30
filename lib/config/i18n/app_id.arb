@@ -297,7 +297,7 @@
   "invoice_print_title": "Nota Transaksi",
   "invoice_print_transaction_id": "ID Transaksi",
   "invoice_print_date": "Tanggal",
-  "invoice_print_customer_name": "Nama Pelanggan",
+  "invoice_print_customer_name": "Pelanggan",
   "invoice_print_service_name": "Layanan",
   "invoice_print_weight": "Berat",
   "invoice_print_amount": "Total",
@@ -305,9 +305,10 @@
   "invoice_print_payment_status": "Status Pembayaran",
   "invoice_print_start_date": "Tanggal Mulai",
   "invoice_print_end_date": "Tanggal Selesai",
-  "invoice_print_staff_name": "Nama Pegawai",
+  "invoice_print_staff_name": "Pegawai",
+  "invoice_print_notes": "Catatan",
   "invoice_print_invoices": "Catatan",
-  "invoice_print_thank_you": "Terima kasih telah memilih {businessName}!",
+  "invoice_print_thank_you": "Terima kasih telah mempercayakan kami!",
 
   "@_BUTTON": {},
 

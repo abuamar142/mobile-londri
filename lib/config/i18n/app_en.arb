@@ -1046,7 +1046,7 @@
   "@invoice_print_date": {
     "description": "Label for the date in the invoice"
   },
-  "invoice_print_customer_name": "Customer Name",
+  "invoice_print_customer_name": "Customer",
   "@invoice_print_customer_name": {
     "description": "Label for the customer name in the invoice"
   },
@@ -1078,15 +1078,19 @@
   "@invoice_print_end_date": {
     "description": "Label for the end date in the invoice"
   },
-  "invoice_print_staff_name": "Staff Name",
+  "invoice_print_staff_name": "Staff",
   "@invoice_print_staff_name": {
     "description": "Label for the staff name in the invoice"
+  },
+  "invoice_print_notes": "Notes",
+  "@invoice_print_notes": {
+    "description": "Label for the notes in the invoice"
   },
   "invoice_print_invoices": "Invoices",
   "@invoice_print_invoices": {
     "description": "Label for the invoices in the invoice"
   },
-  "invoice_print_thank_you": "Thank you for choosing {businessName}!",
+  "invoice_print_thank_you": "Thank you for choosing us",
   "@invoice_print_thank_you": {
     "description": "Thank you message in the invoice"
   },

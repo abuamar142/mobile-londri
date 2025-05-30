@@ -6,9 +6,7 @@ import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 
 import '../../../../core/services/permission_service.dart';
 import '../../../../core/services/printer_service.dart';
-import '../../../transaction/domain/entities/payment_status.dart';
 import '../../../transaction/domain/entities/transaction.dart';
-import '../../../transaction/domain/entities/transaction_status.dart';
 
 part 'printer_event.dart';
 part 'printer_state.dart';
@@ -100,7 +98,6 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
         emit(PrinterStateFailure(message: 'Failed to connect to ${event.device.name}'));
       }
 
-      // Update device list after connection attempt
       add(PrinterEventGetPairedDevices());
     } catch (e) {
       emit(PrinterStateFailure(message: 'Error connecting to printer: ${e.toString()}'));
@@ -171,27 +168,8 @@ class PrinterBloc extends Bloc<PrinterEvent, PrinterState> {
     emit(PrinterStatePrinting());
 
     try {
-      // Create a sample transaction for test printing
-      final sampleTransaction = Transaction(
-        id: "TEST12345",
-        customerName: "Test Customer",
-        serviceName: "Regular Wash",
-        weight: 3.5,
-        amount: 70000,
-        description: "Test invoice printing",
-        transactionStatus: TransactionStatus.onProgress,
-        paymentStatus: PaymentStatus.paid,
-        startDate: DateTime.now(),
-        endDate: DateTime.now().add(const Duration(days: 3)),
-        createdAt: DateTime.now(),
-      );
-
-      final success = await printerService.printInvoice(
+      final success = await printerService.printTest(
         context: event.context,
-        transaction: sampleTransaction,
-        businessName: "Laundry Now",
-        businessAddress: "Jl. Jalan",
-        businessPhone: "0812-xxxx-xxxx",
       );
 
       if (success) {

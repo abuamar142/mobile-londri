@@ -1,13 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
+import 'package:print_bluetooth_thermal/post_code.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/transaction/domain/entities/payment_status.dart';
 import '../../features/transaction/domain/entities/transaction.dart';
 import '../../features/transaction/domain/entities/transaction_status.dart';
+import '../utils/context_extensions.dart';
+import '../utils/date_formatter.dart';
+import '../utils/price_formatter.dart';
 
 class PrinterService {
   static const String _printerKeyPref = 'selected_printer_address';
@@ -220,6 +224,27 @@ class PrinterService {
     }
   }
 
+  Future<bool> printTest({required BuildContext context}) async {
+    if (!_isConnected) {
+      return false;
+    }
+
+    try {
+      await PrintBluetoothThermal.writeBytes(
+        PostCode.text(text: 'Test Print', fontSize: FontSize.normal, align: AlignPos.center, bold: true) +
+            PostCode.text(text: 'This is a test print.', fontSize: FontSize.compressed, align: AlignPos.center) +
+            PostCode.enter(),
+      );
+
+      return true;
+    } catch (e) {
+      if (context.mounted) {
+        context.showSnackbar(context.appText.printer_print_error(e.toString()));
+      }
+      return false;
+    }
+  }
+
   Future<List<int>> getInvoiceBytes({
     required BuildContext context,
     required Transaction transaction,
@@ -229,71 +254,71 @@ class PrinterService {
   }) async {
     List<int> bytes = [];
 
-    // Add ESC/POS commands for invoice formatting
-    // Center align and text size commands
-    bytes += [27, 97, 1]; // Center align
-    bytes += [27, 33, 16]; // Double height text
+    final profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm58, profile);
 
-    // Business information
-    bytes += latin1.encode('$businessName\n');
-    bytes += [27, 33, 0]; // Normal text
-    bytes += latin1.encode('$businessAddress\n');
-    bytes += latin1.encode('$businessPhone\n\n');
+    final userName = transaction.userName ?? '-';
+    final transactionId = transaction.id?.toString() ?? '-';
+    final dateToday = DateTime.now().formatDateOnly();
 
-    // Invoice title
-    bytes += [27, 33, 16]; // Double height text
-    bytes += latin1.encode('RECEIPT\n');
-    bytes += [27, 33, 0]; // Normal text
-    bytes += latin1.encode('--------------------------------\n');
+    final startDate = transaction.startDate?.formatddMMyyyy() ?? '-';
+    final endDate = transaction.endDate?.formatddMMyyyy() ?? '-';
 
-    // Transaction details
-    final transId = transaction.id != null ? "#${transaction.id!.substring(0, min(8, transaction.id!.length)).toUpperCase()}" : "-";
+    // ======= Header =======
+    bytes += generator.setGlobalFont(PosFontType.fontB);
+    bytes += PostCode.text(text: businessName, fontSize: FontSize.normal, align: AlignPos.center, bold: true);
+    bytes += PostCode.text(text: businessAddress, fontSize: FontSize.compressed, align: AlignPos.center);
+    bytes += PostCode.text(text: businessPhone, fontSize: FontSize.compressed, align: AlignPos.center);
 
-    bytes += latin1.encode('Trans ID: $transId\n');
-    bytes += latin1.encode('Date: ${transaction.createdAt?.toString().substring(0, 10) ?? "-"}\n');
-    bytes += latin1.encode('Customer: ${transaction.customerName ?? "-"}\n');
-    bytes += latin1.encode('--------------------------------\n');
+    bytes += generator.hr();
+    if (context.mounted) bytes += PostCode.text(text: context.appText.invoice_print_title, fontSize: FontSize.normal, align: AlignPos.center, bold: true);
+    bytes += PostCode.text(text: '$transactionId | $dateToday', fontSize: FontSize.compressed, align: AlignPos.center);
+    bytes += generator.hr();
 
-    // Service information
-    bytes += latin1.encode('Service: ${transaction.serviceName ?? "-"}\n');
-    bytes += latin1.encode('Weight: ${transaction.weight} kg\n');
+    // ======= Key-Value Detail =======
+    if (context.mounted) {
+      final Map<String, String> data = {
+        context.appText.invoice_print_customer_name: transaction.customerName ?? '-',
+        context.appText.invoice_print_service_name: transaction.serviceName ?? '-',
+        context.appText.invoice_print_weight: '${transaction.weight ?? '-'} kg',
+        context.appText.invoice_print_amount: transaction.amount?.formatNumber() ?? '-',
+        context.appText.invoice_print_notes: transaction.description ?? '-',
+        context.appText.invoice_print_staff_name: userName
+      };
 
-    // Format amount with thousand separators
-    final amount = transaction.amount ?? 0;
-    final formattedAmount = amount.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
-
-    bytes += latin1.encode('Price: Rp $formattedAmount\n');
-    bytes += latin1.encode('--------------------------------\n');
-
-    // Status information
-    bytes += latin1.encode('Status: ${getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.onProgress)}\n');
-    bytes += latin1.encode('Payment: ${getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.notPaidYet)}\n');
-
-    if (transaction.startDate != null) {
-      bytes += latin1.encode('Start Date: ${transaction.startDate!.toString().substring(0, 10)}\n');
+      final maxKeyLength = data.keys.map((k) => k.length).reduce((a, b) => a > b ? a : b);
+      data.forEach((key, value) {
+        final paddedKey = key.padRight(maxKeyLength);
+        bytes += PostCode.text(text: '$paddedKey : $value', fontSize: FontSize.compressed);
+      });
     }
 
-    if (transaction.endDate != null) {
-      bytes += latin1.encode('End Date: ${transaction.endDate!.toString().substring(0, 10)}\n');
+    bytes += generator.setStyles(PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    // ======= Dates & Status =======
+    bytes += PostCode.text(text: '$startDate -> $endDate', fontSize: FontSize.compressed, align: AlignPos.center);
+
+    if (context.mounted) {
+      final transactionStatus = getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other);
+      final paymentStatus = getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other);
+
+      bytes += PostCode.text(
+        text: '$transactionStatus | $paymentStatus',
+        fontSize: FontSize.compressed,
+        align: AlignPos.center,
+      );
     }
 
-    bytes += latin1.encode('--------------------------------\n');
+    bytes += generator.hr();
 
-    // Invoices section
-    if (transaction.description != null && transaction.description!.isNotEmpty) {
-      bytes += latin1.encode('Invoices:\n${transaction.description}\n');
-      bytes += latin1.encode('--------------------------------\n');
+    // ======= Thank You =======
+    if (context.mounted) {
+      final thankYouMessage = context.appText.invoice_print_thank_you;
+      bytes += PostCode.text(text: thankYouMessage, fontSize: FontSize.compressed, align: AlignPos.center);
     }
 
-    // Thank you message
-    bytes += [27, 97, 1]; // Center align
-    bytes += latin1.encode('\nThank you for your business!\n\n\n');
-
-    // Cut paper command
-    bytes += [29, 86, 66, 0];
-
+    bytes += PostCode.enter();
     return bytes;
   }
-
-  int min(int a, int b) => a < b ? a : b;
 }
