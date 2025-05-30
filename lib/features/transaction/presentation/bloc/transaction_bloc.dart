@@ -190,28 +190,46 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     TransactionEventFilter event,
     Emitter<TransactionState> emit,
   ) async {
-    // Update filter parameters if provided
-    if (event.searchQuery != null) {
-      _currentQuery = event.searchQuery!;
-    }
-    if (event.sortBy != null) {
-      _currentSortField = event.sortBy!;
-    }
-    if (event.ascending != null) {
-      _isAscending = event.ascending!;
-    }
-    if (event.transactionStatus != null || event.isIncludeInactive != null) {
-      _selectedStatus = event.transactionStatus;
-      _isIncludeInactive = event.isIncludeInactive;
-    }
-    if (event.tabIndex != null) {
-      _currentTabIndex = event.tabIndex!;
-    }
-    if (event.tabName != null) {
-      _currentTabName = event.tabName!;
+    // If preserveCurrentFilters is true, we only update the filters that are provided
+    if (event.preserveCurrentFilters) {
+      if (event.searchQuery != null) {
+        _currentQuery = event.searchQuery!;
+      }
+      if (event.sortBy != null) {
+        _currentSortField = event.sortBy!;
+      }
+      if (event.ascending != null) {
+        _isAscending = event.ascending!;
+      }
+    } else {
+      // Reset all filters to the provided values
+      if (event.searchQuery != null) {
+        _currentQuery = event.searchQuery!;
+      }
+      if (event.sortBy != null) {
+        _currentSortField = event.sortBy!;
+      }
+      if (event.ascending != null) {
+        _isAscending = event.ascending!;
+      }
+      if (event.transactionStatus != null || event.isIncludeInactive != null) {
+        _selectedStatus = event.transactionStatus;
+        _isIncludeInactive = event.isIncludeInactive;
+      }
+      if (event.tabIndex != null) {
+        _currentTabIndex = event.tabIndex!;
+      }
+      if (event.tabName != null) {
+        _currentTabName = event.tabName!;
+      }
     }
 
-    _isIncludeInactive = event.isIncludeInactive;
+    // Update includeInactive status
+    if (event.isIncludeInactive != null) {
+      _isIncludeInactive = event.isIncludeInactive;
+    } else {
+      _isIncludeInactive = null;
+    }
 
     _emitFilteredState(emit);
   }

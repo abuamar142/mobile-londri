@@ -113,56 +113,83 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
   }
 
   void _onTabChanged() {
+    _applyFilterForCurrentTab();
+  }
+
+  void _applyFilterForCurrentTab({String? sortField, bool? ascending}) {
     final tabIndex = _tabController.index;
     final tabName = _tabNames[tabIndex];
+    final searchQuery = _searchController.text;
+
+    // Gunakan parameter yang diberikan atau nilai saat ini dari bloc
+    final currentSortField = sortField ?? _transactionBloc.currentSortField;
+    final isAscending = ascending ?? _transactionBloc.isAscending;
 
     switch (tabIndex) {
-      case 0: // Inactive - show only deleted transactions
+      case 0: // Inactive
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: true,
           transactionStatus: null,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
-      case 1: // All - show both active and inactive transactions
+      case 1: // All
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: null,
           transactionStatus: null,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
-      case 2: // Active - show only active (not deleted) transactions
+      case 2: // Active
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: false,
           transactionStatus: null,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
-      case 3: // On Progress - show only active transactions with onProgress status
+      case 3: // On Progress
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: false,
           transactionStatus: TransactionStatus.onProgress,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
-      case 4: // Ready for Pickup - show only active transactions with readyToPickup status
+      case 4: // Ready for Pickup
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: false,
           transactionStatus: TransactionStatus.readyForPickup,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
-      case 5: // Picked Up - show only active transactions with pickedUp status
+      case 5: // Picked Up
         _transactionBloc.add(TransactionEventFilter(
           isIncludeInactive: false,
           transactionStatus: TransactionStatus.pickedUp,
           tabIndex: tabIndex,
           tabName: tabName,
+          searchQuery: searchQuery.isNotEmpty ? searchQuery : null,
+          sortBy: currentSortField,
+          ascending: isAscending,
         ));
         break;
     }
@@ -230,13 +257,19 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
                         hintText: context.appText.transaction_search_hint,
                         onChanged: (value) {
                           setState(() {
-                            _transactionBloc.add(TransactionEventFilter(searchQuery: value));
+                            _transactionBloc.add(TransactionEventFilter(
+                              searchQuery: value,
+                              preserveCurrentFilters: true,
+                            ));
                           });
                         },
                         onClear: () {
                           setState(() {
                             _searchController.clear();
-                            _transactionBloc.add(const TransactionEventFilter(searchQuery: ''));
+                            _transactionBloc.add(const TransactionEventFilter(
+                              searchQuery: '',
+                              preserveCurrentFilters: true,
+                            ));
                           });
                         },
                       ),
@@ -371,10 +404,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.person,
           isSelected: _transactionBloc.currentSortField == 'customerName',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'customerName',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('customerName');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -382,10 +412,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.local_laundry_service,
           isSelected: _transactionBloc.currentSortField == 'serviceName',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'serviceName',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('serviceName');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -393,10 +420,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.attach_money,
           isSelected: _transactionBloc.currentSortField == 'amount',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'amount',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('amount');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -404,10 +428,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.payment,
           isSelected: _transactionBloc.currentSortField == 'paymentStatus',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'paymentStatus',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('paymentStatus');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -415,10 +436,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.date_range,
           isSelected: _transactionBloc.currentSortField == 'startDate',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'startDate',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('startDate');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -426,10 +444,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.date_range,
           isSelected: _transactionBloc.currentSortField == 'endDate',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'endDate',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('endDate');
           },
         ),
         WidgetDropdownBottomSheetItem(
@@ -437,13 +452,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
           leadingIcon: Icons.date_range,
           isSelected: _transactionBloc.currentSortField == 'createdAt',
           onTap: () {
-            _transactionBloc.add(TransactionEventFilter(
-              sortBy: 'createdAt',
-              ascending: !_transactionBloc.isAscending,
-            ));
+            _applySortWithCurrentTabFilter('createdAt');
           },
         ),
       ],
+    );
+  }
+
+  void _applySortWithCurrentTabFilter(String sortField) {
+    _applyFilterForCurrentTab(
+      sortField: sortField,
+      ascending: !_transactionBloc.isAscending,
     );
   }
 }

@@ -84,6 +84,8 @@ class TransactionEventFilter extends TransactionEvent {
   final int? tabIndex;
   final String? tabName;
 
+  final bool preserveCurrentFilters;
+
   const TransactionEventFilter({
     this.searchQuery,
     this.sortBy,
@@ -92,6 +94,7 @@ class TransactionEventFilter extends TransactionEvent {
     this.isIncludeInactive,
     this.tabIndex,
     this.tabName,
+    this.preserveCurrentFilters = false,
   });
 
   @override
@@ -103,6 +106,7 @@ class TransactionEventFilter extends TransactionEvent {
         isIncludeInactive,
         tabIndex,
         tabName,
+        preserveCurrentFilters,
       ];
 }
 
