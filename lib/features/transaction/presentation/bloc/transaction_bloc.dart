@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
+import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
 import '../../domain/usecases/transaction_create_transaction.dart';
@@ -11,7 +12,9 @@ import '../../domain/usecases/transaction_get_transaction_by_id.dart';
 import '../../domain/usecases/transaction_get_transactions.dart';
 import '../../domain/usecases/transaction_hard_delete_transaction.dart';
 import '../../domain/usecases/transaction_restore_transaction.dart';
+import '../../domain/usecases/transaction_update_payment_status.dart';
 import '../../domain/usecases/transaction_update_transaction.dart';
+import '../../domain/usecases/transaction_update_transaction_status.dart';
 
 part 'transaction_event.dart';
 part 'transaction_state.dart';
@@ -24,6 +27,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   final TransactionDeleteTransaction transactionDeleteTransaction;
   final TransactionHardDeleteTransaction transactionHardDeleteTransaction;
   final TransactionRestoreTransaction transactionRestoreTransaction;
+  final TransactionUpdateTransactionStatus transactionUpdateTransactionStatus;
+  final TransactionUpdatePaymentStatus transactionUpdatePaymentStatus;
 
   late List<Transaction> _allTransactions = [];
   String _currentQuery = '';
@@ -50,6 +55,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     required this.transactionDeleteTransaction,
     required this.transactionHardDeleteTransaction,
     required this.transactionRestoreTransaction,
+    required this.transactionUpdateTransactionStatus,
+    required this.transactionUpdatePaymentStatus,
   }) : super(TransactionStateInitial()) {
     on<TransactionEventGetTransactions>(_onTransactionEventGetTransactions);
     on<TransactionEventGetTransactionById>(_onTransactionEventGetTransactionById);
@@ -59,6 +66,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<TransactionEventHardDeleteTransaction>(_onTransactionEventHardDeleteTransaction);
     on<TransactionEventRestoreTransaction>(_onTransactionEventRestoreTransaction);
     on<TransactionEventFilter>(_onTransactionEventFilter);
+    on<TransactionEventUpdateTransactionStatus>(_onTransactionEventUpdateTransactionStatus);
+    on<TransactionEventUpdatePaymentStatus>(_onTransactionEventUpdatePaymentStatus);
   }
 
   Future<void> _onTransactionEventGetTransactions(
@@ -294,5 +303,35 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     });
 
     return sorted;
+  }
+
+  void _onTransactionEventUpdateTransactionStatus(
+    TransactionEventUpdateTransactionStatus event,
+    Emitter<TransactionState> emit,
+  ) async {
+    emit(TransactionStateLoading());
+
+    Either<Failure, void> result = await transactionUpdateTransactionStatus(event.id, event.status);
+
+    result.fold((left) {
+      emit(TransactionStateFailure(message: left.message));
+    }, (right) {
+      emit(TransactionStateSuccessUpdateTransaction());
+    });
+  }
+
+  void _onTransactionEventUpdatePaymentStatus(
+    TransactionEventUpdatePaymentStatus event,
+    Emitter<TransactionState> emit,
+  ) async {
+    emit(TransactionStateLoading());
+
+    Either<Failure, void> result = await transactionUpdatePaymentStatus(event.id, event.status);
+
+    result.fold((left) {
+      emit(TransactionStateFailure(message: left.message));
+    }, (right) {
+      emit(TransactionStateSuccessUpdateTransaction());
+    });
   }
 }

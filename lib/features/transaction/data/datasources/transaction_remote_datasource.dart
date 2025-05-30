@@ -2,6 +2,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/utils/clean_json.dart';
+import '../../domain/entities/payment_status.dart';
+import '../../domain/entities/transaction_status.dart';
 import '../models/transaction_model.dart';
 
 abstract class TransactionRemoteDatasource {
@@ -12,10 +14,11 @@ abstract class TransactionRemoteDatasource {
   Future<void> deleteTransaction(String id);
   Future<void> hardDeleteTransaction(String id);
   Future<void> restoreTransaction(String id);
+  Future<void> updateTransactionStatus(String id, TransactionStatus status);
+  Future<void> updatePaymentStatus(String id, PaymentStatus status);
 }
 
-class TransactionRemoteDatasourceImplementation
-    extends TransactionRemoteDatasource {
+class TransactionRemoteDatasourceImplementation extends TransactionRemoteDatasource {
   final SupabaseClient supabaseClient;
 
   TransactionRemoteDatasourceImplementation({
@@ -25,8 +28,7 @@ class TransactionRemoteDatasourceImplementation
   @override
   Future<List<TransactionModel>> readTransactions() async {
     try {
-      final List<Map<String, dynamic>> response =
-          await supabaseClient.from('transactions').select('''
+      final List<Map<String, dynamic>> response = await supabaseClient.from('transactions').select('''
             *,
             users (
               name
@@ -50,8 +52,7 @@ class TransactionRemoteDatasourceImplementation
   @override
   Future<TransactionModel> readTransactionById(String id) async {
     try {
-      final Map<String, dynamic> response =
-          await supabaseClient.from('transactions').select('''
+      final Map<String, dynamic> response = await supabaseClient.from('transactions').select('''
             *,
             users (
               name
@@ -130,6 +131,32 @@ class TransactionRemoteDatasourceImplementation
     try {
       await supabaseClient.from('transactions').update({
         'deleted_at': null,
+      }).eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> updateTransactionStatus(String id, TransactionStatus status) async {
+    try {
+      await supabaseClient.from('transactions').update({
+        'transaction_status': status.value,
+      }).eq('id', id);
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<void> updatePaymentStatus(String id, PaymentStatus status) async {
+    try {
+      await supabaseClient.from('transactions').update({
+        'payment_status': status.value,
       }).eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);

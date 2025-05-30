@@ -63,7 +63,9 @@ import 'features/transaction/domain/usecases/transaction_get_transaction_by_id.d
 import 'features/transaction/domain/usecases/transaction_get_transactions.dart';
 import 'features/transaction/domain/usecases/transaction_hard_delete_transaction.dart';
 import 'features/transaction/domain/usecases/transaction_restore_transaction.dart';
+import 'features/transaction/domain/usecases/transaction_update_payment_status.dart';
 import 'features/transaction/domain/usecases/transaction_update_transaction.dart';
+import 'features/transaction/domain/usecases/transaction_update_transaction_status.dart';
 import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -328,6 +330,12 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<TransactionHardDeleteTransaction>(
       () => TransactionHardDeleteTransaction(transactionRepository: serviceLocator()),
     )
+    ..registerLazySingleton<TransactionUpdateTransactionStatus>(
+      () => TransactionUpdateTransactionStatus(transactionRepository: serviceLocator()),
+    )
+    ..registerLazySingleton<TransactionUpdatePaymentStatus>(
+      () => TransactionUpdatePaymentStatus(transactionRepository: serviceLocator()),
+    )
 
     // Bloc
     ..registerFactory(
@@ -339,6 +347,8 @@ Future<void> initializeDependencies() async {
         transactionDeleteTransaction: serviceLocator(),
         transactionHardDeleteTransaction: serviceLocator(),
         transactionRestoreTransaction: serviceLocator(),
+        transactionUpdateTransactionStatus: serviceLocator(),
+        transactionUpdatePaymentStatus: serviceLocator(),
       ),
     )
 

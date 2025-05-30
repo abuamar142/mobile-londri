@@ -105,3 +105,29 @@ class TransactionEventFilter extends TransactionEvent {
         tabName,
       ];
 }
+
+class TransactionEventUpdateTransactionStatus extends TransactionEvent {
+  final String id;
+  final TransactionStatus status;
+
+  const TransactionEventUpdateTransactionStatus({
+    required this.id,
+    required this.status,
+  });
+
+  @override
+  List<Object> get props => [id, status];
+}
+
+class TransactionEventUpdatePaymentStatus extends TransactionEvent {
+  final String id;
+  final PaymentStatus status;
+
+  const TransactionEventUpdatePaymentStatus({
+    required this.id,
+    required this.status,
+  });
+
+  @override
+  List<Object> get props => [id, status];
+}

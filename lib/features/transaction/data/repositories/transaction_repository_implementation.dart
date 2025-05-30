@@ -131,4 +131,28 @@ class TransactionRepositoryImplementation extends TransactionRepository {
       return Left(Failure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updateTransactionStatus(String id, TransactionStatus status) async {
+    try {
+      await transactionRemoteDatasource.updateTransactionStatus(id, status);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePaymentStatus(String id, PaymentStatus status) async {
+    try {
+      await transactionRemoteDatasource.updatePaymentStatus(id, status);
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(Failure(message: e.message));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
+    }
+  }
 }

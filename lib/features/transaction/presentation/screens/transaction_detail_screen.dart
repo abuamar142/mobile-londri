@@ -13,12 +13,16 @@ import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_detail_card.dart';
 import '../../../../core/widgets/widget_detail_card_item.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
+import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_empty_list.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../../printer/presentation/screens/print_transaction_invoice_screen.dart';
+import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
+import '../../domain/entities/transaction_status.dart';
 import '../bloc/transaction_bloc.dart';
 import '../widgets/widget_bottom_bar.dart';
 import '../widgets/widget_delete_transaction.dart';
@@ -55,6 +59,9 @@ class TransactionDetailScreen extends StatefulWidget {
 class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
   late final TransactionBloc _transactionBloc;
 
+  late TransactionStatus _transactionStatus;
+  late PaymentStatus _paymentStatus;
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +80,12 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
         listener: (context, state) {
           if (state is TransactionStateFailure) {
             context.showSnackbar(state.message);
+          } else if (state is TransactionStateSuccessUpdateTransaction) {
+            setState(() {
+              _transactionBloc.add(
+                TransactionEventGetTransactionById(id: widget.transactionId),
+              );
+            });
           } else if (state is TransactionStateSuccessDeleteTransaction) {
             context.showSnackbar(context.appText.transaction_delete_success_message);
             context.pop();
@@ -104,6 +117,9 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
       return const WidgetLoading(usingPadding: true);
     } else if (state is TransactionStateSuccessGetTransactionById) {
       final transaction = state.transaction;
+
+      _transactionStatus = transaction.transactionStatus!;
+      _paymentStatus = transaction.paymentStatus!;
 
       return SafeArea(
         bottom: false,
@@ -239,12 +255,18 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  WidgetTransactionStatusBadge(
-                    status: transaction.transactionStatus!,
+                  InkWell(
+                    onTap: () => _showTransactionStatusOptions(),
+                    child: WidgetTransactionStatusBadge(
+                      status: transaction.transactionStatus!,
+                    ),
                   ),
                   AppSizes.spaceWidth8,
-                  WidgetPaymentStatusBadge(
-                    status: transaction.paymentStatus!,
+                  InkWell(
+                    onTap: () => _showPaymentStatusOptions(),
+                    child: WidgetPaymentStatusBadge(
+                      status: transaction.paymentStatus!,
+                    ),
                   ),
                 ],
               ),
@@ -344,5 +366,106 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
     _transactionBloc.add(TransactionEventGetTransactionById(
       id: transactionId,
     ));
+  }
+
+  void _showTransactionStatusOptions() {
+    return showDropdownBottomSheet(context: context, title: context.appText.form_transaction_status_hint, items: [
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.onProgress,
+        leadingIcon: TransactionStatus.onProgress.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.onProgress),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdateTransactionStatus(
+              id: widget.transactionId,
+              status: TransactionStatus.onProgress,
+            ),
+          );
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.readyForPickup,
+        leadingIcon: TransactionStatus.readyForPickup.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.readyForPickup),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdateTransactionStatus(
+              id: widget.transactionId,
+              status: TransactionStatus.readyForPickup,
+            ),
+          );
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.pickedUp,
+        leadingIcon: TransactionStatus.pickedUp.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.pickedUp),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdateTransactionStatus(
+              id: widget.transactionId,
+              status: TransactionStatus.pickedUp,
+            ),
+          );
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _transactionStatus == TransactionStatus.other,
+        leadingIcon: TransactionStatus.other.icon,
+        title: getTransactionStatusValue(context, TransactionStatus.other),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdateTransactionStatus(
+              id: widget.transactionId,
+              status: TransactionStatus.other,
+            ),
+          );
+        },
+      ),
+    ]);
+  }
+
+  void _showPaymentStatusOptions() {
+    return showDropdownBottomSheet(context: context, title: context.appText.form_payment_status_hint, items: [
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.notPaidYet,
+        leadingIcon: PaymentStatus.notPaidYet.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.notPaidYet),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdatePaymentStatus(
+              id: widget.transactionId,
+              status: PaymentStatus.notPaidYet,
+            ),
+          );
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.paid,
+        leadingIcon: PaymentStatus.paid.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.paid),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdatePaymentStatus(
+              id: widget.transactionId,
+              status: PaymentStatus.paid,
+            ),
+          );
+        },
+      ),
+      WidgetDropdownBottomSheetItem(
+        isSelected: _paymentStatus == PaymentStatus.other,
+        leadingIcon: PaymentStatus.other.icon,
+        title: getPaymentStatusValue(context, PaymentStatus.other),
+        onTap: () {
+          _transactionBloc.add(
+            TransactionEventUpdatePaymentStatus(
+              id: widget.transactionId,
+              status: PaymentStatus.other,
+            ),
+          );
+        },
+      ),
+    ]);
   }
 }
