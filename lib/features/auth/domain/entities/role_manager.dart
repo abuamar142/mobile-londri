@@ -13,10 +13,12 @@ class RoleManager {
       Permission.activateCustomer,
       Permission.hardDeleteCustomer,
       Permission.exportReports,
+      Permission.accessMainMenu,
     ],
     UserRole.admin: [
       Permission.manageCustomers,
       Permission.manageTransactions,
+      Permission.accessMainMenu,
     ],
     UserRole.user: [
       Permission.trackTransactions,
@@ -60,10 +62,17 @@ enum Permission {
   hardDeleteTransaction,
   trackTransactions,
   exportReports,
+  accessMainMenu,
 }
 
 enum UserRole {
-  superAdmin,
-  admin,
-  user,
+  superAdmin(value: 'Super Admin'),
+  admin(value: 'Admin'),
+  user(value: 'User');
+
+  final String value;
+
+  const UserRole({
+    required this.value,
+  });
 }

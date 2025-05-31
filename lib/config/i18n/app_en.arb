@@ -519,10 +519,81 @@
     "description": "Message displayed when service is changed successfully"
   },
 
+  "@_HOME": {},
+
   "home_screen_title": "Home",
   "@home_screen_title": {
     "description": "Title for the home screen"
   },
+  "home_screen_welcome_text": "Welcome {userName}!",
+  "@home_screen_welcome_text": {
+    "description": "Welcome text displayed on the home screen"
+  },
+  "home_screen_role_text": "{roleName} Londri",
+  "@home_screen_role_text": {
+    "description": "Role text displayed on the home screen"
+  },
+  "home_screen_statistic_today": "Today's Statistics",
+  "@home_screen_statistic_today": {
+    "description": "Label for today's statistics on the home screen"
+  },
+  "home_screen_statistic_revenue": "Revenue",
+  "@home_screen_statistic_revenue": {
+    "description": "Label for revenue statistic on the home screen"
+  },
+  "home_screen_statistic_transaction_on_progress": "On Progress",
+  "@home_screen_statistic_transaction_on_progress": {
+    "description": "Label for on progress transaction statistic on the home screen"
+  },
+  "home_screen_statistic_transaction_ready_for_pickup": "Ready for Pickup",
+  "@home_screen_statistic_transaction_ready_for_pickup": {
+    "description": "Label for ready for pickup transaction statistic on the home screen"
+  },
+  "home_screen_statistic_transaction_picked_up": "Picked Up",
+  "@home_screen_statistic_transaction_picked_up": {
+    "description": "Label for picked up transaction statistic on the home screen"
+  },
+  "home_screen_button_quick_actions_title": "Quick Actions",
+  "@home_screen_button_quick_actions_title": {
+    "description": "Title for the quick actions button on the home screen"
+  },
+  "home_screen_button_quick_actions_add_transaction": "Add Transaction",
+  "@home_screen_button_quick_actions_add_transaction": {
+    "description": "Text for the add transaction quick action button on the home screen"
+  },
+  "home_screen_button_quick_actions_add_customer": "Add Customer",
+  "@home_screen_button_quick_actions_add_customer": {
+    "description": "Text for the add customer quick action button on the home screen"
+  },
+  "home_screen_button_quick_actions_track_transaction": "Track Transaction",
+  "@home_screen_button_quick_actions_track_transaction": {
+    "description": "Text for the track transaction quick action button on the home screen"
+  },
+  "home_screen_button_main_menu_title": "Main Menu",
+  "@home_screen_button_main_menu_title": {
+    "description": "Title for the main menu button on the home screen"
+  },
+  "home_screen_button_main_menu_manage_staff": "Manage Staff",
+  "@home_screen_button_main_menu_manage_staff": {
+    "description": "Text for the manage staff button on the home screen"
+  },
+  "home_screen_button_main_menu_manage_service": "Manage Service",
+  "@home_screen_button_main_menu_manage_service": {
+    "description": "Text for the manage service button on the home screen"
+  },
+  "home_screen_button_main_menu_manage_transaction": "Manage Transaction",
+  "@home_screen_button_main_menu_manage_transaction": {
+    "description": "Text for the manage transaction button on the home screen"
+  },
+  "home_screen_button_main_menu_manage_customer": "Manage Customer",
+  "@home_screen_button_main_menu_manage_customer": {
+    "description": "Text for the manage customer button on the home screen"
+  },
+  "home_screen_button_main_menu_export_report": "Export Report",
+  "@home_screen_button_main_menu_export_report": {
+    "description": "Text for the export report button on the home screen"
+  },
+
 
   "@_SETTING": {},
 

@@ -145,7 +145,26 @@
 
   "service_change_success_message": "Layanan bawaan berhasil diubah ke {serviceName}",
 
+  "@_HOME": {},
+
   "home_screen_title": "Beranda",
+  "home_screen_welcome_text": "Selamat datang {userName}!",
+  "home_screen_role_text": "{roleName} Londri",
+  "home_screen_statistic_today": "Statistik Hari Ini",
+  "home_screen_statistic_revenue": "Pendapatan",
+  "home_screen_statistic_transaction_on_progress": "Sedang Diproses",
+  "home_screen_statistic_transaction_ready_for_pickup": "Siap Diambil",
+  "home_screen_statistic_transaction_picked_up": "Sudah Diambil",
+  "home_screen_button_quick_actions_title": "Aksi Cepat",
+  "home_screen_button_quick_actions_add_transaction": "Tambah Transaksi",
+  "home_screen_button_quick_actions_add_customer": "Tambah Pelanggan",
+  "home_screen_button_quick_actions_track_transaction": "Lacak Transaksi",
+  "home_screen_button_main_menu_title": "Menu Utama",
+  "home_screen_button_main_menu_manage_staff": "Kelola Pegawai",
+  "home_screen_button_main_menu_manage_service": "Kelola Layanan",
+  "home_screen_button_main_menu_manage_transaction": "Kelola Transaksi",
+  "home_screen_button_main_menu_manage_customer": "Kelola Pelanggan",
+  "home_screen_button_main_menu_export_report": "Ekspor Laporan",
 
   "@_SETTING": {},
 
