@@ -332,5 +332,6 @@
   "button_manage_staff": "Kelola Pegawai",
   "button_manage_customer": "Kelola Pelanggan",
   "button_manage_transaction": "Kelola Transaksi",
-  "button_manage_service": "Kelola Layanan"
+  "button_manage_service": "Kelola Layanan",
+  "button_export_report": "Ekspor Laporan"
 }

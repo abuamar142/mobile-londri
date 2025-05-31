@@ -4,6 +4,7 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/customer/presentation/screens/customers_screen.dart';
 import '../../features/customer/presentation/screens/manage_customer_screen.dart';
+import '../../features/export_report/presentation/screens/export_reports_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/home/presentation/screens/splash_screen.dart';
 import '../../features/manage_staff/presentation/screens/manage_staff_screen.dart';
@@ -39,6 +40,7 @@ class RouteNames {
   static const String printTransaction = 'print-transaction';
   static const String trackTransactions = 'track-transactions';
   static const String printerSettings = 'printer-settings';
+  static const String exportReports = 'export-reports';
 }
 
 class AppRoutes {
@@ -210,6 +212,11 @@ class AppRoutes {
           return const PrinterSettingsScreen();
         },
       ),
+      GoRoute(
+        path: '/export-reports',
+        name: RouteNames.exportReports,
+        builder: (context, state) => const ExportReportsScreen(),
+      )
     ],
   );
 }

@@ -22,6 +22,7 @@ class AppSizes {
   static const SizedBox spaceHeight12 = SizedBox(height: size12);
   static const SizedBox spaceHeight16 = SizedBox(height: size16);
   static const SizedBox spaceHeight24 = SizedBox(height: size24);
+  static const SizedBox spaceHeight32 = SizedBox(height: size32);
 
   static const SizedBox spaceWidth8 = SizedBox(width: size8);
   static const SizedBox spaceWidth12 = SizedBox(width: size12);

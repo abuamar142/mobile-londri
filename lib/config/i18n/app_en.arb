@@ -1180,5 +1180,9 @@
   "button_manage_service": "Manage Service",
   "@button_manage_service": {
     "description": "Text for the manage service button"
+  },
+  "button_export_report": "Export Report",
+  "@button_export_report": {
+    "description": "Text for the export report button"
   }
 }
