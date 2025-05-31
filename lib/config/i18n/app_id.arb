@@ -175,6 +175,39 @@
   "setting_service_label": "Layanan",
   "setting_service_empty_message": "Tidak ada layanan ditemukan",
 
+  "@_EXPORT_REPORT": {},
+
+  "export_report_screen_title": "Ekspor Laporan",
+  "export_report_header_title": "Ekspor Laporan Transaksi",
+  "export_report_header_subtitle": "Pilih periode dan format untuk mengekspor laporan transaksi laundry",
+  "export_report_period_section_title": "Periode Laporan",
+  "export_report_date_range_section_title": "Rentang Tanggal",
+  "export_report_format_section_title": "Format File",
+  "export_report_preview_section_title": "Preview Laporan",
+  "export_report_button_label": "Ekspor Laporan",
+
+  "export_report_period_daily": "Harian",
+  "export_report_period_weekly": "Mingguan",
+  "export_report_period_monthly": "Bulanan",
+
+  "export_report_format_pdf": "PDF",
+  "export_report_format_excel": "Excel (XLSX)",
+
+  "export_report_form_start_date_label": "Tanggal Mulai",
+  "export_report_form_start_date_hint": "Pilih tanggal mulai",
+  "export_report_form_end_date_label": "Tanggal Akhir",
+  "export_report_form_end_date_hint": "Pilih tanggal akhir",
+
+  "export_report_preview_period_label": "Periode",
+  "export_report_preview_date_range_label": "Tanggal",
+  "export_report_preview_format_label": "Format",
+  "export_report_preview_estimated_data_label": "Estimasi Data",
+  "export_report_preview_estimated_data_value": "akan dihitung saat export",
+
+  "export_report_period_selection_title": "Pilih Periode",
+
+  "export_report_success_message": "Laporan {format} berhasil diekspor!",
+
   "error_occurred_message": "Terjadi kesalahan",
 
   "@_SORT": {},

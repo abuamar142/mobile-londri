@@ -25,11 +25,11 @@ extension ExportPeriodExtension on ExportPeriod {
   String getName(BuildContext context) {
     switch (this) {
       case ExportPeriod.daily:
-        return 'Harian';
+        return context.appText.export_report_period_daily;
       case ExportPeriod.weekly:
-        return 'Mingguan';
+        return context.appText.export_report_period_weekly;
       case ExportPeriod.monthly:
-        return 'Bulanan';
+        return context.appText.export_report_period_monthly;
     }
   }
 
@@ -49,9 +49,9 @@ extension ExportFormatExtension on ExportFormat {
   String getName(BuildContext context) {
     switch (this) {
       case ExportFormat.pdf:
-        return 'PDF';
+        return context.appText.export_report_format_pdf;
       case ExportFormat.excel:
-        return 'Excel (XLSX)';
+        return context.appText.export_report_format_excel;
     }
   }
 
@@ -110,7 +110,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WidgetAppBar(
-        title: 'Ekspor Laporan',
+        title: context.appText.export_report_screen_title,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -141,7 +141,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ekspor Laporan Transaksi',
+          context.appText.export_report_header_title,
           style: AppTextStyle.heading2.copyWith(
             fontWeight: FontWeight.bold,
             color: AppColors.primary,
@@ -149,7 +149,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
         ),
         AppSizes.spaceHeight8,
         Text(
-          'Pilih periode dan format untuk mengekspor laporan transaksi laundry',
+          context.appText.export_report_header_subtitle,
           style: AppTextStyle.body1.copyWith(
             color: AppColors.gray,
           ),
@@ -163,7 +163,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Periode Laporan',
+          context.appText.export_report_period_section_title,
           style: AppTextStyle.heading3.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -184,7 +184,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Rentang Tanggal',
+          context.appText.export_report_date_range_section_title,
           style: AppTextStyle.heading3.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -194,8 +194,8 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
           children: [
             Expanded(
               child: WidgetTextFormField(
-                label: 'Tanggal Mulai',
-                hint: 'Pilih tanggal mulai',
+                label: context.appText.export_report_form_start_date_label,
+                hint: context.appText.export_report_form_start_date_hint,
                 controller: _startDateController,
                 isEnabled: !_isLoading,
                 readOnly: true,
@@ -210,8 +210,8 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
             AppSizes.spaceWidth12,
             Expanded(
               child: WidgetTextFormField(
-                label: 'Tanggal Akhir',
-                hint: 'Pilih tanggal akhir',
+                label: context.appText.export_report_form_end_date_label,
+                hint: context.appText.export_report_form_end_date_hint,
                 controller: _endDateController,
                 isEnabled: !_isLoading,
                 readOnly: true,
@@ -234,7 +234,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Format File',
+          context.appText.export_report_format_section_title,
           style: AppTextStyle.heading3.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -320,7 +320,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
               ),
               AppSizes.spaceWidth8,
               Text(
-                'Preview Laporan',
+                context.appText.export_report_preview_section_title,
                 style: AppTextStyle.body1.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -329,10 +329,22 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
             ],
           ),
           AppSizes.spaceHeight12,
-          _buildPreviewItem('Periode', _selectedPeriod.getName(context)),
-          _buildPreviewItem('Tanggal', '${_startDateController.text} - ${_endDateController.text}'),
-          _buildPreviewItem('Format', _selectedFormat.getName(context)),
-          _buildPreviewItem('Estimasi Data', 'akan dihitung saat export'), // TODO: Replace with actual data count
+          _buildPreviewItem(
+            context.appText.export_report_preview_period_label,
+            _selectedPeriod.getName(context),
+          ),
+          _buildPreviewItem(
+            context.appText.export_report_preview_date_range_label,
+            '${_startDateController.text} - ${_endDateController.text}',
+          ),
+          _buildPreviewItem(
+            context.appText.export_report_preview_format_label,
+            _selectedFormat.getName(context),
+          ),
+          _buildPreviewItem(
+            context.appText.export_report_preview_estimated_data_label,
+            context.appText.export_report_preview_estimated_data_value,
+          ),
         ],
       ),
     );
@@ -374,7 +386,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
 
   Widget _buildExportButton() {
     return WidgetButton(
-      label: 'Ekspor Laporan',
+      label: context.appText.export_report_button_label,
       isLoading: _isLoading,
       onPressed: _exportReport,
     );
@@ -383,7 +395,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   void _showPeriodOptions() {
     showDropdownBottomSheet(
       context: context,
-      title: 'Pilih Periode',
+      title: context.appText.export_report_period_selection_title,
       items: ExportPeriod.values
           .map(
             (period) => WidgetDropdownBottomSheetItem(
@@ -491,7 +503,9 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
           _isLoading = false;
         });
 
-        context.showSnackbar('Laporan ${_selectedFormat.getName(context)} berhasil diekspor!');
+        context.showSnackbar(
+          context.appText.export_report_success_message(_selectedFormat.getName(context)),
+        );
       }
     });
   }

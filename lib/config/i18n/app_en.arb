@@ -622,6 +622,111 @@
     "description": "Message displayed when no service is found in settings"
   },
 
+  "@_EXPORT_REPORT": {},
+
+  "export_report_screen_title": "Export Report",
+  "@export_report_screen_title": {
+    "description": "Title for the export report screen"
+  },
+  "export_report_header_title": "Export Transaction Report",
+  "@export_report_header_title": {
+    "description": "Header title for export report"
+  },
+  "export_report_header_subtitle": "Select period and format to export laundry transaction report",
+  "@export_report_header_subtitle": {
+    "description": "Header subtitle for export report"
+  },
+  "export_report_period_section_title": "Report Period",
+  "@export_report_period_section_title": {
+    "description": "Title for period selection section"
+  },
+  "export_report_date_range_section_title": "Date Range",
+  "@export_report_date_range_section_title": {
+    "description": "Title for date range section"
+  },
+  "export_report_format_section_title": "File Format",
+  "@export_report_format_section_title": {
+    "description": "Title for format selection section"
+  },
+  "export_report_preview_section_title": "Report Preview",
+  "@export_report_preview_section_title": {
+    "description": "Title for preview section"
+  },
+  "export_report_button_label": "Export Report",
+  "@export_report_button_label": {
+    "description": "Label for export button"
+  },
+
+  "export_report_period_daily": "Daily",
+  "@export_report_period_daily": {
+    "description": "Daily period option"
+  },
+  "export_report_period_weekly": "Weekly",
+  "@export_report_period_weekly": {
+    "description": "Weekly period option"
+  },
+  "export_report_period_monthly": "Monthly",
+  "@export_report_period_monthly": {
+    "description": "Monthly period option"
+  },
+
+  "export_report_format_pdf": "PDF",
+  "@export_report_format_pdf": {
+    "description": "PDF format option"
+  },
+  "export_report_format_excel": "Excel (XLSX)",
+  "@export_report_format_excel": {
+    "description": "Excel format option"
+  },
+
+  "export_report_form_start_date_label": "Start Date",
+  "@export_report_form_start_date_label": {
+    "description": "Label for start date field"
+  },
+  "export_report_form_start_date_hint": "Select start date",
+  "@export_report_form_start_date_hint": {
+    "description": "Hint for start date field"
+  },
+  "export_report_form_end_date_label": "End Date",
+  "@export_report_form_end_date_label": {
+    "description": "Label for end date field"
+  },
+  "export_report_form_end_date_hint": "Select end date",
+  "@export_report_form_end_date_hint": {
+    "description": "Hint for end date field"
+  },
+
+  "export_report_preview_period_label": "Period",
+  "@export_report_preview_period_label": {
+    "description": "Label for period in preview"
+  },
+  "export_report_preview_date_range_label": "Date Range",
+  "@export_report_preview_date_range_label": {
+    "description": "Label for date range in preview"
+  },
+  "export_report_preview_format_label": "Format",
+  "@export_report_preview_format_label": {
+    "description": "Label for format in preview"
+  },
+  "export_report_preview_estimated_data_label": "Estimated Data",
+  "@export_report_preview_estimated_data_label": {
+    "description": "Label for estimated data in preview"
+  },
+  "export_report_preview_estimated_data_value": "will be calculated during export",
+  "@export_report_preview_estimated_data_value": {
+    "description": "Value for estimated data in preview"
+  },
+
+  "export_report_period_selection_title": "Select Period",
+  "@export_report_period_selection_title": {
+    "description": "Title for period selection bottom sheet"
+  },
+
+  "export_report_success_message": "Report {format} exported successfully!",
+  "@export_report_success_message": {
+    "description": "Success message when report is exported"
+  },
+
   "error_occurred_message": "An error occurred",
   "@error_occurred_message": {
     "description": "Generic error message"
