@@ -21,24 +21,29 @@ import '../widgets/widget_restore_transaction.dart';
 import '../widgets/widget_transaction_card.dart';
 import 'manage_transaction_screen.dart';
 
-void pushTransactions({
+Future<bool> pushTransactions({
   required BuildContext context,
   String? searchQuery,
-}) {
-  context.pushNamed(
+  String? tabName,
+}) async {
+  await context.pushNamed(
     RouteNames.transactions,
     queryParameters: {
       'search': searchQuery,
+      'tabName': tabName,
     },
   );
+  return true;
 }
 
 class TransactionsScreen extends StatefulWidget {
   final String? searchQuery;
+  final String? tabName;
 
   const TransactionsScreen({
     super.key,
     this.searchQuery,
+    this.tabName,
   });
 
   @override
@@ -58,7 +63,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
     'All',
     'Active',
     'On Progress',
-    'Ready',
+    'Ready for Pickup',
     'Picked Up',
   ];
 
@@ -96,11 +101,13 @@ class _TransactionsScreenState extends State<TransactionsScreen> with SingleTick
         Tab(text: context.appText.transaction_screen_tab_picked_up),
       ];
 
+      final int tabIndex = _tabNames.indexOf(widget.tabName ?? 'Active');
+
       // Initialize TabController after tabs are created
       _tabController = TabController(
         length: _tabs!.length,
         vsync: this,
-        initialIndex: 2, // Start with "Active" tab
+        initialIndex: tabIndex >= 0 && tabIndex < _tabs!.length ? tabIndex : 2, // Default to 'Active' if invalid index
       );
 
       _tabController.addListener(_onTabChanged);

@@ -154,9 +154,10 @@ class AppRoutes {
         name: RouteNames.transactions,
         builder: (context, state) {
           final searchQuery = state.uri.queryParameters['search'];
+          final tabName = state.uri.queryParameters['tabName'];
 
-          if (searchQuery != null && searchQuery.isNotEmpty) {
-            return TransactionsScreen(searchQuery: searchQuery);
+          if (searchQuery != null && searchQuery.isNotEmpty || tabName != null && tabName.isNotEmpty) {
+            return TransactionsScreen(searchQuery: searchQuery, tabName: tabName);
           } else {
             return const TransactionsScreen();
           }

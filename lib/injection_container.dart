@@ -41,6 +41,11 @@ import 'features/export_report/domain/usecases/export_report_get_report_data.dar
 import 'features/export_report/domain/usecases/export_report_save_to_downloads.dart';
 import 'features/export_report/domain/usecases/export_report_share_file.dart';
 import 'features/export_report/presentation/bloc/export_report_bloc.dart';
+import 'features/home/data/datasources/home_remote_datasource.dart';
+import 'features/home/data/repositories/home_repository_implementation.dart';
+import 'features/home/domain/repositories/home_repository.dart';
+import 'features/home/domain/usecases/home_get_today_statistics.dart';
+import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/manage_staff/data/datasources/manage_staff_remote_datasource.dart';
 import 'features/manage_staff/data/repositories/manage_staff_repository_implementation.dart';
 import 'features/manage_staff/domain/repositories/manage_staff_repository.dart';
@@ -414,6 +419,27 @@ Future<void> initializeDependencies() async {
         exportReportShareFile: serviceLocator(),
         exportReportSaveToDownloads: serviceLocator(),
       ),
+    )
+
+    // Feature - Dashboard
+    // DataSources
+    ..registerLazySingleton<HomeRemoteDatasource>(
+      () => HomeRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
+    )
+
+    // Repositories
+    ..registerLazySingleton<HomeRepository>(
+      () => HomeRepositoryImplementation(homeRemoteDatasource: serviceLocator()),
+    )
+
+    // UseCases
+    ..registerLazySingleton<HomeGetTodayStatistics>(
+      () => HomeGetTodayStatistics(homeRepository: serviceLocator()),
+    )
+
+    // Bloc
+    ..registerFactory(
+      () => HomeBloc(homeGetTodayStatistics: serviceLocator()),
     );
 
   // Auth Listener

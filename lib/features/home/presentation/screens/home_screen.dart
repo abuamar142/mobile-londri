@@ -9,7 +9,7 @@ import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../setting/presentation/screens/setting_screen.dart';
-import 'main_screen.dart';
+import 'dashboard_screen.dart';
 import 'splash_screen.dart';
 
 void pushReplacementHome({
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   List<Widget> _widgetOptions() => [
-        MainScreen(),
+        DashboardScreen(),
         SettingScreen(),
       ];
 

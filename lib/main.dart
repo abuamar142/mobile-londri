@@ -9,6 +9,7 @@ import 'config/theme/app_themes.dart';
 import 'core/constants/app_consts.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
+import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/manage_staff/presentation/bloc/manage_staff_bloc.dart';
 import 'features/printer/presentation/bloc/printer_bloc.dart';
 import 'features/service/presentation/bloc/service_bloc.dart';
@@ -36,6 +37,7 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => serviceLocator<CustomerBloc>()),
         BlocProvider(create: (context) => serviceLocator<TransactionBloc>()),
         BlocProvider(create: (context) => serviceLocator<PrinterBloc>()),
+        BlocProvider(create: (context) => serviceLocator<HomeBloc>()),
       ],
       child: ValueListenableBuilder<Locale>(
         valueListenable: AppLocales.localeNotifier,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
@@ -7,6 +8,10 @@ import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/date_formatter.dart';
+import '../../../../core/utils/price_formatter.dart';
+import '../../../../core/widgets/widget_empty_list.dart';
+import '../../../../core/widgets/widget_loading.dart';
+import '../../../../injection_container.dart';
 import '../../../auth/domain/entities/auth.dart';
 import '../../../auth/domain/entities/role_manager.dart';
 import '../../../customer/presentation/screens/customers_screen.dart';
@@ -16,31 +21,63 @@ import '../../../manage_staff/presentation/screens/manage_staff_screen.dart';
 import '../../../service/presentation/screens/services_screen.dart';
 import '../../../transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../../transaction/presentation/screens/transactions_screen.dart';
+import '../bloc/home_bloc.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  late final HomeBloc _dashboardBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _dashboardBloc = serviceLocator<HomeBloc>();
+    _getTodayStatistics();
+  }
+
+  void _getTodayStatistics() {
+    _dashboardBloc.add(HomeEventGetTodayStatistics());
+  }
+
+  @override
+  void dispose() {
+    _dashboardBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Section
-          _buildHeader(context),
-          AppSizes.spaceHeight16,
+    return BlocProvider.value(
+      value: _dashboardBloc,
+      child: RefreshIndicator(
+        onRefresh: () async => _getTodayStatistics(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Section
+              _buildHeader(context),
+              AppSizes.spaceHeight16,
 
-          // Statistics Cards
-          if (RoleManager.hasPermission(Permission.manageCustomers)) _buildStatisticsSection(context),
-          AppSizes.spaceHeight24,
+              // Statistics Cards
+              if (RoleManager.hasPermission(Permission.manageCustomers)) _buildStatisticsSection(context),
+              AppSizes.spaceHeight24,
 
-          // Quick Actions Section
-          _buildQuickActionsSection(context),
-          AppSizes.spaceHeight24,
+              // Quick Actions Section
+              _buildQuickActionsSection(context),
+              AppSizes.spaceHeight24,
 
-          // Menu Grid Section
-          if (RoleManager.hasPermission(Permission.accessMainMenu)) _buildMenuGridSection(context),
-        ],
+              // Menu Grid Section
+              if (RoleManager.hasPermission(Permission.accessMainMenu)) _buildMenuGridSection(context),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -89,46 +126,142 @@ class MainScreen extends StatelessWidget {
           ],
         ),
         AppSizes.spaceHeight12,
-        _buildStatCard(
-          context.appText.home_screen_statistic_revenue,
-          'Rp 850.000', // TODO: Replace with actual data
-          Icons.attach_money,
-          AppColors.success,
-        ),
-        AppSizes.spaceHeight12,
-        _buildStatCard(
-          context.appText.home_screen_statistic_transaction_on_progress,
-          '12', // TODO: Replace with actual data
-          Icons.pending_actions,
-          AppColors.gray,
-        ),
-        AppSizes.spaceHeight12,
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context.appText.home_screen_statistic_transaction_ready_for_pickup,
-                '8', // TODO: Replace with actual data
-                Icons.inventory,
-                AppColors.warning,
-              ),
-            ),
-            AppSizes.spaceWidth12,
-            Expanded(
-              child: _buildStatCard(
-                context.appText.home_screen_statistic_transaction_picked_up,
-                '15', // TODO: Replace with actual data
-                Icons.check_circle,
-                AppColors.success,
-              ),
-            ),
-          ],
+        BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is HomeStateLoading) {
+              return Center(child: const WidgetLoading(usingPadding: false));
+            } else if (state is HomeStateFailure) {
+              return WidgetEmptyList(
+                emptyMessage: state.message,
+                onRefresh: _getTodayStatistics,
+              );
+            } else if (state is HomeStateSuccessLoadedData) {
+              final statistics = state.statistic;
+              return Column(
+                children: [
+                  _buildStatCard(
+                    context.appText.home_screen_statistic_revenue,
+                    statistics.todayRevenue.toInt().formatNumber(),
+                    Icons.attach_money,
+                    AppColors.success,
+                  ),
+                  AppSizes.spaceHeight12,
+                  _buildStatCard(
+                    context.appText.home_screen_statistic_transaction_on_progress,
+                    statistics.onProgressCount.toString(),
+                    Icons.pending_actions,
+                    AppColors.gray,
+                    () async {
+                      final result = await pushTransactions(context: context, tabName: 'On Progress');
+
+                      if (result == true) {
+                        _getTodayStatistics();
+                      }
+                    },
+                  ),
+                  AppSizes.spaceHeight12,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          context.appText.home_screen_statistic_transaction_ready_for_pickup,
+                          statistics.readyForPickupCount.toString(),
+                          Icons.inventory,
+                          AppColors.warning,
+                          () async {
+                            final result = await pushTransactions(context: context, tabName: 'Ready for Pickup');
+
+                            if (result == true) {
+                              _getTodayStatistics();
+                            }
+                          },
+                        ),
+                      ),
+                      AppSizes.spaceWidth12,
+                      Expanded(
+                        child: _buildStatCard(
+                          context.appText.home_screen_statistic_transaction_picked_up,
+                          statistics.pickedUpCount.toString(),
+                          Icons.check_circle,
+                          AppColors.success,
+                          () async {
+                            final result = await pushTransactions(context: context, tabName: 'Picked Up');
+
+                            if (result == true) {
+                              _getTodayStatistics();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }
+
+            return Column(
+              children: [
+                _buildStatCardSkeleton(),
+                AppSizes.spaceHeight12,
+                _buildStatCardSkeleton(),
+                AppSizes.spaceHeight12,
+                Row(
+                  children: [
+                    Expanded(child: _buildStatCardSkeleton()),
+                    AppSizes.spaceWidth12,
+                    Expanded(child: _buildStatCardSkeleton()),
+                  ],
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(String title, String value, IconData icon, Color color, [VoidCallback? onTap]) {
+    return InkWell(
+      onTap: onTap ?? () {},
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.onPrimary,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.2),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(icon, color: color, size: 24),
+                Text(value, style: AppTextStyle.heading3.copyWith(color: AppColors.primary)),
+              ],
+            ),
+            AppSizes.spaceHeight8,
+            Text(
+              title,
+              style: AppTextStyle.body1.copyWith(
+                color: AppColors.gray.withValues(alpha: 0.8),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCardSkeleton() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -149,16 +282,31 @@ class MainScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(icon, color: color, size: 24),
-              Text(value, style: AppTextStyle.heading3.copyWith(color: AppColors.primary)),
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.gray.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                width: 60,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: AppColors.gray.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
             ],
           ),
           AppSizes.spaceHeight8,
-          Text(
-            title,
-            style: AppTextStyle.body1.copyWith(
-              color: AppColors.gray.withValues(alpha: 0.8),
-              fontWeight: FontWeight.w600,
+          Container(
+            width: double.infinity,
+            height: 16,
+            decoration: BoxDecoration(
+              color: AppColors.gray.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(4),
             ),
           ),
         ],
@@ -185,7 +333,13 @@ class MainScreen extends StatelessWidget {
                   context.appText.home_screen_button_quick_actions_add_transaction,
                   Icons.add_circle,
                   AppColors.primary,
-                  () => pushAddTransaction(context: context),
+                  () async {
+                    final result = await pushAddTransaction(context: context);
+
+                    if (result == true) {
+                      _getTodayStatistics();
+                    }
+                  },
                 ),
               ),
             if (RoleManager.hasPermission(Permission.manageCustomers)) AppSizes.spaceWidth12,
@@ -291,7 +445,13 @@ class MainScreen extends StatelessWidget {
                 context.appText.home_screen_button_main_menu_manage_transaction,
                 Icons.receipt_long,
                 AppColors.primary,
-                () => pushTransactions(context: context),
+                () async {
+                  final result = await pushTransactions(context: context);
+
+                  if (result == true) {
+                    _getTodayStatistics();
+                  }
+                },
               ),
             if (RoleManager.hasPermission(Permission.exportReports))
               _buildMenuCard(
