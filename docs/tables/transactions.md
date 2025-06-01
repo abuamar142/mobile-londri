@@ -71,10 +71,10 @@ CREATE TABLE public.transactions (
   description TEXT,
   transaction_status app_transaction_status NOT NULL DEFAULT 'On Progress',
   payment_status app_payment_status NOT NULL DEFAULT 'Not Paid Yet',
-  start_date TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
+  start_date TIMESTAMPTZ NOT NULL DEFAULT now(),
   end_date TIMESTAMPTZ NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ,
 
   -- RELATIONS
@@ -222,7 +222,6 @@ Before implementing this table, ensure:
 
 - The enums `app_transaction_status` and `app_payment_status` have been created
 - Referenced tables (`customers`, `services`, and `users`) already exist with BIGINT id columns
-- Default timezone is set to `'Asia/Jakarta'`
 - The `set_updated_at()` function exists for the automatic timestamp update trigger
 - The `authorize()` function exists for RLS policies
 - The `role_permissions` table is properly set up for the permission system

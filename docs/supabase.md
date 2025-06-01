@@ -24,7 +24,6 @@ offers PostgreSQL databases, authentication, storage, and built-in real-time API
 - **PostgreSQL** (hosted by Supabase)
 - **Supabase Auth** (user authentication)
 - **PL/pgSQL** (database functions and triggers)
-- **Timezone**: `Asia/Jakarta`
 
 ## 🚀 Setup Steps
 

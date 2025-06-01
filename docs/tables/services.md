@@ -36,8 +36,8 @@ CREATE TABLE public.services (
   unit public.service_unit NOT NULL DEFAULT 'kg',
   duration_hours INTEGER NOT NULL DEFAULT 24,
   is_active BOOLEAN NOT NULL DEFAULT true,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ NULL
 );
 
@@ -52,7 +52,7 @@ CREATE INDEX idx_services_name ON public.services USING btree (name);
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.updated_at = now() AT TIME ZONE 'Asia/Jakarta';
+  NEW.updated_at = now();
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

@@ -33,8 +33,8 @@ CREATE TABLE public.customers (
   phone VARCHAR(15),
   gender public.app_gender NOT NULL DEFAULT 'other',
   description TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ NULL
 );
 
@@ -49,7 +49,7 @@ CREATE INDEX idx_customers_name ON public.customers USING btree (name);
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.updated_at = now() AT TIME ZONE 'Asia/Jakarta';
+  NEW.updated_at = now();
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

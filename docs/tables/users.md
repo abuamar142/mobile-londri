@@ -108,8 +108,8 @@ CREATE TABLE public.users (
     phone text,
     image_url text,
     role_id bigint REFERENCES public.user_roles(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT (now() AT TIME ZONE 'Asia/Jakarta'),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );
 
