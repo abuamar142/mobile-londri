@@ -727,6 +727,87 @@
     "description": "Success message when report is exported"
   },
 
+  "export_report_document_title": "Laundry Transaction Report",
+  "@export_report_document_title": {
+    "description": "Title for the export report document"
+  },
+  "export_report_info_section_title": "Report Information",
+  "@export_report_info_section_title": {
+    "description": "Title for report information section"
+  },
+  "export_report_statistics_section_title": "Transaction Statistics",
+  "@export_report_statistics_section_title": {
+    "description": "Title for transaction statistics section"
+  },
+  "export_report_details_section_title": "Transaction Details",
+  "@export_report_details_section_title": {
+    "description": "Title for transaction details section"
+  },
+  "export_report_table_header_status": "Status",
+  "@export_report_table_header_status": {
+    "description": "Table header for status column"
+  },
+  "export_report_table_header_count": "Count",
+  "@export_report_table_header_count": {
+    "description": "Table header for count column"
+  },
+  "export_report_table_header_id": "ID",
+  "@export_report_table_header_id": {
+    "description": "Table header for ID column"
+  },
+  "export_report_table_header_customer": "Customer",
+  "@export_report_table_header_customer": {
+    "description": "Table header for customer column"
+  },
+  "export_report_table_header_service": "Service",
+  "@export_report_table_header_service": {
+    "description": "Table header for service column"
+  },
+  "export_report_table_header_weight": "Weight (Kg)",
+  "@export_report_table_header_weight": {
+    "description": "Table header for weight column"
+  },
+  "export_report_table_header_total": "Total",
+  "@export_report_table_header_total": {
+    "description": "Table header for total column"
+  },
+  "export_report_table_header_transaction_status": "Status",
+  "@export_report_table_header_transaction_status": {
+    "description": "Table header for transaction status column"
+  },
+  "export_report_table_header_payment_status": "Payment Status",
+  "@export_report_table_header_payment_status": {
+    "description": "Table header for payment status column"
+  },
+  "export_report_table_header_created_date": "Created Date",
+  "@export_report_table_header_created_date": {
+    "description": "Table header for created date column"
+  },
+  "export_report_info_period_label": "Period",
+  "@export_report_info_period_label": {
+    "description": "Label for period in report information"
+  },
+  "export_report_info_date_label": "Date",
+  "@export_report_info_date_label": {
+    "description": "Label for date in report information"
+  },
+  "export_report_info_total_transactions_label": "Total Transactions",
+  "@export_report_info_total_transactions_label": {
+    "description": "Label for total transactions in report information"
+  },
+  "export_report_info_total_revenue_label": "Total Revenue",
+  "@export_report_info_total_revenue_label": {
+    "description": "Label for total revenue in report information"
+  },
+  "export_report_excel_sheet_name": "Transaction Report",
+  "@export_report_excel_sheet_name": {
+    "description": "Name for the Excel sheet in export report"
+  },
+  "export_report_save_success_message": "File saved to Downloads successfully: {fileName}",
+  "@export_report_save_success_message": {
+    "description": "Success message when file is saved to Downloads"
+  },
+
   "error_occurred_message": "An error occurred",
   "@error_occurred_message": {
     "description": "Generic error message"

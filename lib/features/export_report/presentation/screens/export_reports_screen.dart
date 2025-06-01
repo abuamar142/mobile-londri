@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
@@ -11,7 +12,10 @@ import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_dropdown_bottom_sheet.dart';
 import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
+import '../../../../injection_container.dart';
 import '../../../customer/presentation/widgets/widget_dropdown.dart';
+import '../../domain/entities/export_report_data.dart';
+import '../bloc/export_report_bloc.dart';
 
 void pushExportReports({required BuildContext context}) {
   context.pushNamed(RouteNames.exportReports);
@@ -82,6 +86,8 @@ class ExportReportsScreen extends StatefulWidget {
 }
 
 class _ExportReportsScreenState extends State<ExportReportsScreen> {
+  late final ExportReportBloc _exportReportBloc;
+
   ExportPeriod _selectedPeriod = ExportPeriod.daily;
   ExportFormat _selectedFormat = ExportFormat.pdf;
 
@@ -91,12 +97,22 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
 
-  bool _isLoading = false;
+  ExportReportData? _currentReportData;
+  bool _shouldExportAfterDataLoad = false;
 
   @override
   void initState() {
     super.initState();
+    _exportReportBloc = serviceLocator<ExportReportBloc>();
     _setDefaultDates();
+    _loadReportData();
+  }
+
+  void _loadReportData() {
+    _exportReportBloc.add(ExportReportGetData(
+      startDate: _startDate,
+      endDate: _endDate,
+    ));
   }
 
   @override
@@ -108,31 +124,57 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: WidgetAppBar(
-        title: context.appText.export_report_screen_title,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(AppSizes.size16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              AppSizes.spaceHeight24,
-              _buildPeriodSelection(),
-              AppSizes.spaceHeight24,
-              _buildDateRangeSection(),
-              AppSizes.spaceHeight24,
-              _buildFormatSelection(),
-              AppSizes.spaceHeight24,
-              _buildReportPreview(),
-              AppSizes.spaceHeight32,
-              _buildExportButton(),
-            ],
+    return BlocConsumer<ExportReportBloc, ExportReportState>(
+      bloc: _exportReportBloc,
+      listener: (context, state) {
+        if (state is ExportReportFailure) {
+          context.showSnackbar(state.message);
+        } else if (state is ExportReportDataLoaded) {
+          setState(() {
+            _currentReportData = state.reportData;
+          });
+          // If this was triggered by export, continue with export
+          if (_shouldExportAfterDataLoad) {
+            _shouldExportAfterDataLoad = false;
+            _exportReport();
+          }
+        } else if (state is ExportReportExportSuccess) {
+          // Show dialog to choose between share or save locally
+          _showExportSuccessDialog(context, state.filePath, state.format);
+        } else if (state is ExportReportShareSuccess) {
+          context.showSnackbar('File berhasil dibagikan!');
+        } else if (state is ExportReportSaveSuccess) {
+          context.showSnackbar('File berhasil disimpan ke Downloads: ${state.savedPath.split('/').last}');
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: WidgetAppBar(
+            title: context.appText.export_report_screen_title,
           ),
-        ),
-      ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(AppSizes.size16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  AppSizes.spaceHeight24,
+                  _buildPeriodSelection(),
+                  AppSizes.spaceHeight24,
+                  _buildDateRangeSection(),
+                  AppSizes.spaceHeight24,
+                  _buildFormatSelection(),
+                  AppSizes.spaceHeight24,
+                  _buildReportPreview(),
+                  AppSizes.spaceHeight32,
+                  _buildExportButton(),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -159,107 +201,125 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   }
 
   Widget _buildPeriodSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.appText.export_report_period_section_title,
-          style: AppTextStyle.heading3.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        AppSizes.spaceHeight12,
-        WidgetDropdown(
-          icon: _selectedPeriod.icon,
-          label: _selectedPeriod.getName(context),
-          isEnable: !_isLoading,
-          showModalBottomSheet: () => _showPeriodOptions(),
-        ),
-      ],
+    return BlocBuilder<ExportReportBloc, ExportReportState>(
+      bloc: _exportReportBloc,
+      builder: (context, state) {
+        final isLoading = state is ExportReportLoading;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.appText.export_report_period_section_title,
+              style: AppTextStyle.heading3.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            AppSizes.spaceHeight12,
+            WidgetDropdown(
+              icon: _selectedPeriod.icon,
+              label: _selectedPeriod.getName(context),
+              isEnable: !isLoading,
+              showModalBottomSheet: () => _showPeriodOptions(),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildDateRangeSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.appText.export_report_date_range_section_title,
-          style: AppTextStyle.heading3.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        AppSizes.spaceHeight12,
-        Row(
+    return BlocBuilder<ExportReportBloc, ExportReportState>(
+      bloc: _exportReportBloc,
+      builder: (context, state) {
+        final isLoading = state is ExportReportLoading;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: WidgetTextFormField(
-                label: context.appText.export_report_form_start_date_label,
-                hint: context.appText.export_report_form_start_date_hint,
-                controller: _startDateController,
-                isEnabled: !_isLoading,
-                readOnly: true,
-                suffixIcon: !_isLoading
-                    ? IconButton(
-                        onPressed: () => _selectStartDate(context),
-                        icon: Icon(Icons.calendar_today),
-                      )
-                    : null,
+            Text(
+              context.appText.export_report_date_range_section_title,
+              style: AppTextStyle.heading3.copyWith(
+                fontWeight: FontWeight.bold,
               ),
             ),
-            AppSizes.spaceWidth12,
-            Expanded(
-              child: WidgetTextFormField(
-                label: context.appText.export_report_form_end_date_label,
-                hint: context.appText.export_report_form_end_date_hint,
-                controller: _endDateController,
-                isEnabled: !_isLoading,
-                readOnly: true,
-                suffixIcon: !_isLoading
-                    ? IconButton(
-                        onPressed: () => _selectEndDate(context),
-                        icon: Icon(Icons.calendar_today),
-                      )
-                    : null,
-              ),
+            AppSizes.spaceHeight12,
+            Row(
+              children: [
+                Expanded(
+                  child: WidgetTextFormField(
+                    label: context.appText.export_report_form_start_date_label,
+                    hint: context.appText.export_report_form_start_date_hint,
+                    controller: _startDateController,
+                    isEnabled: !isLoading,
+                    readOnly: true,
+                    suffixIcon: !isLoading
+                        ? IconButton(
+                            onPressed: () => _selectStartDate(context),
+                            icon: Icon(Icons.calendar_today),
+                          )
+                        : null,
+                  ),
+                ),
+                AppSizes.spaceWidth12,
+                Expanded(
+                  child: WidgetTextFormField(
+                    label: context.appText.export_report_form_end_date_label,
+                    hint: context.appText.export_report_form_end_date_hint,
+                    controller: _endDateController,
+                    isEnabled: !isLoading,
+                    readOnly: true,
+                    suffixIcon: !isLoading
+                        ? IconButton(
+                            onPressed: () => _selectEndDate(context),
+                            icon: Icon(Icons.calendar_today),
+                          )
+                        : null,
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 
   Widget _buildFormatSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          context.appText.export_report_format_section_title,
-          style: AppTextStyle.heading3.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        AppSizes.spaceHeight12,
-        Row(
+    return BlocBuilder<ExportReportBloc, ExportReportState>(
+      bloc: _exportReportBloc,
+      builder: (context, state) {
+        final isLoading = state is ExportReportLoading;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: _buildFormatCard(ExportFormat.pdf),
+            Text(
+              context.appText.export_report_format_section_title,
+              style: AppTextStyle.heading3.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            AppSizes.spaceWidth12,
-            Expanded(
-              child: _buildFormatCard(ExportFormat.excel),
+            AppSizes.spaceHeight12,
+            Row(
+              children: [
+                Expanded(
+                  child: _buildFormatCard(ExportFormat.pdf, isLoading),
+                ),
+                AppSizes.spaceWidth12,
+                Expanded(
+                  child: _buildFormatCard(ExportFormat.excel, isLoading),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 
-  Widget _buildFormatCard(ExportFormat format) {
+  Widget _buildFormatCard(ExportFormat format, bool isLoading) {
     final isSelected = _selectedFormat == format;
 
     return GestureDetector(
-      onTap: _isLoading
+      onTap: isLoading
           ? null
           : () {
               setState(() {
@@ -385,10 +445,16 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   }
 
   Widget _buildExportButton() {
-    return WidgetButton(
-      label: context.appText.export_report_button_label,
-      isLoading: _isLoading,
-      onPressed: _exportReport,
+    return BlocBuilder<ExportReportBloc, ExportReportState>(
+      bloc: _exportReportBloc,
+      builder: (context, state) {
+        final isLoading = state is ExportReportLoading;
+        return WidgetButton(
+          label: context.appText.export_report_button_label,
+          isLoading: isLoading,
+          onPressed: _exportReport,
+        );
+      },
     );
   }
 
@@ -435,6 +501,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     }
 
     _updateDateControllers();
+    _loadReportData(); // Reload data when dates change
   }
 
   void _updateDateControllers() {
@@ -461,6 +528,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
           _endDate = _startDate;
         }
         _updateDateControllers();
+        _loadReportData(); // Reload data when dates change
       });
     }
   }
@@ -477,6 +545,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
       setState(() {
         _endDate = picked;
         _updateDateControllers();
+        _loadReportData(); // Reload data when dates change
       });
     }
   }
@@ -489,24 +558,158 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   }
 
   void _exportReport() {
-    setState(() {
-      _isLoading = true;
-    });
+    // Check if we have current report data, if not load it first
+    if (_currentReportData == null) {
+      _shouldExportAfterDataLoad = true;
+      _exportReportBloc.add(ExportReportGetData(
+        startDate: _startDate,
+        endDate: _endDate,
+      ));
+      return;
+    }
 
-    // TODO: Implement export logic here
-    // This will be connected to Supabase later
+    // Trigger export based on selected format
+    if (_selectedFormat == ExportFormat.pdf) {
+      _exportReportBloc.add(ExportReportExportToPdf(
+        reportData: _currentReportData!,
+        context: context,
+      ));
+    } else {
+      _exportReportBloc.add(ExportReportExportToExcel(
+        reportData: _currentReportData!,
+        context: context,
+      ));
+    }
+  }
 
-    // Simulate loading
-    Future.delayed(Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+  void _showExportSuccessDialog(BuildContext context, String filePath, String format) {
+    // Extract filename from full path
+    final fileName = filePath.split('/').last;
 
-        context.showSnackbar(
-          context.appText.export_report_success_message(_selectedFormat.getName(context)),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.size16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: Colors.green,
+                size: AppSizes.size24,
+              ),
+              AppSizes.spaceWidth8,
+              Expanded(
+                child: Text(
+                  'Export Berhasil',
+                  style: AppTextStyle.heading3.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.onSecondary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'File ${format.toUpperCase()} berhasil dibuat:',
+                style: AppTextStyle.body1.copyWith(
+                  color: AppColors.gray,
+                ),
+              ),
+              AppSizes.spaceHeight8,
+              Container(
+                padding: EdgeInsets.all(AppSizes.size12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(AppSizes.size8),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      format.toLowerCase() == 'pdf' ? Icons.picture_as_pdf : Icons.table_chart,
+                      color: format.toLowerCase() == 'pdf' ? Colors.red : Colors.green,
+                      size: AppSizes.size20,
+                    ),
+                    AppSizes.spaceWidth8,
+                    Expanded(
+                      child: Text(
+                        fileName,
+                        style: AppTextStyle.body2.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AppSizes.spaceHeight16,
+              Text(
+                'Pilih aksi yang ingin dilakukan:',
+                style: AppTextStyle.body1.copyWith(
+                  color: AppColors.gray,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _exportReportBloc.add(ExportReportSaveToDownloads(filePath: filePath));
+              },
+              icon: Icon(
+                Icons.save_alt,
+                color: AppColors.gray,
+                size: AppSizes.size20,
+              ),
+              label: Text(
+                'Simpan Lokal',
+                style: AppTextStyle.body1.copyWith(
+                  color: AppColors.gray,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _exportReportBloc.add(ExportReportShareFile(filePath: filePath));
+              },
+              icon: Icon(
+                Icons.share,
+                size: AppSizes.size20,
+              ),
+              label: Text(
+                'Bagikan',
+                style: AppTextStyle.body1.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSizes.size8),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.size16,
+                  vertical: AppSizes.size12,
+                ),
+              ),
+            ),
+          ],
         );
-      }
-    });
+      },
+    );
   }
 }

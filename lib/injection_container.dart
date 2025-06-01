@@ -31,6 +31,16 @@ import 'features/customer/domain/usecases/customer_get_customers.dart';
 import 'features/customer/domain/usecases/customer_hard_delete_customer.dart';
 import 'features/customer/domain/usecases/customer_update_customer.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
+import 'features/export_report/data/datasources/export_report_local_datasource.dart';
+import 'features/export_report/data/datasources/export_report_remote_datasource.dart';
+import 'features/export_report/data/repositories/export_report_repository_implementation.dart';
+import 'features/export_report/domain/repositories/export_report_repository.dart';
+import 'features/export_report/domain/usecases/export_report_save_to_downloads.dart' as export_report_save_use_case;
+import 'features/export_report/domain/usecases/export_to_excel.dart';
+import 'features/export_report/domain/usecases/export_to_pdf.dart';
+import 'features/export_report/domain/usecases/get_report_data.dart';
+import 'features/export_report/domain/usecases/share_file.dart';
+import 'features/export_report/presentation/bloc/export_report_bloc.dart';
 import 'features/manage_staff/data/datasources/manage_staff_remote_datasource.dart';
 import 'features/manage_staff/data/repositories/manage_staff_repository_implementation.dart';
 import 'features/manage_staff/domain/repositories/manage_staff_repository.dart';
@@ -358,6 +368,51 @@ Future<void> initializeDependencies() async {
       () => PrinterBloc(
         printerService: serviceLocator(),
         permissionService: serviceLocator(),
+      ),
+    )
+
+    // Feature - Export Report
+    // DataSources
+    ..registerLazySingleton<ExportReportRemoteDatasource>(
+      () => ExportReportRemoteDatasourceImplementation(serviceLocator()),
+    )
+    ..registerLazySingleton<ExportReportLocalDatasource>(
+      () => ExportReportLocalDatasourceImplementation(),
+    )
+
+    // Repositories
+    ..registerLazySingleton<ExportReportRepository>(
+      () => ExportReportRepositoryImplementation(
+        serviceLocator(),
+        serviceLocator(),
+      ),
+    )
+
+    // UseCases
+    ..registerLazySingleton<ExportToExcel>(
+      () => ExportToExcel(serviceLocator()),
+    )
+    ..registerLazySingleton<ExportToPdf>(
+      () => ExportToPdf(serviceLocator()),
+    )
+    ..registerLazySingleton<GetReportData>(
+      () => GetReportData(serviceLocator()),
+    )
+    ..registerLazySingleton<ShareFile>(
+      () => ShareFile(serviceLocator()),
+    )
+    ..registerLazySingleton<export_report_save_use_case.ExportReportSaveToDownloads>(
+      () => export_report_save_use_case.ExportReportSaveToDownloads(serviceLocator()),
+    )
+
+    // Bloc
+    ..registerFactory(
+      () => ExportReportBloc(
+        exportToExcel: serviceLocator(),
+        exportToPdf: serviceLocator(),
+        getReportData: serviceLocator(),
+        shareFile: serviceLocator(),
+        saveToDownloads: serviceLocator(),
       ),
     );
 

@@ -31,7 +31,7 @@ class TransactionModel extends Transaction {
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
       id: json['id'],
-      userId: json['user_id'],
+      userId: json['staff_id']?.toString(),
       userName: json['users'] != null ? json['users']['name'] : null,
       customerId: json['customer_id'],
       customerName: json['customers'] != null ? json['customers']['name'] : null,

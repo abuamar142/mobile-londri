@@ -208,6 +208,27 @@
 
   "export_report_success_message": "Laporan {format} berhasil diekspor!",
 
+  "export_report_document_title": "Laporan Transaksi Laundry",
+  "export_report_info_section_title": "Informasi Laporan",
+  "export_report_statistics_section_title": "Statistik Transaksi",
+  "export_report_details_section_title": "Detail Transaksi",
+  "export_report_table_header_status": "Status",
+  "export_report_table_header_count": "Jumlah",
+  "export_report_table_header_id": "ID",
+  "export_report_table_header_customer": "Pelanggan",
+  "export_report_table_header_service": "Layanan",
+  "export_report_table_header_weight": "Berat (Kg)",
+  "export_report_table_header_total": "Total",
+  "export_report_table_header_transaction_status": "Status",
+  "export_report_table_header_payment_status": "Status Pembayaran",
+  "export_report_table_header_created_date": "Tanggal Dibuat",
+  "export_report_info_period_label": "Periode",
+  "export_report_info_date_label": "Tanggal",
+  "export_report_info_total_transactions_label": "Total Transaksi",
+  "export_report_info_total_revenue_label": "Total Pendapatan",
+  "export_report_excel_sheet_name": "Laporan Transaksi",
+  "export_report_save_success_message": "File berhasil disimpan ke Downloads: {fileName}",
+
   "error_occurred_message": "Terjadi kesalahan",
 
   "@_SORT": {},
