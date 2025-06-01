@@ -7,24 +7,26 @@ sealed class ExportReportState extends Equatable {
   List<Object> get props => [];
 }
 
-final class ExportReportInitial extends ExportReportState {}
+final class ExportReportStateInitial extends ExportReportState {}
 
-final class ExportReportLoading extends ExportReportState {}
+final class ExportReportStateLoading extends ExportReportState {}
 
-final class ExportReportDataLoaded extends ExportReportState {
-  final ExportReportData reportData;
+final class ExportReportStateSuccessLoadedData extends ExportReportState {
+  final ExportReport reportData;
 
-  const ExportReportDataLoaded({required this.reportData});
+  const ExportReportStateSuccessLoadedData({
+    required this.reportData,
+  });
 
   @override
   List<Object> get props => [reportData];
 }
 
-final class ExportReportExportSuccess extends ExportReportState {
+final class ExportReportStateSuccessExport extends ExportReportState {
   final String filePath;
   final String format;
 
-  const ExportReportExportSuccess({
+  const ExportReportStateSuccessExport({
     required this.filePath,
     required this.format,
   });
@@ -33,21 +35,25 @@ final class ExportReportExportSuccess extends ExportReportState {
   List<Object> get props => [filePath, format];
 }
 
-final class ExportReportShareSuccess extends ExportReportState {}
+final class ExportReportStateSuccessShare extends ExportReportState {}
 
-final class ExportReportSaveSuccess extends ExportReportState {
+final class ExportReportStateSuccessSave extends ExportReportState {
   final String savedPath;
 
-  const ExportReportSaveSuccess({required this.savedPath});
+  const ExportReportStateSuccessSave({
+    required this.savedPath,
+  });
 
   @override
   List<Object> get props => [savedPath];
 }
 
-final class ExportReportFailure extends ExportReportState {
+final class ExportReportStateFailure extends ExportReportState {
   final String message;
 
-  const ExportReportFailure({required this.message});
+  const ExportReportStateFailure({
+    required this.message,
+  });
 
   @override
   List<Object> get props => [message];

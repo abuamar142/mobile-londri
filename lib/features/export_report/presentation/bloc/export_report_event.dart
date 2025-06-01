@@ -7,11 +7,11 @@ sealed class ExportReportEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ExportReportGetData extends ExportReportEvent {
+class ExportReportEventGetData extends ExportReportEvent {
   final DateTime startDate;
   final DateTime endDate;
 
-  const ExportReportGetData({
+  const ExportReportEventGetData({
     required this.startDate,
     required this.endDate,
   });
@@ -20,11 +20,11 @@ class ExportReportGetData extends ExportReportEvent {
   List<Object> get props => [startDate, endDate];
 }
 
-class ExportReportExportToPdf extends ExportReportEvent {
-  final ExportReportData reportData;
+class ExportReportEventExportToPdf extends ExportReportEvent {
+  final ExportReport reportData;
   final BuildContext context;
 
-  const ExportReportExportToPdf({
+  const ExportReportEventExportToPdf({
     required this.reportData,
     required this.context,
   });
@@ -33,11 +33,11 @@ class ExportReportExportToPdf extends ExportReportEvent {
   List<Object> get props => [reportData, context];
 }
 
-class ExportReportExportToExcel extends ExportReportEvent {
-  final ExportReportData reportData;
+class ExportReportEventExportToExcel extends ExportReportEvent {
+  final ExportReport reportData;
   final BuildContext context;
 
-  const ExportReportExportToExcel({
+  const ExportReportEventExportToExcel({
     required this.reportData,
     required this.context,
   });
@@ -46,10 +46,10 @@ class ExportReportExportToExcel extends ExportReportEvent {
   List<Object> get props => [reportData, context];
 }
 
-class ExportReportShareFile extends ExportReportEvent {
+class ExportReportEventShareFile extends ExportReportEvent {
   final String filePath;
 
-  const ExportReportShareFile({
+  const ExportReportEventShareFile({
     required this.filePath,
   });
 
@@ -57,10 +57,10 @@ class ExportReportShareFile extends ExportReportEvent {
   List<Object> get props => [filePath];
 }
 
-class ExportReportSaveToDownloads extends ExportReportEvent {
+class ExportReportEventSaveToDownloads extends ExportReportEvent {
   final String filePath;
 
-  const ExportReportSaveToDownloads({
+  const ExportReportEventSaveToDownloads({
     required this.filePath,
   });
 

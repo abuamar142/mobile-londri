@@ -35,11 +35,11 @@ import 'features/export_report/data/datasources/export_report_local_datasource.d
 import 'features/export_report/data/datasources/export_report_remote_datasource.dart';
 import 'features/export_report/data/repositories/export_report_repository_implementation.dart';
 import 'features/export_report/domain/repositories/export_report_repository.dart';
-import 'features/export_report/domain/usecases/export_report_save_to_downloads.dart' as export_report_save_use_case;
-import 'features/export_report/domain/usecases/export_to_excel.dart';
-import 'features/export_report/domain/usecases/export_to_pdf.dart';
-import 'features/export_report/domain/usecases/get_report_data.dart';
-import 'features/export_report/domain/usecases/share_file.dart';
+import 'features/export_report/domain/usecases/export_report_export_to_excel.dart';
+import 'features/export_report/domain/usecases/export_report_export_to_pdf.dart';
+import 'features/export_report/domain/usecases/export_report_get_report_data.dart';
+import 'features/export_report/domain/usecases/export_report_save_to_downloads.dart';
+import 'features/export_report/domain/usecases/export_report_share_file.dart';
 import 'features/export_report/presentation/bloc/export_report_bloc.dart';
 import 'features/manage_staff/data/datasources/manage_staff_remote_datasource.dart';
 import 'features/manage_staff/data/repositories/manage_staff_repository_implementation.dart';
@@ -373,46 +373,46 @@ Future<void> initializeDependencies() async {
 
     // Feature - Export Report
     // DataSources
-    ..registerLazySingleton<ExportReportRemoteDatasource>(
-      () => ExportReportRemoteDatasourceImplementation(serviceLocator()),
-    )
     ..registerLazySingleton<ExportReportLocalDatasource>(
       () => ExportReportLocalDatasourceImplementation(),
+    )
+    ..registerLazySingleton<ExportReportRemoteDatasource>(
+      () => ExportReportRemoteDatasourceImplementation(supabaseClient: serviceLocator()),
     )
 
     // Repositories
     ..registerLazySingleton<ExportReportRepository>(
       () => ExportReportRepositoryImplementation(
-        serviceLocator(),
-        serviceLocator(),
+        exportReportLocalDatasource: serviceLocator(),
+        exportReportRemoteDatasource: serviceLocator(),
       ),
     )
 
     // UseCases
-    ..registerLazySingleton<ExportToExcel>(
-      () => ExportToExcel(serviceLocator()),
+    ..registerLazySingleton<ExportReportGetReportData>(
+      () => ExportReportGetReportData(exportReportRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ExportToPdf>(
-      () => ExportToPdf(serviceLocator()),
+    ..registerLazySingleton<ExportReportExportToPdf>(
+      () => ExportReportExportToPdf(exportReportRepository: serviceLocator()),
     )
-    ..registerLazySingleton<GetReportData>(
-      () => GetReportData(serviceLocator()),
+    ..registerLazySingleton<ExportReportExportToExcel>(
+      () => ExportReportExportToExcel(exportReportRepository: serviceLocator()),
     )
-    ..registerLazySingleton<ShareFile>(
-      () => ShareFile(serviceLocator()),
+    ..registerLazySingleton<ExportReportShareFile>(
+      () => ExportReportShareFile(exportReportRepository: serviceLocator()),
     )
-    ..registerLazySingleton<export_report_save_use_case.ExportReportSaveToDownloads>(
-      () => export_report_save_use_case.ExportReportSaveToDownloads(serviceLocator()),
+    ..registerLazySingleton<ExportReportSaveToDownloads>(
+      () => ExportReportSaveToDownloads(exportReportRepository: serviceLocator()),
     )
 
     // Bloc
     ..registerFactory(
       () => ExportReportBloc(
-        exportToExcel: serviceLocator(),
-        exportToPdf: serviceLocator(),
-        getReportData: serviceLocator(),
-        shareFile: serviceLocator(),
-        saveToDownloads: serviceLocator(),
+        exportReportGetReportData: serviceLocator(),
+        exportReportExportToPdf: serviceLocator(),
+        exportReportExportToExcel: serviceLocator(),
+        exportReportShareFile: serviceLocator(),
+        exportReportSaveToDownloads: serviceLocator(),
       ),
     );
 

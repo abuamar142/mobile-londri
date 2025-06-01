@@ -229,6 +229,11 @@
   "export_report_excel_sheet_name": "Laporan Transaksi",
   "export_report_save_success_message": "File berhasil disimpan ke Downloads: {fileName}",
 
+  "export_report_export_success_message": "Laporan berhasil diekspor!",
+  "export_report_file_created_message": "File {fileName} telah berhasil dibuat",
+
+  "export_report_button_choose_action": "Pilih Tindakan",
+
   "error_occurred_message": "Terjadi kesalahan",
 
   "@_SORT": {},
@@ -391,6 +396,7 @@
   "button_cancel": "Batal",
   "button_edit": "Ubah",
   "button_save": "Simpan",
+  "button_share": "Bagikan",
   "button_delete": "Hapus",
   "button_hard_delete": "Hapus Permanen",
   "button_deactivate": "Nonaktifkan",

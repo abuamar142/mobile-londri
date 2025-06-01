@@ -2,130 +2,100 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/export_report_data.dart';
-import '../../domain/usecases/export_report_save_to_downloads.dart' as save_use_case;
-import '../../domain/usecases/export_to_excel.dart';
-import '../../domain/usecases/export_to_pdf.dart';
-import '../../domain/usecases/get_report_data.dart';
-import '../../domain/usecases/share_file.dart';
+import '../../domain/entities/export_report.dart';
+import '../../domain/usecases/export_report_export_to_excel.dart';
+import '../../domain/usecases/export_report_export_to_pdf.dart';
+import '../../domain/usecases/export_report_get_report_data.dart';
+import '../../domain/usecases/export_report_save_to_downloads.dart';
+import '../../domain/usecases/export_report_share_file.dart';
 
 part 'export_report_event.dart';
 part 'export_report_state.dart';
 
 class ExportReportBloc extends Bloc<ExportReportEvent, ExportReportState> {
-  final GetReportData _getReportData;
-  final ExportToPdf _exportToPdf;
-  final ExportToExcel _exportToExcel;
-  final ShareFile _shareFile;
-  final save_use_case.ExportReportSaveToDownloads _saveToDownloads;
+  final ExportReportGetReportData exportReportGetReportData;
+  final ExportReportExportToPdf exportReportExportToPdf;
+  final ExportReportExportToExcel exportReportExportToExcel;
+  final ExportReportSaveToDownloads exportReportSaveToDownloads;
+  final ExportReportShareFile exportReportShareFile;
 
   ExportReportBloc({
-    required GetReportData getReportData,
-    required ExportToPdf exportToPdf,
-    required ExportToExcel exportToExcel,
-    required ShareFile shareFile,
-    required save_use_case.ExportReportSaveToDownloads saveToDownloads,
-  })  : _getReportData = getReportData,
-        _exportToPdf = exportToPdf,
-        _exportToExcel = exportToExcel,
-        _shareFile = shareFile,
-        _saveToDownloads = saveToDownloads,
-        super(ExportReportInitial()) {
-    on<ExportReportGetData>(_onGetData);
-    on<ExportReportExportToPdf>(_onExportToPdf);
-    on<ExportReportExportToExcel>(_onExportToExcel);
-    on<ExportReportShareFile>(_onShareFile);
-    on<ExportReportSaveToDownloads>(_onSaveToDownloads);
+    required this.exportReportGetReportData,
+    required this.exportReportExportToPdf,
+    required this.exportReportExportToExcel,
+    required this.exportReportSaveToDownloads,
+    required this.exportReportShareFile,
+  }) : super(ExportReportStateInitial()) {
+    on<ExportReportEventGetData>(_onTransactionEventGetData);
+    on<ExportReportEventExportToPdf>(_onTransactionEventExportToPdf);
+    on<ExportReportEventExportToExcel>(_onTransactionEventExportToExcel);
+    on<ExportReportEventShareFile>(_onTransactionEventShareFile);
+    on<ExportReportEventSaveToDownloads>(_onTransactionEventSaveToDownloads);
   }
 
-  void _onGetData(
-    ExportReportGetData event,
+  void _onTransactionEventGetData(
+    ExportReportEventGetData event,
     Emitter<ExportReportState> emit,
   ) async {
-    emit(ExportReportLoading());
+    emit(ExportReportStateLoading());
 
-    final result = await _getReportData.call(
-      GetReportDataParams(
-        startDate: event.startDate,
-        endDate: event.endDate,
-      ),
-    );
+    final result = await exportReportGetReportData.call(event.startDate, event.endDate);
 
     result.fold(
-      (failure) => emit(ExportReportFailure(message: failure.message)),
-      (reportData) => emit(ExportReportDataLoaded(reportData: reportData)),
+      (left) => emit(ExportReportStateFailure(message: left.message)),
+      (right) => emit(ExportReportStateSuccessLoadedData(reportData: right)),
     );
   }
 
-  void _onExportToPdf(
-    ExportReportExportToPdf event,
+  void _onTransactionEventExportToPdf(
+    ExportReportEventExportToPdf event,
     Emitter<ExportReportState> emit,
   ) async {
-    emit(ExportReportLoading());
+    emit(ExportReportStateLoading());
 
-    final result = await _exportToPdf.call(
-      ExportToPdfParams(
-        reportData: event.reportData,
-        context: event.context,
-      ),
-    );
+    final result = await exportReportExportToPdf.call(event.reportData, event.context);
 
     result.fold(
-      (failure) => emit(ExportReportFailure(message: failure.message)),
-      (filePath) => emit(ExportReportExportSuccess(
-        filePath: filePath,
-        format: 'PDF',
-      )),
+      (left) => emit(ExportReportStateFailure(message: left.message)),
+      (right) => emit(ExportReportStateSuccessExport(filePath: right, format: 'PDF')),
     );
   }
 
-  void _onExportToExcel(
-    ExportReportExportToExcel event,
+  void _onTransactionEventExportToExcel(
+    ExportReportEventExportToExcel event,
     Emitter<ExportReportState> emit,
   ) async {
-    emit(ExportReportLoading());
+    emit(ExportReportStateLoading());
 
-    final result = await _exportToExcel.call(
-      ExportToExcelParams(
-        reportData: event.reportData,
-        context: event.context,
-      ),
-    );
+    final result = await exportReportExportToExcel.call(event.reportData, event.context);
 
     result.fold(
-      (failure) => emit(ExportReportFailure(message: failure.message)),
-      (filePath) => emit(ExportReportExportSuccess(
-        filePath: filePath,
-        format: 'Excel',
-      )),
+      (left) => emit(ExportReportStateFailure(message: left.message)),
+      (right) => emit(ExportReportStateSuccessExport(filePath: right, format: 'Excel')),
     );
   }
 
-  void _onShareFile(
-    ExportReportShareFile event,
+  void _onTransactionEventShareFile(
+    ExportReportEventShareFile event,
     Emitter<ExportReportState> emit,
   ) async {
-    final result = await _shareFile.call(
-      ShareFileParams(filePath: event.filePath),
-    );
+    final result = await exportReportShareFile.call(event.filePath);
 
     result.fold(
-      (failure) => emit(ExportReportFailure(message: failure.message)),
-      (_) => emit(ExportReportShareSuccess()),
+      (left) => emit(ExportReportStateFailure(message: left.message)),
+      (_) => emit(ExportReportStateSuccessShare()),
     );
   }
 
-  void _onSaveToDownloads(
-    ExportReportSaveToDownloads event,
+  void _onTransactionEventSaveToDownloads(
+    ExportReportEventSaveToDownloads event,
     Emitter<ExportReportState> emit,
   ) async {
-    final result = await _saveToDownloads.call(
-      filePath: event.filePath,
-    );
+    final result = await exportReportSaveToDownloads.call(event.filePath);
 
     result.fold(
-      (failure) => emit(ExportReportFailure(message: failure.message)),
-      (savedPath) => emit(ExportReportSaveSuccess(savedPath: savedPath)),
+      (left) => emit(ExportReportStateFailure(message: left.message)),
+      (right) => emit(ExportReportStateSuccessSave(savedPath: right)),
     );
   }
 }

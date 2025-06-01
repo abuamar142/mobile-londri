@@ -14,7 +14,7 @@ import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../../../customer/presentation/widgets/widget_dropdown.dart';
-import '../../domain/entities/export_report_data.dart';
+import '../../domain/entities/export_report.dart';
 import '../bloc/export_report_bloc.dart';
 
 void pushExportReports({required BuildContext context}) {
@@ -97,7 +97,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
 
-  ExportReportData? _currentReportData;
+  ExportReport? _currentReportData;
   bool _shouldExportAfterDataLoad = false;
 
   @override
@@ -109,7 +109,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
   }
 
   void _loadReportData() {
-    _exportReportBloc.add(ExportReportGetData(
+    _exportReportBloc.add(ExportReportEventGetData(
       startDate: _startDate,
       endDate: _endDate,
     ));
@@ -127,9 +127,9 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     return BlocConsumer<ExportReportBloc, ExportReportState>(
       bloc: _exportReportBloc,
       listener: (context, state) {
-        if (state is ExportReportFailure) {
+        if (state is ExportReportStateFailure) {
           context.showSnackbar(state.message);
-        } else if (state is ExportReportDataLoaded) {
+        } else if (state is ExportReportStateSuccessLoadedData) {
           setState(() {
             _currentReportData = state.reportData;
           });
@@ -138,12 +138,12 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
             _shouldExportAfterDataLoad = false;
             _exportReport();
           }
-        } else if (state is ExportReportExportSuccess) {
+        } else if (state is ExportReportStateSuccessExport) {
           // Show dialog to choose between share or save locally
           _showExportSuccessDialog(context, state.filePath, state.format);
-        } else if (state is ExportReportShareSuccess) {
+        } else if (state is ExportReportStateSuccessShare) {
           context.showSnackbar('File berhasil dibagikan!');
-        } else if (state is ExportReportSaveSuccess) {
+        } else if (state is ExportReportStateSuccessSave) {
           context.showSnackbar('File berhasil disimpan ke Downloads: ${state.savedPath.split('/').last}');
         }
       },
@@ -204,7 +204,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     return BlocBuilder<ExportReportBloc, ExportReportState>(
       bloc: _exportReportBloc,
       builder: (context, state) {
-        final isLoading = state is ExportReportLoading;
+        final isLoading = state is ExportReportStateLoading;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -231,7 +231,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     return BlocBuilder<ExportReportBloc, ExportReportState>(
       bloc: _exportReportBloc,
       builder: (context, state) {
-        final isLoading = state is ExportReportLoading;
+        final isLoading = state is ExportReportStateLoading;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -287,7 +287,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     return BlocBuilder<ExportReportBloc, ExportReportState>(
       bloc: _exportReportBloc,
       builder: (context, state) {
-        final isLoading = state is ExportReportLoading;
+        final isLoading = state is ExportReportStateLoading;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -448,7 +448,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     return BlocBuilder<ExportReportBloc, ExportReportState>(
       bloc: _exportReportBloc,
       builder: (context, state) {
-        final isLoading = state is ExportReportLoading;
+        final isLoading = state is ExportReportStateLoading;
         return WidgetButton(
           label: context.appText.export_report_button_label,
           isLoading: isLoading,
@@ -561,7 +561,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
     // Check if we have current report data, if not load it first
     if (_currentReportData == null) {
       _shouldExportAfterDataLoad = true;
-      _exportReportBloc.add(ExportReportGetData(
+      _exportReportBloc.add(ExportReportEventGetData(
         startDate: _startDate,
         endDate: _endDate,
       ));
@@ -570,12 +570,12 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
 
     // Trigger export based on selected format
     if (_selectedFormat == ExportFormat.pdf) {
-      _exportReportBloc.add(ExportReportExportToPdf(
+      _exportReportBloc.add(ExportReportEventExportToPdf(
         reportData: _currentReportData!,
         context: context,
       ));
     } else {
-      _exportReportBloc.add(ExportReportExportToExcel(
+      _exportReportBloc.add(ExportReportEventExportToExcel(
         reportData: _currentReportData!,
         context: context,
       ));
@@ -603,7 +603,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
               AppSizes.spaceWidth8,
               Expanded(
                 child: Text(
-                  'Export Berhasil',
+                  context.appText.export_report_export_success_message,
                   style: AppTextStyle.heading3.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.onSecondary,
@@ -617,7 +617,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'File ${format.toUpperCase()} berhasil dibuat:',
+                context.appText.export_report_file_created_message(format.toUpperCase()),
                 style: AppTextStyle.body1.copyWith(
                   color: AppColors.gray,
                 ),
@@ -654,18 +654,19 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
               ),
               AppSizes.spaceHeight16,
               Text(
-                'Pilih aksi yang ingin dilakukan:',
+                context.appText.export_report_button_choose_action,
                 style: AppTextStyle.body1.copyWith(
                   color: AppColors.gray,
                 ),
               ),
             ],
           ),
+          actionsAlignment: MainAxisAlignment.spaceBetween,
           actions: [
             TextButton.icon(
               onPressed: () {
-                Navigator.of(context).pop();
-                _exportReportBloc.add(ExportReportSaveToDownloads(filePath: filePath));
+                context.pop();
+                _exportReportBloc.add(ExportReportEventSaveToDownloads(filePath: filePath));
               },
               icon: Icon(
                 Icons.save_alt,
@@ -673,7 +674,7 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
                 size: AppSizes.size20,
               ),
               label: Text(
-                'Simpan Lokal',
+                context.appText.button_save,
                 style: AppTextStyle.body1.copyWith(
                   color: AppColors.gray,
                   fontWeight: FontWeight.w500,
@@ -682,15 +683,15 @@ class _ExportReportsScreenState extends State<ExportReportsScreen> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                Navigator.of(context).pop();
-                _exportReportBloc.add(ExportReportShareFile(filePath: filePath));
+                context.pop();
+                _exportReportBloc.add(ExportReportEventShareFile(filePath: filePath));
               },
               icon: Icon(
                 Icons.share,
                 size: AppSizes.size20,
               ),
               label: Text(
-                'Bagikan',
+                context.appText.button_share,
                 style: AppTextStyle.body1.copyWith(
                   fontWeight: FontWeight.w500,
                 ),

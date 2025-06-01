@@ -808,6 +808,20 @@
     "description": "Success message when file is saved to Downloads"
   },
 
+  "export_report_export_success_message": "Report exported successfully!",
+  "@export_report_export_success_message": {
+    "description": "Success message when report is exported"
+  },
+  "export_report_file_created_message": "File {fileName} created successfully",
+  "@export_report_file_created_message": {
+    "description": "Message displayed when file is created successfully"
+  },
+
+  "export_report_button_choose_action": "Choose Action",
+  "@export_report_button_choose_action": {
+    "description": "Button text for choosing an action in export report"
+  },
+
   "error_occurred_message": "An error occurred",
   "@error_occurred_message": {
     "description": "Generic error message"
@@ -1377,6 +1391,10 @@
   "button_save": "Save",
   "@button_save": {
     "description": "Text for the save button"
+  },
+  "button_share": "Share",
+  "@button_share": {
+    "description": "Text for the share button"
   },
   "button_delete": "Delete",
   "@button_delete": {

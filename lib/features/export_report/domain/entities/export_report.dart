@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../transaction/domain/entities/transaction.dart';
 
-class ExportReportData extends Equatable {
+class ExportReport extends Equatable {
   final List<Transaction> transactions;
   final DateTime startDate;
   final DateTime endDate;
@@ -13,7 +13,7 @@ class ExportReportData extends Equatable {
   final int readyForPickupCount;
   final int pickedUpCount;
 
-  const ExportReportData({
+  const ExportReport({
     required this.transactions,
     required this.startDate,
     required this.endDate,

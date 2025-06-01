@@ -1,31 +1,25 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../transaction/data/models/transaction_model.dart';
 import '../models/export_report_data_model.dart';
 
-abstract interface class ExportReportRemoteDatasource {
-  Future<ExportReportDataModel> getReportData({
-    required DateTime startDate,
-    required DateTime endDate,
-  });
+abstract class ExportReportRemoteDatasource {
+  Future<ExportReportModel> getReportData(DateTime startDate, DateTime endDate);
 }
 
-class ExportReportRemoteDatasourceImplementation implements ExportReportRemoteDatasource {
-  final SupabaseClient _supabaseClient;
+class ExportReportRemoteDatasourceImplementation extends ExportReportRemoteDatasource {
+  final SupabaseClient supabaseClient;
 
-  const ExportReportRemoteDatasourceImplementation(this._supabaseClient);
+  ExportReportRemoteDatasourceImplementation({required this.supabaseClient});
 
   @override
-  Future<ExportReportDataModel> getReportData({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
+  Future<ExportReportModel> getReportData(DateTime startDate, DateTime endDate) async {
     try {
-      // Format dates for SQL query
       final startDateStr = startDate.toIso8601String().split('T')[0];
       final endDateStr = endDate.toIso8601String().split('T')[0];
 
-      final response = await _supabaseClient
+      final response = await supabaseClient
           .from('transactions')
           .select('''
             *,
@@ -39,7 +33,6 @@ class ExportReportRemoteDatasourceImplementation implements ExportReportRemoteDa
 
       final List<TransactionModel> transactions = (response as List).map((transaction) => TransactionModel.fromJson(transaction)).toList();
 
-      // Determine period based on date range
       String period;
       final difference = endDate.difference(startDate).inDays;
       if (difference == 0) {
@@ -50,14 +43,16 @@ class ExportReportRemoteDatasourceImplementation implements ExportReportRemoteDa
         period = 'monthly';
       }
 
-      return ExportReportDataModel.fromTransactionModels(
+      return ExportReportModel.fromTransactionModels(
         transactions: transactions,
         startDate: startDate,
         endDate: endDate,
         period: period,
       );
+    } on PostgrestException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
-      throw Exception('Failed to get report data: $e');
+      throw ServerException(message: e.toString());
     }
   }
 }

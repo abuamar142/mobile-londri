@@ -8,20 +8,21 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/utils/date_formatter.dart';
 import '../../../transaction/domain/entities/payment_status.dart';
 import '../../../transaction/domain/entities/transaction_status.dart';
-import '../../domain/entities/export_report_data.dart';
+import '../../domain/entities/export_report.dart';
 
 abstract interface class ExportReportLocalDatasource {
-  Future<String> exportToPdf({required ExportReportData reportData, required BuildContext context});
-  Future<String> exportToExcel({required ExportReportData reportData, required BuildContext context});
-  Future<void> shareFile({required String filePath});
-  Future<String> saveToDownloads({required String filePath});
+  Future<String> exportToPdf(ExportReport reportData, BuildContext context);
+  Future<String> exportToExcel(ExportReport reportData, BuildContext context);
+  Future<void> shareFile(String filePath);
+  Future<String> saveToDownloads(String filePath);
 }
 
 class ExportReportLocalDatasourceImplementation implements ExportReportLocalDatasource {
   @override
-  Future<String> exportToPdf({required ExportReportData reportData, required BuildContext context}) async {
+  Future<String> exportToPdf(ExportReport reportData, BuildContext context) async {
     final appText = context.appText;
 
     try {
@@ -66,7 +67,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
                     ),
                     pw.SizedBox(height: 10),
                     pw.Text('${appText.export_report_info_period_label}: ${reportData.period.toUpperCase()}'),
-                    pw.Text('${appText.export_report_info_date_label}: ${_formatDate(reportData.startDate)} - ${_formatDate(reportData.endDate)}'),
+                    pw.Text('${appText.export_report_info_date_label}: ${reportData.startDate.formatDateOnly()} - ${reportData.endDate.formatDateOnly()}'),
                     pw.Text('${appText.export_report_info_total_transactions_label}: ${reportData.totalTransactions}'),
                     pw.Text('${appText.export_report_info_total_revenue_label}: Rp ${_formatCurrency(reportData.totalRevenue)}'),
                   ],
@@ -103,7 +104,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(_getStatusText('On Progress', context)),
+                        child: pw.Text(getTransactionStatusValue(context, TransactionStatus.onProgress)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
@@ -115,7 +116,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(_getStatusText('Ready for Pickup', context)),
+                        child: pw.Text(getTransactionStatusValue(context, TransactionStatus.readyForPickup)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
@@ -127,7 +128,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(_getStatusText('Picked Up', context)),
+                        child: pw.Text(getTransactionStatusValue(context, TransactionStatus.pickedUp)),
                       ),
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(8),
@@ -218,17 +219,17 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
 
       // Save PDF to file
       final output = await getApplicationDocumentsDirectory();
-      final file = File('${output.path}/laporan_transaksi_${DateTime.now().millisecondsSinceEpoch}.pdf');
+      final file = File('${output.path}/Londri_${DateTime.now().formatddMMyyyy()}.pdf');
       await file.writeAsBytes(await pdf.save());
 
       return file.path;
     } catch (e) {
-      throw Exception('Failed to export PDF: $e');
+      throw Exception(e.toString());
     }
   }
 
   @override
-  Future<String> exportToExcel({required ExportReportData reportData, required BuildContext context}) async {
+  Future<String> exportToExcel(ExportReport reportData, BuildContext context) async {
     final appText = context.appText;
 
     try {
@@ -243,7 +244,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
       sheet.cell(CellIndex.indexByString('A3')).value = TextCellValue(appText.export_report_info_section_title);
       sheet.cell(CellIndex.indexByString('A4')).value = TextCellValue('${appText.export_report_info_period_label}: ${reportData.period.toUpperCase()}');
       sheet.cell(CellIndex.indexByString('A5')).value =
-          TextCellValue('${appText.export_report_info_date_label}: ${_formatDate(reportData.startDate)} - ${_formatDate(reportData.endDate)}');
+          TextCellValue('${appText.export_report_info_date_label}: ${reportData.startDate.formatDateOnly()} - ${reportData.endDate.formatDateOnly()}');
       sheet.cell(CellIndex.indexByString('A6')).value =
           TextCellValue('${appText.export_report_info_total_transactions_label}: ${reportData.totalTransactions}');
       sheet.cell(CellIndex.indexByString('A7')).value =
@@ -255,11 +256,11 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
       sheet.cell(CellIndex.indexByString('B10')).value = TextCellValue(appText.export_report_table_header_count);
 
       // Statistics Data
-      sheet.cell(CellIndex.indexByString('A11')).value = TextCellValue(_getStatusText('On Progress', context));
+      sheet.cell(CellIndex.indexByString('A11')).value = TextCellValue(getTransactionStatusValue(context, TransactionStatus.onProgress));
       sheet.cell(CellIndex.indexByString('B11')).value = IntCellValue(reportData.onProgressCount);
-      sheet.cell(CellIndex.indexByString('A12')).value = TextCellValue(_getStatusText('Ready for Pickup', context));
+      sheet.cell(CellIndex.indexByString('A12')).value = TextCellValue(getTransactionStatusValue(context, TransactionStatus.readyForPickup));
       sheet.cell(CellIndex.indexByString('B12')).value = IntCellValue(reportData.readyForPickupCount);
-      sheet.cell(CellIndex.indexByString('A13')).value = TextCellValue(_getStatusText('Picked Up', context));
+      sheet.cell(CellIndex.indexByString('A13')).value = TextCellValue(getTransactionStatusValue(context, TransactionStatus.pickedUp));
       sheet.cell(CellIndex.indexByString('B13')).value = IntCellValue(reportData.pickedUpCount);
 
       // Transaction Table Header
@@ -285,15 +286,14 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
         sheet.cell(CellIndex.indexByString('D$row')).value = DoubleCellValue(transaction.weight ?? 0);
         sheet.cell(CellIndex.indexByString('E$row')).value = IntCellValue(transaction.amount ?? 0);
         sheet.cell(CellIndex.indexByString('F$row')).value =
-            TextCellValue(_getStatusText(transaction.transactionStatus?.value ?? TransactionStatus.other.value, context));
-        sheet.cell(CellIndex.indexByString('G$row')).value =
-            TextCellValue(_getPaymentStatusText(transaction.paymentStatus?.value ?? PaymentStatus.other.value, context));
-        sheet.cell(CellIndex.indexByString('H$row')).value = TextCellValue(_formatDate(transaction.createdAt ?? DateTime.now()));
+            TextCellValue(getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other));
+        sheet.cell(CellIndex.indexByString('G$row')).value = TextCellValue(getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other));
+        sheet.cell(CellIndex.indexByString('H$row')).value = TextCellValue((transaction.createdAt ?? DateTime.now()).formatDateOnly());
       }
 
       // Save Excel to file
       final output = await getApplicationDocumentsDirectory();
-      final file = File('${output.path}/laporan_transaksi_${DateTime.now().millisecondsSinceEpoch}.xlsx');
+      final file = File('${output.path}/Londri_${DateTime.now().formatddMMyyyy()}.xlsx');
 
       final List<int>? bytes = excel.encode();
       if (bytes != null) {
@@ -302,21 +302,17 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
 
       return file.path;
     } catch (e) {
-      throw Exception('Failed to export Excel: $e');
+      throw Exception(e.toString());
     }
   }
 
   @override
-  Future<void> shareFile({required String filePath}) async {
+  Future<void> shareFile(String filePath) async {
     try {
       await Share.shareXFiles([XFile(filePath)]);
     } catch (e) {
-      throw Exception('Failed to share file: $e');
+      throw Exception(e.toString());
     }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   String _formatCurrency(double amount) {
@@ -326,18 +322,8 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
         );
   }
 
-  String _getStatusText(String status, BuildContext context) {
-    final transactionStatus = TransactionStatus.fromString(status);
-    return getTransactionStatusValue(context, transactionStatus);
-  }
-
-  String _getPaymentStatusText(String paymentStatus, BuildContext context) {
-    final payStatus = PaymentStatus.fromString(paymentStatus);
-    return getPaymentStatusValue(context, payStatus);
-  }
-
   @override
-  Future<String> saveToDownloads({required String filePath}) async {
+  Future<String> saveToDownloads(String filePath) async {
     try {
       Directory? downloadsDirectory;
 
@@ -366,7 +352,7 @@ class ExportReportLocalDatasourceImplementation implements ExportReportLocalData
 
       return newPath;
     } catch (e) {
-      throw Exception('Failed to save file to Downloads: $e');
+      throw Exception(e.toString());
     }
   }
 }
