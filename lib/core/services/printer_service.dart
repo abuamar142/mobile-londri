@@ -194,6 +194,48 @@ class PrinterService {
     }
   }
 
+  Future<bool> printTest({required BuildContext context}) async {
+    if (!_isConnected) {
+      return false;
+    }
+
+    try {
+      await PrintBluetoothThermal.writeBytes(
+        await getInvoiceBytesTest(context: context),
+      );
+
+      return true;
+    } catch (e) {
+      if (context.mounted) {
+        context.showSnackbar(context.appText.printer_print_error(e.toString()));
+      }
+      return false;
+    }
+  }
+
+  Future<List<int>> getInvoiceBytesTest({
+    required BuildContext context,
+  }) async {
+    List<int> bytes = [];
+
+    final profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm58, profile);
+
+    bytes += generator.setGlobalFont(PosFontType.fontA);
+
+    bytes += generator.feed(1);
+
+    if (context.mounted) {
+      bytes +=
+          generator.text(context.appText.invoice_printing_test, styles: PosStyles(align: PosAlign.center, width: PosTextSize.size1, height: PosTextSize.size2));
+      bytes += generator.text(context.appText.invoice_printing_test_success, styles: PosStyles(align: PosAlign.center, width: PosTextSize.size1));
+    }
+
+    bytes += generator.feed(4);
+
+    return bytes;
+  }
+
   Future<bool> printInvoice({
     required BuildContext context,
     required Transaction transaction,
@@ -220,27 +262,6 @@ class PrinterService {
       return true;
     } catch (e) {
       debugPrint('Error printing invoice: $e');
-      return false;
-    }
-  }
-
-  Future<bool> printTest({required BuildContext context}) async {
-    if (!_isConnected) {
-      return false;
-    }
-
-    try {
-      await PrintBluetoothThermal.writeBytes(
-        PostCode.text(text: 'Test Print', fontSize: FontSize.normal, align: AlignPos.center, bold: true) +
-            PostCode.text(text: 'This is a test print.', fontSize: FontSize.compressed, align: AlignPos.center) +
-            PostCode.enter(),
-      );
-
-      return true;
-    } catch (e) {
-      if (context.mounted) {
-        context.showSnackbar(context.appText.printer_print_error(e.toString()));
-      }
       return false;
     }
   }

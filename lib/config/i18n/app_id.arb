@@ -372,6 +372,8 @@
 
   "@_INVOICE": {},
 
+  "invoice_printing_test": "Mencetak Tes Nota",
+  "invoice_printing_test_success": "Nota tes berhasil dicetak",
   "invoice_print_title": "Nota Transaksi",
   "invoice_print_transaction_id": "ID Transaksi",
   "invoice_print_date": "Tanggal",

@@ -1305,6 +1305,14 @@
   
   "@_INVOICE": {},
 
+  "invoice_printing_test": "Printing Test Invoice",
+  "@invoice_printing_test": {
+    "description": "Message displayed when printing a test invoice"
+  },
+  "invoice_printing_test_success": "Test invoice printed successfully",
+  "@invoice_printing_test_success": {
+    "description": "Success message when test invoice is printed"
+  },
   "invoice_print_title": "Invoice",
   "@invoice_print_title": {
     "description": "Title for the invoice print"
