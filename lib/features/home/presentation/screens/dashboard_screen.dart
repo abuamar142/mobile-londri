@@ -19,6 +19,7 @@ import '../../../customer/presentation/screens/manage_customer_screen.dart';
 import '../../../export_report/presentation/screens/export_reports_screen.dart';
 import '../../../manage_staff/presentation/screens/manage_staff_screen.dart';
 import '../../../service/presentation/screens/services_screen.dart';
+import '../../../transaction/domain/entities/transaction_status.dart';
 import '../../../transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../../transaction/presentation/screens/transactions_screen.dart';
 import '../bloc/home_bloc.dart';
@@ -37,10 +38,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _dashboardBloc = serviceLocator<HomeBloc>();
-    _getTodayStatistics();
+    _getLast3DaysStatistics();
   }
 
-  void _getTodayStatistics() {
+  void _getLast3DaysStatistics() {
     _dashboardBloc.add(HomeEventGetTodayStatistics());
   }
 
@@ -55,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlocProvider.value(
       value: _dashboardBloc,
       child: RefreshIndicator(
-        onRefresh: () async => _getTodayStatistics(),
+        onRefresh: () async => _getLast3DaysStatistics(),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
@@ -109,7 +110,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               context.appText.home_screen_statistic_today,
@@ -117,11 +118,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: AppColors.primary,
               ),
             ),
-            Text(
-              DateTime.now().formatDateOnly(),
-              style: AppTextStyle.body1.copyWith(
-                color: AppColors.gray.withValues(alpha: 0.9),
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  DateTime.now().subtract(Duration(days: 2)).formatDateOnly(),
+                  style: AppTextStyle.body2.copyWith(
+                    color: AppColors.gray.withValues(alpha: 0.9),
+                  ),
+                ),
+                Text(
+                  DateTime.now().formatDateOnly(),
+                  style: AppTextStyle.body2.copyWith(
+                    color: AppColors.gray.withValues(alpha: 0.9),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -133,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             } else if (state is HomeStateFailure) {
               return WidgetEmptyList(
                 emptyMessage: state.message,
-                onRefresh: _getTodayStatistics,
+                onRefresh: _getLast3DaysStatistics,
               );
             } else if (state is HomeStateSuccessLoadedData) {
               final statistics = state.statistic;
@@ -141,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: [
                   _buildStatCard(
                     context.appText.home_screen_statistic_revenue,
-                    statistics.todayRevenue.toInt().formatNumber(),
+                    statistics.last3DaysRevenue.toInt().formatNumber(),
                     Icons.attach_money,
                     AppColors.success,
                   ),
@@ -152,10 +164,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Icons.pending_actions,
                     AppColors.gray,
                     () async {
-                      final result = await pushTransactions(context: context, tabName: 'On Progress');
+                      final result = await pushTransactions(
+                        context: context,
+                        tabName: TransactionStatus.onProgress.value,
+                      );
 
                       if (result == true) {
-                        _getTodayStatistics();
+                        _getLast3DaysStatistics();
                       }
                     },
                   ),
@@ -169,10 +184,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Icons.inventory,
                           AppColors.warning,
                           () async {
-                            final result = await pushTransactions(context: context, tabName: 'Ready for Pickup');
+                            final result = await pushTransactions(
+                              context: context,
+                              tabName: TransactionStatus.readyForPickup.value,
+                            );
 
                             if (result == true) {
-                              _getTodayStatistics();
+                              _getLast3DaysStatistics();
                             }
                           },
                         ),
@@ -185,10 +203,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           Icons.check_circle,
                           AppColors.success,
                           () async {
-                            final result = await pushTransactions(context: context, tabName: 'Picked Up');
+                            final result = await pushTransactions(
+                              context: context,
+                              tabName: TransactionStatus.pickedUp.value,
+                            );
 
                             if (result == true) {
-                              _getTodayStatistics();
+                              _getLast3DaysStatistics();
                             }
                           },
                         ),
@@ -337,7 +358,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     final result = await pushAddTransaction(context: context);
 
                     if (result == true) {
-                      _getTodayStatistics();
+                      _getLast3DaysStatistics();
                     }
                   },
                 ),
@@ -449,7 +470,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   final result = await pushTransactions(context: context);
 
                   if (result == true) {
-                    _getTodayStatistics();
+                    _getLast3DaysStatistics();
                   }
                 },
               ),

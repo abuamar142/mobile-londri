@@ -1,7 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/error/exceptions.dart';
-import '../../../transaction/data/models/transaction_model.dart';
 import '../models/statistic_model.dart';
 
 abstract class HomeRemoteDatasource {
@@ -11,63 +10,25 @@ abstract class HomeRemoteDatasource {
 class HomeRemoteDatasourceImplementation extends HomeRemoteDatasource {
   final SupabaseClient supabaseClient;
 
-  HomeRemoteDatasourceImplementation({required this.supabaseClient});
+  HomeRemoteDatasourceImplementation({
+    required this.supabaseClient,
+  });
 
   @override
   Future<StatisticModel> getTodayStatistics() async {
     try {
-      final transactionsOnProgress = await supabaseClient
-          .from('transactions')
-          .select('''
-            id, amount, created_at, payment_status, transaction_status, updated_at
-          ''')
-          .isFilter(
-            'deleted_at',
-            null,
-          )
-          .or(
-            'transaction_status.eq.On Progress,transaction_status.eq.Ready for Pickup',
-          );
+      // Get transaction status counts for last 3 days
+      final response = await supabaseClient.rpc('get_transaction_status_count_last_3_days');
+      final List<Map<String, dynamic>> statusCounts = (response as List).cast<Map<String, dynamic>>();
 
-      final List<TransactionModel> transactions = (transactionsOnProgress as List).map((transaction) => TransactionModel.fromJson(transaction)).toList();
+      // Get total income for last 3 days
+      final last3DaysIncome = await supabaseClient.rpc('get_total_income_last_3_days');
 
-      final now = DateTime.now();
-      final startOfDay = DateTime(now.year, now.month, now.day);
-      final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
-
-      final startDateStr = startOfDay.toIso8601String();
-      final endDateStr = endOfDay.toIso8601String();
-
-      final otherTransactions = await supabaseClient
-          .from('transactions')
-          .select('''
-            id, amount, created_at, payment_status, transaction_status, updated_at
-          ''')
-          .gte(
-            'created_at',
-            startDateStr,
-          )
-          .lte(
-            'created_at',
-            endDateStr,
-          )
-          .isFilter(
-            'deleted_at',
-            null,
-          )
-          .filter(
-            'transaction_status',
-            'eq',
-            'Picked Up',
-          )
-          .order(
-            'created_at',
-            ascending: false,
-          );
-
-      transactions.addAll((otherTransactions as List).map((transaction) => TransactionModel.fromJson(transaction)).toList());
-
-      return StatisticModel.fromTransactionModels(transactions: transactions);
+      // Create StatisticModel using RPC data
+      return StatisticModel.fromRpcData(
+        statusCounts: statusCounts,
+        totalIncome: last3DaysIncome as int,
+      );
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

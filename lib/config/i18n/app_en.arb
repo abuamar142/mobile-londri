@@ -533,9 +533,9 @@
   "@home_screen_role_text": {
     "description": "Role text displayed on the home screen"
   },
-  "home_screen_statistic_today": "Today's Statistics",
+  "home_screen_statistic_today": "Last 3 Days Statistics",
   "@home_screen_statistic_today": {
-    "description": "Label for today's statistics on the home screen"
+    "description": "Label for last 3 days statistics on the home screen"
   },
   "home_screen_statistic_revenue": "Revenue",
   "@home_screen_statistic_revenue": {

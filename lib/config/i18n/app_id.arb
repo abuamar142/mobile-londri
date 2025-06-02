@@ -150,7 +150,7 @@
   "home_screen_title": "Beranda",
   "home_screen_welcome_text": "Selamat datang {userName}!",
   "home_screen_role_text": "{roleName} Londri",
-  "home_screen_statistic_today": "Statistik Hari Ini",
+  "home_screen_statistic_today": "Statistik 3 Hari Terakhir",
   "home_screen_statistic_revenue": "Pendapatan",
   "home_screen_statistic_transaction_on_progress": "Sedang Diproses",
   "home_screen_statistic_transaction_ready_for_pickup": "Siap Diambil",

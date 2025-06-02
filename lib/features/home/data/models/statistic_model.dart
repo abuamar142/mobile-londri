@@ -1,29 +1,50 @@
-import '../../../transaction/data/models/transaction_model.dart';
-import '../../../transaction/domain/entities/payment_status.dart';
-import '../../../transaction/domain/entities/transaction_status.dart';
 import '../../domain/entities/statistic.dart';
 
 class StatisticModel extends Statistic {
   const StatisticModel({
-    required super.todayRevenue,
+    required super.last3DaysRevenue,
     required super.onProgressCount,
     required super.readyForPickupCount,
     required super.pickedUpCount,
   });
 
-  factory StatisticModel.fromTransactionModels({
-    required List<TransactionModel> transactions,
+  factory StatisticModel.fromRpcData({
+    required List<Map<String, dynamic>> statusCounts,
+    required int totalIncome,
   }) {
-    final todayRevenue = transactions.where((t) => t.paymentStatus?.value == PaymentStatus.paid.value && t.updatedAt.day == DateTime.now().day).fold(
-          0.0,
-          (sum, t) => sum + (t.amount?.toDouble() ?? 0.0),
-        );
-    final onProgressCount = transactions.where((t) => t.transactionStatus?.value == TransactionStatus.onProgress.value).length;
-    final readyForPickupCount = transactions.where((t) => t.transactionStatus?.value == TransactionStatus.readyForPickup.value).length;
-    final pickedUpCount = transactions.where((t) => t.transactionStatus?.value == TransactionStatus.pickedUp.value).length;
+    // Initialize default counts
+    int onProgressCount = 0;
+    int readyForPickupCount = 0;
+    int pickedUpCount = 0;
+
+    // Create status counts map
+    Map<String, int> statusCountsMap = {};
+
+    // Process status counts from RPC
+    for (var row in statusCounts) {
+      final status = row['transaction_status'] as String?;
+      final count = row['total'] as int? ?? 0;
+
+      if (status != null) {
+        statusCountsMap[status] = count;
+
+        // Map to specific counters
+        switch (status) {
+          case 'On Progress':
+            onProgressCount = count;
+            break;
+          case 'Ready for Pickup':
+            readyForPickupCount = count;
+            break;
+          case 'Picked Up':
+            pickedUpCount = count;
+            break;
+        }
+      }
+    }
 
     return StatisticModel(
-      todayRevenue: todayRevenue,
+      last3DaysRevenue: totalIncome,
       onProgressCount: onProgressCount,
       readyForPickupCount: readyForPickupCount,
       pickedUpCount: pickedUpCount,

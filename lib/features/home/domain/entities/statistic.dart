@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
 class Statistic extends Equatable {
-  final double todayRevenue;
+  final int last3DaysRevenue;
   final int onProgressCount;
   final int readyForPickupCount;
   final int pickedUpCount;
 
   const Statistic({
-    required this.todayRevenue,
+    required this.last3DaysRevenue,
     required this.onProgressCount,
     required this.readyForPickupCount,
     required this.pickedUpCount,
@@ -15,7 +15,7 @@ class Statistic extends Equatable {
 
   @override
   List<Object> get props => [
-        todayRevenue,
+        last3DaysRevenue,
         onProgressCount,
         readyForPickupCount,
         pickedUpCount,
