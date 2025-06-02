@@ -5,15 +5,15 @@
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
 </div>
 
-## 📋 Contents
+> **📚 Navigation:** [🏠 Main](../../README.md) • [📋 All Docs](../_navigation.md) •
+> [🗃️ Setup](../supabase.md) • [📊 Dashboard](../dashboard_statistics.md)
 
-- [Overview](#overview)
-- [Database Schema](#database-schema)
-- [Custom Types](#custom-types)
-- [Tables](#tables)
-  - [User Roles](#user-roles)
-  - [Role Permissions](#role-permissions)
-  - [Users](#users)
+## 📋 Table Documentation Navigation
+
+| Table        | This Page      | Other Tables                                                                                         |
+| ------------ | -------------- | ---------------------------------------------------------------------------------------------------- |
+| 👤 **Users** | **✅ Current** | [🛍️ Transactions](./transactions.md) • [👥 Customers](./customers.md) • [🏷️ Services](./services.md) |
+
 - [Authentication Hooks](#authentication-hooks)
 - [Triggers & Functions](#triggers--functions)
 - [Deep Link Implementation](#deep-link-implementation)
@@ -412,6 +412,21 @@ INSERT INTO public.role_permissions (role, permission) VALUES
 - [Main Supabase Setup](../supabase.md)
 - [Transactions Table](./transactions.md)
 
+---
+
+## 🔗 Table Documentation Navigation
+
 <div align="center">
-  <a href="../supabase.md">⬅️ Back to Supabase Setup</a>
+
+**Current:** 👤 Users • **Next:** [🛍️ Transactions](./transactions.md)
+
+| [📋 All Docs](../_navigation.md) | [🗃️ Setup](../supabase.md) | [📊 Dashboard](../dashboard_statistics.md) | [🏠 Project](../../README.md) |
+| :------------------------------: | :------------------------: | :----------------------------------------: | :---------------------------: |
+
+</div>
+
+---
+
+<div align="center">
+  <strong>LONDRI Database Schema</strong> • <a href="#-users--rbac-implementation">⬆️ Back to Top</a>
 </div>

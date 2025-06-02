@@ -1,19 +1,19 @@
-# 🧾 Transactions Table
+# 🛍️ Transactions Table
 
 <div align="center">
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
   <img src="https://img.shields.io/badge/Auto_ID-FFA500?style=for-the-badge&logoColor=white" alt="Auto ID"/>
 </div>
 
-## 📋 Contents
+> **📚 Navigation:** [🏠 Main](../../README.md) • [📋 All Docs](../_navigation.md) •
+> [🗃️ Setup](../supabase.md) • [📊 Dashboard](../dashboard_statistics.md)
 
-- Overview
-- Transaction ID Format
-- Table Structure
-- Auto-Generated Transaction ID
-  - Generation Function
-  - Trigger Function
-  - Trigger Implementation
+## 📋 Table Documentation Navigation
+
+| Table               | This Page      | Other Tables                                                                           |
+| ------------------- | -------------- | -------------------------------------------------------------------------------------- |
+| 🛍️ **Transactions** | **✅ Current** | [👤 Users](./users.md) • [👥 Customers](./customers.md) • [🏷️ Services](./services.md) |
+
 - Working Mechanism
 - Row Level Security
 - Prerequisites
@@ -248,11 +248,20 @@ INSERT INTO transactions (
 
 ---
 
-## 🔄 Related Documentation
-
-- Main Database Setup
-- Users Table
+## 🔗 Table Documentation Navigation
 
 <div align="center">
-  <a href="../database.md">⬅️ Back to Database Setup</a>
+
+**Previous:** [👤 Users](./users.md) • **Current:** 🛍️ Transactions • **Next:**
+[👥 Customers](./customers.md)
+
+| [📋 All Docs](../_navigation.md) | [🗃️ Setup](../supabase.md) | [📊 Dashboard](../dashboard_statistics.md) | [🏠 Project](../../README.md) |
+| :------------------------------: | :------------------------: | :----------------------------------------: | :---------------------------: |
+
+</div>
+
+---
+
+<div align="center">
+  <strong>LONDRI Database Schema</strong> • <a href="#-transactions-table">⬆️ Back to Top</a>
 </div>

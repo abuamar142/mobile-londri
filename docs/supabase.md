@@ -5,13 +5,17 @@
   <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase"/>
 </div>
 
-## 📋 Contents
+> **📚 Navigation:** [🏠 Main](../README.md) • [📋 All Docs](./_navigation.md) •
+> [📊 Dashboard](./dashboard_statistics.md) • [📋 Tables](./tables/)
 
-- [Overview](#overview)
-- [Technologies](#technologies)
-- [Setup Steps](#setup-steps)
-- [Table Documentation](#table-documentation)
-- [Additional Resources](#additional-resources)
+## 📋 Quick Navigation
+
+| Step  | Document                                  | Description                    |
+| ----- | ----------------------------------------- | ------------------------------ |
+| **1** | [🗃️ This Guide](./supabase.md)            | Database setup & configuration |
+| **2** | [📊 Dashboard](./dashboard_statistics.md) | Analytics functions            |
+| **3** | [📋 Tables](./tables/)                    | Schema documentation           |
+| **4** | [🏠 Back to Project](../README.md)        | Main README                    |
 
 ## 🔍 Overview
 
@@ -52,6 +56,11 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 - Configure the transactions table with auto-generated IDs
 - **[See complete documentation in Transactions Table](./tables/transactions.md)**
 
+### 4. Dashboard Statistics Functions Setup
+
+- Create optimized PostgreSQL functions for dashboard statistics
+- **[See complete documentation in Dashboard Statistics](./dashboard_statistics.md)**
+
 ## 📊 Table Documentation
 
 | Table Name   | Description                              | Documentation Link                             |
@@ -61,6 +70,12 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 | Customers    | Customer information and contact details | [Customers Table](./tables/customers.md)       |
 | Services     | Laundry services offered and pricing     | [Services Table](./tables/services.md)         |
 
+## 🔧 Database Functions
+
+| Function Category    | Description                       | Documentation Link                                |
+| -------------------- | --------------------------------- | ------------------------------------------------- |
+| Dashboard Statistics | Revenue and transaction analytics | [Dashboard Statistics](./dashboard_statistics.md) |
+
 ## 📚 Additional Resources
 
 - [Supabase Documentation](https://supabase.com/docs)
@@ -69,6 +84,21 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 
 ---
 
+## 🔗 Documentation Navigation
+
 <div align="center">
-  <a href="#">⬆️ Back to Top</a>
+
+**Previous:** [🏠 Main README](../README.md) • **Next:**
+[📊 Dashboard Statistics](./dashboard_statistics.md)
+
+| [📋 All Docs](./_navigation.md) | [📋 Tables](./tables/) | [🏠 Back to Project](../README.md) |
+| :-----------------------------: | :--------------------: | :--------------------------------: |
+
+</div>
+
+---
+
+<div align="center">
+  <strong>LONDRI Documentation</strong> • <a href="#-supabase-database-setup">⬆️ Back to Top</a>
+</div>
 </div>

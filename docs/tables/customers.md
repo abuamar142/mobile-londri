@@ -1,19 +1,23 @@
-# 👤 Customers Table
+# 👥 Customers Table
 
 <div align="center">
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"/>
 </div>
 
-## 📋 Contents
+> **📚 Navigation:** [🏠 Main](../../README.md) • [📋 All Docs](../_navigation.md) •
+> [🗃️ Setup](../supabase.md) • [📊 Dashboard](../dashboard_statistics.md)
 
-- [Overview](#overview)
-- [Table Structure](#table-structure)
-- [Usage Examples](#usage-examples)
+## 📋 Table Documentation Navigation
+
+| Table            | This Page      | Other Tables                                                                                 |
+| ---------------- | -------------- | -------------------------------------------------------------------------------------------- |
+| 👥 **Customers** | **✅ Current** | [👤 Users](./users.md) • [🛍️ Transactions](./transactions.md) • [🏷️ Services](./services.md) |
 
 ## 🔍 Overview
 
-This document details the structure of the `customers` table in the **Supabase PostgreSQL**
-database for the **LONDRI** application. This table stores information about customers who use the laundry service.
+This document details the structure of the `customers` table in the **Supabase PostgreSQL** database
+for the **LONDRI** application. This table stores information about customers who use the laundry
+service.
 
 ## 📊 Table Structure
 
@@ -96,5 +100,24 @@ INSERT INTO public.role_permissions (role, permission) VALUES
   ('admin', 'customers.select'),
   ('admin', 'customers.insert'),
   ('admin', 'customers.update');
-
 ```
+
+---
+
+## 🔗 Table Documentation Navigation
+
+<div align="center">
+
+**Previous:** [🛍️ Transactions](./transactions.md) • **Current:** 👥 Customers • **Next:**
+[🏷️ Services](./services.md)
+
+| [📋 All Docs](../_navigation.md) | [🗃️ Setup](../supabase.md) | [📊 Dashboard](../dashboard_statistics.md) | [🏠 Project](../../README.md) |
+| :------------------------------: | :------------------------: | :----------------------------------------: | :---------------------------: |
+
+</div>
+
+---
+
+<div align="center">
+  <strong>LONDRI Database Schema</strong> • <a href="#-customers-table">⬆️ Back to Top</a>
+</div>
