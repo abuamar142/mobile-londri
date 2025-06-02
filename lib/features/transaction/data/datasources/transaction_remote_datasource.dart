@@ -155,9 +155,12 @@ class TransactionRemoteDatasourceImplementation extends TransactionRemoteDatasou
   @override
   Future<void> updatePaymentStatus(String id, PaymentStatus status) async {
     try {
-      await supabaseClient.from('transactions').update({
+      final updateData = <String, dynamic>{
         'payment_status': status.value,
-      }).eq('id', id);
+        'paid_at': status == PaymentStatus.paid ? DateTime.now().toIso8601String() : null,
+      };
+
+      await supabaseClient.from('transactions').update(updateData).eq('id', id);
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failure.dart';
+import '../../../../core/utils/get_paid_at.dart';
 import '../../domain/entities/payment_status.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/transaction_status.dart';
@@ -43,6 +44,8 @@ class TransactionRepositoryImplementation extends TransactionRepository {
   @override
   Future<Either<Failure, void>> createTransaction(Transaction transaction) async {
     try {
+      final paymentStatus = transaction.paymentStatus ?? PaymentStatus.notPaidYet;
+
       await transactionRemoteDatasource.createTransaction(
         TransactionModel(
           userId: transaction.userId,
@@ -52,9 +55,10 @@ class TransactionRepositoryImplementation extends TransactionRepository {
           amount: transaction.amount,
           description: transaction.description,
           transactionStatus: transaction.transactionStatus ?? TransactionStatus.onProgress,
-          paymentStatus: transaction.paymentStatus ?? PaymentStatus.notPaidYet,
+          paymentStatus: paymentStatus,
           startDate: transaction.startDate ?? DateTime.now(),
           endDate: transaction.endDate ?? DateTime.now().add(const Duration(days: 3)),
+          paidAt: getPaidAtFromPaymentStatus(paymentStatus),
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -84,6 +88,7 @@ class TransactionRepositoryImplementation extends TransactionRepository {
           paymentStatus: transaction.paymentStatus,
           startDate: transaction.startDate,
           endDate: transaction.endDate,
+          paidAt: getPaidAtFromPaymentStatus(transaction.paymentStatus),
           updatedAt: DateTime.now(),
         ),
       );

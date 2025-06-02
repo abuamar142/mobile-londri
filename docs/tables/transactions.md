@@ -73,6 +73,7 @@ CREATE TABLE public.transactions (
   payment_status app_payment_status NOT NULL DEFAULT 'Not Paid Yet',
   start_date TIMESTAMPTZ NOT NULL DEFAULT now(),
   end_date TIMESTAMPTZ NULL,
+  paid_at TIMESTAMPTZ NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   deleted_at TIMESTAMPTZ,
@@ -158,6 +159,56 @@ AFTER UPDATE ON public.transactions
 FOR EACH ROW
 EXECUTE FUNCTION public.set_updated_at();
 ```
+
+## 💰 Automatic Payment Tracking
+
+The system automatically manages the `paid_at` timestamp based on the `payment_status` field:
+
+### 1. Function: `set_paid_at_based_on_payment_status`
+
+This function automatically sets the `paid_at` timestamp when payment status changes:
+
+```sql
+CREATE OR REPLACE FUNCTION set_paid_at_based_on_payment_status()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- If payment_status is 'Paid', set paid_at to current timestamp
+  -- Otherwise, set paid_at to NULL
+  IF NEW.payment_status = 'Paid' THEN
+    NEW.paid_at = now();
+  ELSE
+    NEW.paid_at = NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### 2. Triggers for Payment Status Changes
+
+These triggers ensure `paid_at` is automatically updated:
+
+```sql
+-- Trigger for INSERT operations
+CREATE TRIGGER trigger_set_paid_at_on_insert
+  BEFORE INSERT ON public.transactions
+  FOR EACH ROW
+  EXECUTE FUNCTION set_paid_at_based_on_payment_status();
+
+-- Trigger for UPDATE operations (only when payment_status changes)
+CREATE TRIGGER trigger_set_paid_at_on_update
+  BEFORE UPDATE ON public.transactions
+  FOR EACH ROW
+  WHEN (OLD.payment_status IS DISTINCT FROM NEW.payment_status)
+  EXECUTE FUNCTION set_paid_at_based_on_payment_status();
+```
+
+### 3. Payment Status Logic
+
+- **When `payment_status` = 'Paid'**: `paid_at` is automatically set to `now()`
+- **When `payment_status` = 'Not Paid Yet'** or **'Other'**: `paid_at` is set to `NULL`
+- This works for both INSERT and UPDATE operations
 
 ## 🔄 Working Mechanism
 

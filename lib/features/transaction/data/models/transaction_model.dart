@@ -5,6 +5,7 @@ import '../../domain/entities/transaction_status.dart';
 class TransactionModel extends Transaction {
   final DateTime updatedAt;
   final DateTime? deletedAt;
+  final DateTime? paidAt;
 
   const TransactionModel({
     super.id,
@@ -23,6 +24,7 @@ class TransactionModel extends Transaction {
     super.endDate,
     super.createdAt,
     required this.updatedAt,
+    this.paidAt,
     this.deletedAt,
   }) : super(
           isDeleted: deletedAt != null,
@@ -46,6 +48,7 @@ class TransactionModel extends Transaction {
       endDate: json['end_date'] != null ? DateTime.parse(json['end_date']) : null,
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
       updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : DateTime.now(),
+      paidAt: json['paid_at'] != null ? DateTime.parse(json['paid_at']) : null,
       deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at']) : null,
     );
   }
@@ -65,6 +68,7 @@ class TransactionModel extends Transaction {
       'end_date': endDate?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'paid_at': paidAt?.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
     };
   }
