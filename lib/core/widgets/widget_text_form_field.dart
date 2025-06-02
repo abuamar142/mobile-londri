@@ -18,6 +18,7 @@ class WidgetTextFormField extends StatelessWidget {
   final bool readOnly;
   final Iterable<String>? autofillHints;
   final VoidCallback? onTap;
+  final int? maxLength;
 
   const WidgetTextFormField({
     super.key,
@@ -35,6 +36,7 @@ class WidgetTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.autofillHints,
     this.onTap,
+    this.maxLength,
   });
 
   @override
@@ -54,6 +56,7 @@ class WidgetTextFormField extends StatelessWidget {
       maxLines: maxLines,
       readOnly: readOnly,
       autofillHints: autofillHints,
+      maxLength: maxLength,
       decoration: InputDecoration(
         labelText: readOnly ? null : label,
         hintText: hint,

@@ -244,18 +244,21 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
         WidgetTextFormField(
           label: context.appText.printer_business_name,
           hint: context.appText.printer_business_name_hint,
+          maxLength: 32,
           controller: _businessNameController,
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
           label: context.appText.printer_business_address,
           hint: context.appText.printer_business_address_hint,
+          maxLength: 32,
           controller: _businessAddressController,
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
           label: context.appText.printer_business_phone,
           hint: context.appText.printer_business_phone_hint,
+          maxLength: 18,
           controller: _businessPhoneController,
         ),
       ],
