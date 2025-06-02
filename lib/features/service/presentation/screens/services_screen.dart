@@ -89,6 +89,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
           },
           onSortTap: () => _showSortOptions(),
           buildListItems: _buildServiceList(),
+          onFloatingActionButtonPressed: () async {
+            final result = await context.pushNamed(
+              RouteNames.addService,
+            );
+
+            if (result == true) {
+              _getServices();
+            }
+          },
         ),
       ),
     );
