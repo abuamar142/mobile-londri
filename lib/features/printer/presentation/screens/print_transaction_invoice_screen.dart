@@ -246,6 +246,9 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
           hint: context.appText.printer_business_name_hint,
           maxLength: 32,
           controller: _businessNameController,
+          onChanged: (value) {
+            setState(() {});
+          },
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
@@ -253,6 +256,9 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
           hint: context.appText.printer_business_address_hint,
           maxLength: 32,
           controller: _businessAddressController,
+          onChanged: (value) {
+            setState(() {});
+          },
         ),
         AppSizes.spaceHeight8,
         WidgetTextFormField(
@@ -260,6 +266,9 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
           hint: context.appText.printer_business_phone_hint,
           maxLength: 18,
           controller: _businessPhoneController,
+          onChanged: (value) {
+            setState(() {});
+          },
         ),
       ],
     );
