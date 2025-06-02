@@ -282,8 +282,8 @@ class PrinterService {
         context.appText.invoice_print_service_name: transaction.serviceName ?? '-',
         context.appText.invoice_print_weight: '${transaction.weight ?? '-'} kg',
         context.appText.invoice_print_amount: transaction.amount?.formatNumber() ?? '-',
-        context.appText.invoice_print_notes: transaction.description ?? '-',
-        context.appText.invoice_print_staff_name: userName
+        context.appText.invoice_print_staff_name: userName,
+        if (transaction.description != null && transaction.description!.isNotEmpty) context.appText.invoice_print_notes: transaction.description!,
       };
 
       final maxKeyLength = data.keys.map((k) => k.length).reduce((a, b) => a > b ? a : b);
