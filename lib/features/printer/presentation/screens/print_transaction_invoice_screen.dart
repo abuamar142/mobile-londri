@@ -266,6 +266,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
           hint: context.appText.printer_business_phone_hint,
           maxLength: 18,
           controller: _businessPhoneController,
+          keyboardType: TextInputType.phone,
           onChanged: (value) {
             setState(() {});
           },
