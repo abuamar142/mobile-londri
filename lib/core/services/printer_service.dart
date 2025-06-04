@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
-import 'package:print_bluetooth_thermal/post_code.dart';
 import 'package:print_bluetooth_thermal/print_bluetooth_thermal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -286,14 +285,25 @@ class PrinterService {
     final endDate = transaction.endDate?.formatddMMyyyy() ?? '-';
 
     // ======= Header =======
-    bytes += generator.setGlobalFont(PosFontType.fontB);
-    bytes += PostCode.text(text: businessName, fontSize: FontSize.normal, align: AlignPos.center, bold: true);
-    bytes += PostCode.text(text: businessAddress, fontSize: FontSize.compressed, align: AlignPos.center);
-    bytes += PostCode.text(text: businessPhone, fontSize: FontSize.compressed, align: AlignPos.center);
+    bytes += generator.setGlobalFont(PosFontType.fontA);
+    bytes += generator.text(businessName, styles: PosStyles(align: PosAlign.center, bold: true));
+    bytes += generator.text(businessAddress, styles: PosStyles(align: PosAlign.center));
+    bytes += generator.text(businessPhone, styles: PosStyles(align: PosAlign.center));
 
     bytes += generator.hr();
-    if (context.mounted) bytes += PostCode.text(text: context.appText.invoice_print_title, fontSize: FontSize.normal, align: AlignPos.center, bold: true);
-    bytes += PostCode.text(text: '$transactionId | $dateToday', fontSize: FontSize.compressed, align: AlignPos.center);
+    if (context.mounted) bytes += generator.text(context.appText.invoice_print_title, styles: PosStyles(align: PosAlign.center, bold: true));
+
+    if ('$transactionId | $dateToday'.length > 32) {
+      // If the combined string is too long, split it
+      final parts = '$transactionId | $dateToday'.split(' | ');
+      bytes += generator.text(parts[0], styles: PosStyles(align: PosAlign.center));
+      if (parts.length > 1) {
+        bytes += generator.text(parts[1], styles: PosStyles(align: PosAlign.center));
+      }
+    } else {
+      // Else print it as a single line
+      bytes += generator.text('$transactionId | $dateToday', styles: PosStyles(align: PosAlign.center));
+    }
     bytes += generator.hr();
 
     // ======= Key-Value Detail =======
@@ -304,13 +314,14 @@ class PrinterService {
         context.appText.invoice_print_weight: '${transaction.weight ?? '-'} kg',
         context.appText.invoice_print_amount: transaction.amount?.formatNumber() ?? '-',
         context.appText.invoice_print_staff_name: userName,
-        if (transaction.description != null && transaction.description!.isNotEmpty) context.appText.invoice_print_notes: transaction.description!,
+        if (transaction.description != null && transaction.description!.isNotEmpty)
+          context.appText.invoice_print_notes: transaction.description!, // Optional field
       };
 
       final maxKeyLength = data.keys.map((k) => k.length).reduce((a, b) => a > b ? a : b);
       data.forEach((key, value) {
         final paddedKey = key.padRight(maxKeyLength);
-        bytes += PostCode.text(text: '$paddedKey : $value', fontSize: FontSize.compressed);
+        bytes += generator.text('$paddedKey : $value', styles: PosStyles());
       });
     }
 
@@ -318,16 +329,15 @@ class PrinterService {
     bytes += generator.hr();
 
     // ======= Dates & Status =======
-    bytes += PostCode.text(text: '$startDate -> $endDate', fontSize: FontSize.compressed, align: AlignPos.center);
+    bytes += generator.text('$startDate -> $endDate', styles: PosStyles(align: PosAlign.center));
 
     if (context.mounted) {
       final transactionStatus = getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other);
       final paymentStatus = getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other);
 
-      bytes += PostCode.text(
-        text: '$transactionStatus | $paymentStatus',
-        fontSize: FontSize.compressed,
-        align: AlignPos.center,
+      bytes += generator.text(
+        '$transactionStatus | $paymentStatus',
+        styles: PosStyles(align: PosAlign.center),
       );
     }
 
@@ -336,10 +346,10 @@ class PrinterService {
     // ======= Thank You =======
     if (context.mounted) {
       final thankYouMessage = context.appText.invoice_print_thank_you;
-      bytes += PostCode.text(text: thankYouMessage, fontSize: FontSize.compressed, align: AlignPos.center);
+      bytes += generator.text(thankYouMessage, styles: PosStyles(align: PosAlign.center));
     }
 
-    bytes += PostCode.enter();
+    bytes += generator.feed(3);
     return bytes;
   }
 }

@@ -1369,7 +1369,7 @@
   "@invoice_print_invoices": {
     "description": "Label for the invoices in the invoice"
   },
-  "invoice_print_thank_you": "Thank you for choosing us",
+  "invoice_print_thank_you": "Thank you for choosing us!",
   "@invoice_print_thank_you": {
     "description": "Thank you message in the invoice"
   },
