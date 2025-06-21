@@ -225,9 +225,17 @@ class PrinterService {
     bytes += generator.feed(1);
 
     if (context.mounted) {
-      bytes +=
-          generator.text(context.appText.invoice_printing_test, styles: PosStyles(align: PosAlign.center, width: PosTextSize.size1, height: PosTextSize.size2));
-      bytes += generator.text(context.appText.invoice_printing_test_success, styles: PosStyles(align: PosAlign.center, width: PosTextSize.size1));
+      bytes += generator.text(context.appText.invoice_printing_test,
+          styles: PosStyles(
+            align: PosAlign.center,
+            width: PosTextSize.size1,
+            height: PosTextSize.size2,
+          ));
+      bytes += generator.text(context.appText.invoice_printing_test_success,
+          styles: PosStyles(
+            align: PosAlign.center,
+            width: PosTextSize.size1,
+          ));
     }
 
     bytes += generator.feed(4);
@@ -281,17 +289,33 @@ class PrinterService {
     final transactionId = transaction.id?.toString() ?? '-';
     final dateToday = DateTime.now().formatDateOnly();
 
-    final startDate = transaction.startDate?.formatddMMyyyy() ?? '-';
-    final endDate = transaction.endDate?.formatddMMyyyy() ?? '-';
+    final startDate = transaction.startDate?.formatDateOnly() ?? '-';
+    final endDate = transaction.endDate?.formatDateOnly() ?? '-';
 
     // ======= Header =======
     bytes += generator.setGlobalFont(PosFontType.fontA);
+
+    bytes += generator.hr();
+    if (context.mounted) {
+      bytes += generator.text(context.appText.invoice_print_title,
+          styles: PosStyles(
+            align: PosAlign.center,
+            bold: true,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          ));
+    }
+    bytes += generator.hr();
+
     bytes += generator.text(businessName, styles: PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.text(businessAddress, styles: PosStyles(align: PosAlign.center));
     bytes += generator.text(businessPhone, styles: PosStyles(align: PosAlign.center));
 
     bytes += generator.hr();
-    if (context.mounted) bytes += generator.text(context.appText.invoice_print_title, styles: PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.qrcode(transactionId, size: QRSize(6), align: PosAlign.center);
+
+    bytes += generator.feed(1);
 
     if ('$transactionId | $dateToday'.length > 32) {
       // If the combined string is too long, split it
@@ -329,7 +353,18 @@ class PrinterService {
     bytes += generator.hr();
 
     // ======= Dates & Status =======
-    bytes += generator.text('$startDate -> $endDate', styles: PosStyles(align: PosAlign.center));
+    bytes += generator.text(startDate, styles: PosStyles(align: PosAlign.center));
+
+    if (context.mounted) {
+      bytes += generator.text(
+        '---',
+        styles: PosStyles(align: PosAlign.center, fontType: PosFontType.fontB),
+      );
+    }
+
+    bytes += generator.text(endDate, styles: PosStyles(align: PosAlign.center));
+
+    bytes += generator.hr();
 
     if (context.mounted) {
       final transactionStatus = getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other);
@@ -349,7 +384,7 @@ class PrinterService {
       bytes += generator.text(thankYouMessage, styles: PosStyles(align: PosAlign.center));
     }
 
-    bytes += generator.feed(3);
+    bytes += generator.feed(2);
     return bytes;
   }
 }
