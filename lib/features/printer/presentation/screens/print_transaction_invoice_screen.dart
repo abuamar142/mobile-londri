@@ -54,7 +54,7 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
   late final PrinterBloc _printerBloc;
 
   final TextEditingController _businessNameController = TextEditingController(text: 'Laundry LB Fresh');
-  final TextEditingController _businessAddressController = TextEditingController(text: 'Jl. Cuwiri, Krapyak');
+  final TextEditingController _businessAddressController = TextEditingController(text: 'Mantrijeron, Yogyakarta');
   final TextEditingController _businessPhoneController = TextEditingController(text: '0822-2367-6677');
 
   Transaction? _currentTransaction;
@@ -281,23 +281,11 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
         child: Text(context.appText.printer_no_transaction_data),
       );
     }
-
     final transaction = _currentTransaction!;
     final dateToday = DateTime.now().formatDateOnly();
-    final startDate = transaction.startDate?.formatddMMyyyy() ?? '-';
-    final endDate = transaction.endDate?.formatddMMyyyy() ?? '-';
+    final startDate = transaction.startDate?.formatDateOnly() ?? '-';
+    final endDate = transaction.endDate?.formatDateOnly() ?? '-';
     final staffName = transaction.userName ?? '-';
-
-    final Map<String, String> data = {
-      context.appText.invoice_print_customer_name: transaction.customerName ?? '-',
-      context.appText.invoice_print_service_name: transaction.serviceName ?? '-',
-      context.appText.invoice_print_weight: '${transaction.weight ?? '-'} kg',
-      context.appText.invoice_print_amount: 'Rp ${transaction.amount?.formatNumber() ?? '0'}',
-      context.appText.invoice_print_notes: transaction.description ?? '-',
-      context.appText.invoice_print_staff_name: staffName,
-    };
-
-    final maxKeyLength = data.keys.map((e) => e.length).reduce((a, b) => a > b ? a : b);
 
     return SingleChildScrollView(
       child: Container(
@@ -311,41 +299,122 @@ class _PrintTransactionInvoiceScreenState extends State<PrintTransactionInvoiceS
         child: DefaultTextStyle(
           style: const TextStyle(
             fontFamily: 'Courier New',
-            fontSize: 12,
+            fontSize: 11,
             color: AppColors.onSecondary,
+            height: 1.2,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(_businessNameController.text, style: const TextStyle(fontWeight: FontWeight.bold)),
+              // Header with title
+              const Divider(thickness: 2),
+              Text(
+                context.appText.invoice_print_title.toUpperCase(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const Divider(thickness: 2),
+              const SizedBox(height: 8),
+
+              // Business Info
+              Text(_businessNameController.text, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
               Text(_businessAddressController.text),
               Text(_businessPhoneController.text),
+              const Divider(thickness: 1),
               const SizedBox(height: 8),
+
+              // QR Code placeholder
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.gray),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Center(
+                  child: Text(
+                    'QR\nCODE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Transaction ID and Date
+              Text(transaction.id ?? '-', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(dateToday),
               const Divider(thickness: 1),
-              Text(context.appText.invoice_print_title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text("#${transaction.id ?? '-'} | $dateToday"),
-              const Divider(thickness: 1),
+              const SizedBox(height: 8),
+
+              // Transaction Details
               Align(
                 alignment: Alignment.centerLeft,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: data.entries.map((e) {
-                    final paddedKey = e.key.padRight(maxKeyLength);
-                    return Text('$paddedKey : ${e.value}');
-                  }).toList(),
+                  children: [
+                    // Customer
+                    Text(
+                        '${context.appText.invoice_print_customer_name.padRight(15)}: ${transaction.customerName ?? '-'}'),
+                    const SizedBox(height: 4),
+
+                    // Service
+                    Text(
+                        '${context.appText.invoice_print_service_name.padRight(15)}: ${transaction.serviceName ?? '-'}'),
+                    const SizedBox(height: 4),
+
+                    // Weight
+                    Text('${context.appText.invoice_print_weight.padRight(15)}: ${transaction.weight ?? '-'} kg'),
+                    const SizedBox(height: 4),
+
+                    // Amount
+                    Text(
+                      '${context.appText.invoice_print_amount.padRight(15)}: ${transaction.amount?.formatNumber() ?? '-'}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+
+                    // Staff
+                    Text('${context.appText.invoice_print_staff_name.padRight(15)}: $staffName'),
+
+                    // Notes (if available)
+                    if (transaction.description != null && transaction.description!.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text('${context.appText.invoice_print_notes.padRight(15)}: ${transaction.description!}'),
+                    ],
+                  ],
                 ),
               ),
+
+              const SizedBox(height: 8),
               const Divider(thickness: 1),
-              Text('$startDate -> $endDate'),
-              const SizedBox(height: 4),
-              Text(
-                '${getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other)}'
-                ' | '
-                '${getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other)}',
-              ),
+
+              // Dates Section
+              Text(startDate, style: const TextStyle(fontWeight: FontWeight.bold)),
+              const Text('---', style: TextStyle(fontSize: 8)),
+              Text(endDate, style: const TextStyle(fontWeight: FontWeight.bold)),
+
               const Divider(thickness: 1),
               const SizedBox(height: 8),
-              Text(context.appText.invoice_print_thank_you),
+
+              // Status
+              Text(
+                '${getTransactionStatusValue(context, transaction.transactionStatus ?? TransactionStatus.other)} | ${getPaymentStatusValue(context, transaction.paymentStatus ?? PaymentStatus.other)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+
+              const Divider(thickness: 1),
+              const SizedBox(height: 8),
+
+              // Thank You
+              Text(
+                context.appText.invoice_print_thank_you,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),
