@@ -7,6 +7,7 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/utils/context_extensions.dart';
 import '../../../../core/utils/price_formatter.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
@@ -16,7 +17,6 @@ import '../../../../core/widgets/widget_dropdown_bottom_sheet_item.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
-import '../../../auth/domain/entities/auth.dart';
 import '../../../customer/domain/entities/customer.dart';
 import '../../../customer/domain/entities/gender.dart';
 import '../../../customer/presentation/bloc/customer_bloc.dart';
@@ -93,7 +93,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
 
-  String? _currentUserId;
+  int? _currentUserId;
   Customer? _selectedCustomer;
   Service? _selectedService;
   Transaction? _currentTransaction;
@@ -156,7 +156,11 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
             context.showSnackbar(state.message);
           } else if (state is TransactionStateSuccessCreateTransaction) {
             context.showSnackbar(context.appText.transaction_add_success_message);
-            context.pop(true);
+            context.pop();
+            pushViewTransaction(
+              context: context,
+              transactionId: state.transactionId.toString(),
+            );
           } else if (state is TransactionStateSuccessUpdateTransaction) {
             context.showSnackbar(context.appText.transaction_update_success_message);
             context.pop();
@@ -671,8 +675,16 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
     }
   }
 
-  void _getCurrentUserId() {
-    _currentUserId = AuthManager.currentUser!.id;
+  void _getCurrentUserId() async {
+    // Get the ID from public.users table
+    final authService = serviceLocator<AuthService>();
+    _currentUserId = await authService.getCurrentUserId();
+
+    if (_currentUserId == null) {
+      if (mounted) {
+        context.showSnackbar('Error: Could not get user ID. Please try again.');
+      }
+    }
   }
 
   void _setDefaultDates() {
@@ -777,9 +789,14 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
         return;
       }
 
+      if (_currentUserId == null) {
+        context.showSnackbar('Error: User ID not found. Please try logging in again.');
+        return;
+      }
+
       final transaction = Transaction(
         id: _isAddMode ? null : _currentTransaction!.id,
-        userId: _currentUserId,
+        userId: _currentUserId?.toString(),
         customerId: _selectedCustomer!.id,
         serviceId: _selectedService!.id,
         customerName: _selectedCustomer!.name,

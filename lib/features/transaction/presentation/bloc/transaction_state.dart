@@ -68,7 +68,16 @@ class TransactionStateSuccessGetTransactionById extends TransactionState {
   List<Object> get props => [transaction];
 }
 
-class TransactionStateSuccessCreateTransaction extends TransactionState {}
+class TransactionStateSuccessCreateTransaction extends TransactionState {
+  final String transactionId;
+
+  const TransactionStateSuccessCreateTransaction({
+    required this.transactionId,
+  });
+
+  @override
+  List<Object> get props => [transactionId];
+}
 
 class TransactionStateSuccessUpdateTransaction extends TransactionState {}
 

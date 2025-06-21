@@ -75,4 +75,21 @@ class AuthService {
   Future<AuthResponse> refreshSession() async {
     return await supabaseClient.auth.refreshSession();
   }
+
+  /// Get current user's ID from public.users table
+  Future<int?> getCurrentUserId() async {
+    try {
+      final user = currentUser;
+      if (user == null) return null;
+
+      final response = await supabaseClient.from('users').select('id').eq('user_id', user.id).single();
+
+      return response['id'] as int?;
+    } catch (e) {
+      if (kDebugMode) {
+        print('❌ Error getting user ID: $e');
+      }
+      return null;
+    }
+  }
 }

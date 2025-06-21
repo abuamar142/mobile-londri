@@ -11,7 +11,7 @@ class TransactionCreateTransaction {
     required this.transactionRepository,
   });
 
-  Future<Either<Failure, void>> call(Transaction transaction) async {
+  Future<Either<Failure, String>> call(Transaction transaction) async {
     return await transactionRepository.createTransaction(transaction);
   }
 }

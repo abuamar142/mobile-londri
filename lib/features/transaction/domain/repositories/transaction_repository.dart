@@ -8,7 +8,7 @@ import '../entities/transaction_status.dart';
 abstract class TransactionRepository {
   Future<Either<Failure, List<Transaction>>> getTransactions();
   Future<Either<Failure, Transaction>> getTransactionById(String id);
-  Future<Either<Failure, void>> createTransaction(Transaction transaction);
+  Future<Either<Failure, String>> createTransaction(Transaction transaction);
   Future<Either<Failure, void>> updateTransaction(Transaction transaction);
   Future<Either<Failure, void>> deleteTransaction(String id);
   Future<Either<Failure, void>> hardDeleteTransaction(String id);

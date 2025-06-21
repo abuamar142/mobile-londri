@@ -9,7 +9,7 @@ import '../models/transaction_model.dart';
 abstract class TransactionRemoteDatasource {
   Future<List<TransactionModel>> readTransactions();
   Future<TransactionModel> readTransactionById(String id);
-  Future<void> createTransaction(TransactionModel transaction);
+  Future<String> createTransaction(TransactionModel transaction);
   Future<void> updateTransaction(TransactionModel transaction);
   Future<void> deleteTransaction(String id);
   Future<void> hardDeleteTransaction(String id);
@@ -74,11 +74,13 @@ class TransactionRemoteDatasourceImplementation extends TransactionRemoteDatasou
   }
 
   @override
-  Future<void> createTransaction(TransactionModel transaction) async {
+  Future<String> createTransaction(TransactionModel transaction) async {
     try {
       Map<String, dynamic> data = transaction.toJson().cleanNulls();
 
-      await supabaseClient.from('transactions').insert(data);
+      final response = await supabaseClient.from('transactions').insert(data).select('id').single();
+
+      return response['id'] as String;
     } on PostgrestException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {

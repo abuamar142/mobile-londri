@@ -116,12 +116,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     emit(TransactionStateLoading());
 
-    Either<Failure, void> result = await transactionCreateTransaction(event.transaction);
+    Either<Failure, String> result = await transactionCreateTransaction(event.transaction);
 
     result.fold((left) {
       emit(TransactionStateFailure(message: left.message));
     }, (right) {
-      emit(TransactionStateSuccessCreateTransaction());
+      emit(TransactionStateSuccessCreateTransaction(transactionId: right));
     });
   }
 
@@ -274,7 +274,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         final description = transaction.description?.toLowerCase() ?? '';
         final query = _currentQuery.toLowerCase();
 
-        return customerName.contains(query) || serviceName.contains(query) || transactionId.contains(query) || description.contains(query);
+        return customerName.contains(query) ||
+            serviceName.contains(query) ||
+            transactionId.contains(query) ||
+            description.contains(query);
       }).toList();
     }
 

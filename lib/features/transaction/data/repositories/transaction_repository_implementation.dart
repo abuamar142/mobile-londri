@@ -42,11 +42,11 @@ class TransactionRepositoryImplementation extends TransactionRepository {
   }
 
   @override
-  Future<Either<Failure, void>> createTransaction(Transaction transaction) async {
+  Future<Either<Failure, String>> createTransaction(Transaction transaction) async {
     try {
       final paymentStatus = transaction.paymentStatus ?? PaymentStatus.notPaidYet;
 
-      await transactionRemoteDatasource.createTransaction(
+      final transactionId = await transactionRemoteDatasource.createTransaction(
         TransactionModel(
           userId: transaction.userId,
           customerId: transaction.customerId,
@@ -64,7 +64,7 @@ class TransactionRepositoryImplementation extends TransactionRepository {
         ),
       );
 
-      return const Right(null);
+      return Right(transactionId);
     } on ServerException catch (e) {
       return Left(Failure(message: e.message));
     } catch (e) {

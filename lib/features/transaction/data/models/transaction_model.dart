@@ -56,7 +56,7 @@ class TransactionModel extends Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'staff_id': userId,
+      'staff_id': userId != null ? int.tryParse(userId!) : null,
       'customer_id': customerId,
       'service_id': serviceId,
       'weight': weight,
