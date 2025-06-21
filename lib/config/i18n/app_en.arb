@@ -533,6 +533,14 @@
   "@home_screen_role_text": {
     "description": "Role text displayed on the home screen"
   },
+  "home_screen_dialog_logout_title": "Logout",
+  "@home_screen_dialog_logout_title": {
+    "description": "Title for the logout dialog on the home screen"
+  },
+  "home_screen_dialog_logout_message": "Are you sure you want to logout?",
+  "@home_screen_dialog_logout_message": {
+    "description": "Message displayed in the logout dialog on the home screen"
+  },
   "home_screen_statistic_today": "Last 3 Days Statistics",
   "@home_screen_statistic_today": {
     "description": "Label for last 3 days statistics on the home screen"

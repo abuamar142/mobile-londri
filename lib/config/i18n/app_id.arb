@@ -150,6 +150,8 @@
   "home_screen_title": "Beranda",
   "home_screen_welcome_text": "Selamat datang {userName}!",
   "home_screen_role_text": "{roleName} Londri",
+  "home_screen_dialog_logout_title": "Keluar",
+  "home_screen_dialog_logout_message": "Apakah Anda yakin ingin keluar dari aplikasi?",
   "home_screen_statistic_today": "Statistik 3 Hari Terakhir",
   "home_screen_statistic_revenue": "Pendapatan",
   "home_screen_statistic_transaction_on_progress": "Sedang Diproses",

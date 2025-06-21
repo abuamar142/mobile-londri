@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/utils/show_confirmation_dialog.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_loading.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -98,7 +99,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _logout() => _authBloc.add(AuthEventLogout());
+  void _logout() async {
+    await showConfirmationDialog(
+      context: context,
+      title: context.appText.home_screen_dialog_logout_title,
+      content: context.appText.home_screen_dialog_logout_message,
+      onConfirm: () => _authBloc.add(AuthEventLogout()),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
