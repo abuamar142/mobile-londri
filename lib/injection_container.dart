@@ -15,6 +15,7 @@ import 'core/utils/get_timezone.dart';
 import 'features/auth/data/datasources/auth_remote_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_implementation.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
+import 'features/auth/domain/usecases/auth_check_initial_state.dart';
 import 'features/auth/domain/usecases/auth_login.dart';
 import 'features/auth/domain/usecases/auth_logout.dart';
 import 'features/auth/domain/usecases/auth_register.dart';
@@ -89,6 +90,16 @@ Future<void> initializeDependencies() async {
   // Flutter Dotenv
   await dotenv.load(fileName: ".env");
 
+  // Initialize Supabase dengan persistence
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_KEY']!,
+    authOptions: const FlutterAuthClientOptions(
+      authFlowType: AuthFlowType.pkce,
+      autoRefreshToken: true,
+    ),
+  );
+
   // Timezone
   timezone.initializeTimeZones();
   timezone.setLocalLocation(
@@ -114,11 +125,7 @@ Future<void> initializeDependencies() async {
   // Supabase
   serviceLocator
     ..registerLazySingleton<SupabaseClient>(
-      () => SupabaseClient(
-        dotenv.env['SUPABASE_URL']!,
-        dotenv.env['SUPABASE_KEY']!,
-        authOptions: const AuthClientOptions(authFlowType: AuthFlowType.implicit),
-      ),
+      () => Supabase.instance.client,
     )
 
     // Auth Service
@@ -146,6 +153,9 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<AuthLogout>(
       () => AuthLogout(authRepository: serviceLocator()),
     )
+    ..registerLazySingleton<AuthCheckInitialState>(
+      () => AuthCheckInitialState(authRepository: serviceLocator()),
+    )
 
     // Bloc
     ..registerFactory<AuthBloc>(
@@ -153,6 +163,7 @@ Future<void> initializeDependencies() async {
         authLogin: serviceLocator(),
         authRegister: serviceLocator(),
         authLogout: serviceLocator(),
+        authCheckInitialState: serviceLocator(),
       ),
     )
 

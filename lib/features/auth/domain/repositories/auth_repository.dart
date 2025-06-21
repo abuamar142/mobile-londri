@@ -14,4 +14,5 @@ abstract class AuthRepository {
     String name,
   );
   Future<Either<Failure, void>> logout();
+  Future<Either<Failure, Auth?>> checkInitialState();
 }

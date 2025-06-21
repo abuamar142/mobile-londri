@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../domain/entities/auth.dart';
+import '../../domain/usecases/auth_check_initial_state.dart';
 import '../../domain/usecases/auth_login.dart';
 import '../../domain/usecases/auth_logout.dart';
 import '../../domain/usecases/auth_register.dart';
@@ -15,11 +16,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthLogin authLogin;
   final AuthRegister authRegister;
   final AuthLogout authLogout;
+  final AuthCheckInitialState authCheckInitialState;
 
   AuthBloc({
     required this.authLogin,
     required this.authRegister,
     required this.authLogout,
+    required this.authCheckInitialState,
   }) : super(AuthStateInitial()) {
     on<AuthEventLogin>((event, emit) async {
       emit(AuthStateLoading());
@@ -68,6 +71,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ));
       }, (_) {
         emit(AuthStateSuccessLogout());
+      });
+    });
+
+    on<AuthEventCheckInitialState>((event, emit) async {
+      emit(AuthStateLoading());
+
+      Either<Failure, Auth?> result = await authCheckInitialState.call();
+
+      result.fold((left) {
+        emit(AuthStateInitial());
+      }, (right) {
+        if (right != null) {
+          emit(AuthStateSuccessLogin(auth: right));
+        } else {
+          emit(AuthStateInitial());
+        }
       });
     });
   }

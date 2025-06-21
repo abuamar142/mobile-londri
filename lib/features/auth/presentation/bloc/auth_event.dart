@@ -46,3 +46,5 @@ class AuthEventRegister extends AuthEvent {
 }
 
 class AuthEventLogout extends AuthEvent {}
+
+class AuthEventCheckInitialState extends AuthEvent {}

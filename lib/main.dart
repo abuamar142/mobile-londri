@@ -31,7 +31,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => serviceLocator<AuthBloc>()),
+        BlocProvider(create: (context) => serviceLocator<AuthBloc>()..add(AuthEventCheckInitialState())),
         BlocProvider(create: (context) => serviceLocator<ManageStaffBloc>()),
         BlocProvider(create: (context) => serviceLocator<ServiceBloc>()),
         BlocProvider(create: (context) => serviceLocator<CustomerBloc>()),

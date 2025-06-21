@@ -26,6 +26,8 @@ class AuthRepositoryImplementation extends AuthRepository {
         password,
       );
 
+      AuthManager.setCurrentUser(response);
+
       if (response.accessToken == null) {
         RoleManager.setUserRole('user');
       } else {
@@ -77,6 +79,37 @@ class AuthRepositoryImplementation extends AuthRepository {
   Future<Either<Failure, void>> logout() async {
     try {
       await authRemoteDatasource.logout();
+
+      AuthManager.clearCurrentUser();
+      RoleManager.setUserRole('');
+
+      return const Right(null);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(message: e.message),
+      );
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, Auth?>> checkInitialState() async {
+    try {
+      final authData = await authRemoteDatasource.checkInitialState();
+
+      if (authData != null) {
+        // Set the current user in AuthManager
+        AuthManager.setCurrentUser(authData);
+
+        // Set user role from stored token
+        final userRole = authData.accessToken!.getUserRoleFromJwt();
+        RoleManager.setUserRole(userRole);
+
+        return Right(authData);
+      }
 
       return const Right(null);
     } on ServerException catch (e) {

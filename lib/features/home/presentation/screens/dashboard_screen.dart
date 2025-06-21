@@ -84,18 +84,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final userName = AuthManager.currentUser?.name ?? 'User';
+    final userRole = RoleManager.currentUserRole?.value ?? 'User';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.appText.home_screen_welcome_text(AuthManager.currentUser!.name),
+          context.appText.home_screen_welcome_text(userName),
           style: AppTextStyle.heading1.copyWith(color: AppColors.primary),
           maxLines: 2,
           overflow: TextOverflow.visible,
         ),
         AppSizes.spaceHeight4,
         Text(
-          context.appText.home_screen_role_text(RoleManager.currentUserRole!.value),
+          context.appText.home_screen_role_text(userRole),
           style: AppTextStyle.body1.copyWith(
             color: AppColors.primary,
           ),

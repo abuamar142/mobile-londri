@@ -19,6 +19,7 @@ abstract class AuthRemoteDatasource {
     String accessToken,
   );
   Future<void> logout();
+  Future<AuthModel?> checkInitialState();
 }
 
 class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
@@ -34,8 +35,7 @@ class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
     String password,
   ) async {
     try {
-      final AuthResponse response =
-          await supabaseClient.auth.signInWithPassword(
+      final AuthResponse response = await supabaseClient.auth.signInWithPassword(
         email: email,
         password: password,
       );
@@ -56,8 +56,7 @@ class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
   @override
   Future<void> saveAuth(String userId, String accessToken) async {
     try {
-      final Map<String, dynamic> response =
-          await supabaseClient.from('users').select('''
+      final Map<String, dynamic> response = await supabaseClient.from('users').select('''
         id,
         email,
         name
@@ -107,6 +106,28 @@ class AuthRemoteDatasourceImplementation extends AuthRemoteDatasource {
   Future<void> logout() async {
     try {
       await supabaseClient.auth.signOut();
+    } on AuthException catch (e) {
+      throw ServerException(message: e.message);
+    } catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<AuthModel?> checkInitialState() async {
+    try {
+      final session = supabaseClient.auth.currentSession;
+
+      if (session?.user != null) {
+        return AuthModel(
+          id: session!.user.id,
+          accessToken: session.accessToken,
+          email: session.user.email ?? '',
+          name: session.user.userMetadata?['name'] ?? '',
+        );
+      }
+
+      return null;
     } on AuthException catch (e) {
       throw ServerException(message: e.message);
     } catch (e) {
