@@ -682,7 +682,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
 
     if (_currentUserId == null) {
       if (mounted) {
-        context.showSnackbar('Error: Could not get user ID. Please try again.');
+        context.showSnackbar(context.appText.error_user_id_not_found);
       }
     }
   }
@@ -790,7 +790,7 @@ class _ManageTransactionScreenState extends State<ManageTransactionScreen> {
       }
 
       if (_currentUserId == null) {
-        context.showSnackbar('Error: User ID not found. Please try logging in again.');
+        context.showSnackbar(context.appText.error_user_id_login_again);
         return;
       }
 

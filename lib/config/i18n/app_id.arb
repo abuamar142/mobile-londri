@@ -416,5 +416,10 @@
   "button_manage_customer": "Kelola Pelanggan",
   "button_manage_transaction": "Kelola Transaksi",
   "button_manage_service": "Kelola Layanan",
-  "button_export_report": "Ekspor Laporan"
+  "button_export_report": "Ekspor Laporan",
+
+  "@_ERROR_MESSAGES": {},
+
+  "error_user_id_not_found": "Tidak dapat mengambil ID pengguna. Silakan coba lagi.",
+  "error_user_id_login_again": "ID pengguna tidak ditemukan. Silakan masuk kembali."
 }
