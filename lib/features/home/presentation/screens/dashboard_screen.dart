@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../config/routes/app_routes.dart';
 import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
@@ -21,6 +19,7 @@ import '../../../manage_staff/presentation/screens/manage_staff_screen.dart';
 import '../../../service/presentation/screens/services_screen.dart';
 import '../../../transaction/domain/entities/transaction_status.dart';
 import '../../../transaction/presentation/screens/manage_transaction_screen.dart';
+import '../../../transaction/presentation/screens/track_transaction_screen.dart';
 import '../../../transaction/presentation/screens/transactions_screen.dart';
 import '../bloc/home_bloc.dart';
 
@@ -382,7 +381,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   context.appText.home_screen_button_quick_actions_track_transaction,
                   Icons.search,
                   AppColors.success,
-                  () => context.pushNamed(RouteNames.trackTransactions),
+                  () => pushTrackTransactionsScreen(context),
                 ),
               ),
           ],

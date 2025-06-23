@@ -95,14 +95,17 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
           return Scaffold(
             appBar: WidgetAppBar(
               title: context.appText.transaction_detail_screen_title,
-              action: IconButton(
-                onPressed: () => pushPrintTransactionInvoiceScreen(
-                  context: context,
-                  transactionId: widget.transactionId,
-                ),
-                icon: const Icon(Icons.print),
-                tooltip: context.appText.printer_print_invoice,
-              ),
+              action: RoleManager.hasPermission(Permission.trackTransactions) &&
+                      !RoleManager.hasPermission(Permission.manageTransactions)
+                  ? null
+                  : IconButton(
+                      onPressed: () => pushPrintTransactionInvoiceScreen(
+                        context: context,
+                        transactionId: widget.transactionId,
+                      ),
+                      icon: const Icon(Icons.print),
+                      tooltip: context.appText.printer_print_invoice,
+                    ),
             ),
             body: _buildBody(state),
             bottomNavigationBar: state is TransactionStateSuccessGetTransactionById ? _buildBottomBar(state.transaction) : null,
@@ -148,6 +151,11 @@ class _TransactionDetailScreenState extends State<TransactionDetailScreen> {
   }
 
   Widget _buildBottomBar(Transaction transaction) {
+    if (RoleManager.hasPermission(Permission.trackTransactions) &&
+        !RoleManager.hasPermission(Permission.manageTransactions)) {
+      return const SizedBox.shrink();
+    }
+
     return WidgetBottomBar(
       content: [
         // Button edit
