@@ -67,6 +67,10 @@ class TransactionRemoteDatasourceImplementation extends TransactionRemoteDatasou
 
       return TransactionModel.fromJson(response);
     } on PostgrestException catch (e) {
+      if (e.code == 'PGRST116') {
+        throw ServerException(message: 'transaction_not_found');
+      }
+
       throw ServerException(message: e.message);
     } catch (e) {
       throw ServerException(message: e.toString());

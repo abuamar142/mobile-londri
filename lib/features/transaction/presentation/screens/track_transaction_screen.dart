@@ -50,9 +50,12 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
       child: BlocConsumer<TransactionBloc, TransactionState>(
         listener: (context, state) {
           if (state is TransactionStateFailure) {
-            context.showSnackbar(state.message);
+            if (state.message == 'transaction_not_found') {
+              context.showSnackbar(context.appText.transaction_empty_message);
+            } else {
+              context.showSnackbar(state.message);
+            }
           } else if (state is TransactionStateSuccessGetTransactionById) {
-            // Navigate to transaction detail
             pushViewTransaction(
               context: context,
               transactionId: state.transaction.id!,

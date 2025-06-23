@@ -14,6 +14,7 @@ class RoleManager {
       Permission.hardDeleteCustomer,
       Permission.exportReports,
       Permission.accessMainMenu,
+      Permission.trackTransactions,
     ],
     UserRole.admin: [
       Permission.manageCustomers,

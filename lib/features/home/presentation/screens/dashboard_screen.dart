@@ -375,6 +375,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   () => pushAddCustomer(context: context),
                 ),
               ),
+            if (RoleManager.hasPermission(Permission.trackTransactions)) AppSizes.spaceWidth12,
             if (RoleManager.hasPermission(Permission.trackTransactions))
               Expanded(
                 child: _buildQuickActionCard(
