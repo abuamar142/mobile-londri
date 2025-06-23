@@ -109,6 +109,18 @@
   "transaction_payment_status_paid": "Sudah Dibayar",
   "transaction_payment_status_other": "Lainnya",
 
+  "@_TRACK_TRANSACTION": {},
+
+  "track_transaction_screen_title": "Lacak Transaksi",
+  "track_transaction_header_title": "Lacak Transaksi Anda",
+  "track_transaction_header_subtitle": "Masukkan ID transaksi Anda untuk melihat detail dan status",
+  "track_transaction_form_transaction_id_label": "ID Transaksi",
+  "track_transaction_form_transaction_id_hint": "Masukkan ID transaksi (contoh: abc123)",
+  "track_transaction_form_transaction_id_required": "ID Transaksi wajib diisi",
+  "track_transaction_button_search": "Cari Transaksi",
+  "track_transaction_instructions_title": "Cara menggunakan",
+  "track_transaction_instructions_content": "• Masukkan ID transaksi Anda pada kolom di atas\n• Ketuk \"Cari Transaksi\" untuk menemukan pesanan Anda\n• Lihat informasi detail tentang status laundry Anda\n• Hubungi kami jika Anda butuh bantuan mencari ID transaksi",
+
   "@_CUSTOMER": {},
 
   "customer_screen_title": "Pelanggan",

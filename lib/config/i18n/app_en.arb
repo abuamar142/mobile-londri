@@ -393,6 +393,45 @@
   "@transaction_payment_status_other": {
     "description": "Label for other payment status"
   },
+
+  "@_TRACK_TRANSACTION": {},
+
+  "track_transaction_screen_title": "Track Transaction",
+  "@track_transaction_screen_title": {
+    "description": "Title for the track transaction screen"
+  },
+  "track_transaction_header_title": "Track Your Transaction",
+  "@track_transaction_header_title": {
+    "description": "Header title for the track transaction screen"
+  },
+  "track_transaction_header_subtitle": "Enter your transaction ID to view details and status",
+  "@track_transaction_header_subtitle": {
+    "description": "Header subtitle for the track transaction screen"
+  },
+  "track_transaction_form_transaction_id_label": "Transaction ID",
+  "@track_transaction_form_transaction_id_label": {
+    "description": "Label for transaction ID form field"
+  },
+  "track_transaction_form_transaction_id_hint": "Enter transaction ID (e.g. abc123)",
+  "@track_transaction_form_transaction_id_hint": {
+    "description": "Hint text for transaction ID form field"
+  },
+  "track_transaction_form_transaction_id_required": "Transaction ID is required",
+  "@track_transaction_form_transaction_id_required": {
+    "description": "Validation message when transaction ID is required"
+  },
+  "track_transaction_button_search": "Search Transaction",
+  "@track_transaction_button_search": {
+    "description": "Button text for searching transaction"
+  },
+  "track_transaction_instructions_title": "How to use",
+  "@track_transaction_instructions_title": {
+    "description": "Title for instructions section"
+  },
+  "track_transaction_instructions_content": "• Enter your transaction ID in the field above\n• Tap \"Search Transaction\" to find your order\n• View detailed information about your laundry status\n• Contact us if you need help finding your transaction ID",
+  "@track_transaction_instructions_content": {
+    "description": "Instructions content for track transaction"
+  },
   
   "@_CUSTOMER": {},
 

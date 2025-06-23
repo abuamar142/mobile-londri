@@ -63,7 +63,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: WidgetAppBar(
-              title: 'Track Transaction',
+              title: context.appText.track_transaction_screen_title,
             ),
             body: GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
@@ -122,7 +122,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
               ),
               AppSizes.spaceHeight12,
               Text(
-                'Track Your Transaction',
+                context.appText.track_transaction_header_title,
                 style: AppTextStyle.heading2.copyWith(
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
@@ -131,7 +131,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
               ),
               AppSizes.spaceHeight8,
               Text(
-                'Enter your transaction ID to view details and status',
+                context.appText.track_transaction_header_subtitle,
                 style: AppTextStyle.body1.copyWith(
                   color: AppColors.gray,
                 ),
@@ -149,7 +149,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Transaction ID',
+          context.appText.track_transaction_form_transaction_id_label,
           style: AppTextStyle.heading3.copyWith(
             color: AppColors.primary,
           ),
@@ -157,12 +157,12 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
         AppSizes.spaceHeight12,
         WidgetTextFormField(
           controller: _transactionIdController,
-          label: 'Transaction ID',
-          hint: 'Enter transaction ID (e.g. abc123)',
+          label: context.appText.track_transaction_form_transaction_id_label,
+          hint: context.appText.track_transaction_form_transaction_id_hint,
           keyboardType: TextInputType.text,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Transaction ID is required';
+              return context.appText.track_transaction_form_transaction_id_required;
             }
             return null;
           },
@@ -185,7 +185,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
         SizedBox(
           width: double.infinity,
           child: WidgetButton(
-            label: 'Search Transaction',
+            label: context.appText.track_transaction_button_search,
             isLoading: state is TransactionStateLoading,
             onPressed: _searchTransaction,
             backgroundColor: AppColors.success,
@@ -218,7 +218,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
               ),
               AppSizes.spaceWidth8,
               Text(
-                'How to use',
+                context.appText.track_transaction_instructions_title,
                 style: AppTextStyle.body1.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
@@ -228,10 +228,7 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
           ),
           AppSizes.spaceHeight8,
           Text(
-            '• Enter your transaction ID in the field above\n'
-            '• Tap "Search Transaction" to find your order\n'
-            '• View detailed information about your laundry status\n'
-            '• Contact us if you need help finding your transaction ID',
+            context.appText.track_transaction_instructions_content,
             style: AppTextStyle.body2.copyWith(
               color: AppColors.gray,
             ),
