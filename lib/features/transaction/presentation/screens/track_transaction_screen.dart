@@ -7,6 +7,7 @@ import '../../../../config/textstyle/app_colors.dart';
 import '../../../../config/textstyle/app_sizes.dart';
 import '../../../../config/textstyle/app_textstyle.dart';
 import '../../../../core/utils/context_extensions.dart';
+import '../../../../core/utils/launch_whatsapp.dart';
 import '../../../../core/widgets/widget_app_bar.dart';
 import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
@@ -95,6 +96,12 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
                   ),
                 ),
               ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                launchWhatsapp(phone: '+6282223676677', message: '');
+              },
+              child: Icon(Icons.chat),
             ),
           );
         },
