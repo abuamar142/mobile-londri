@@ -125,6 +125,7 @@
   "track_transaction_scan_instructions_content": "Scanner akan otomatis mendeteksi dan membaca barcode",
   "track_transaction_scan_success": "Barcode berhasil discan: {code}",
   "track_transaction_scan_error": "Error scanning barcode: {error}",
+  "track_transaction_scan_cancelled": "Scan dibatalkan",
 
   "@_CUSTOMER": {},
 

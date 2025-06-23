@@ -452,6 +452,10 @@
   "@track_transaction_scan_error": {
     "description": "Error message when barcode scanning fails"
   },
+  "track_transaction_scan_cancelled": "Barcode scanning cancelled",
+  "@track_transaction_scan_cancelled": {
+    "description": "Message displayed when barcode scanning is cancelled"
+  },
   
   "@_CUSTOMER": {},
 

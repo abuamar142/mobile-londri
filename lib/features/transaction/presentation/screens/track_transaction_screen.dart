@@ -261,7 +261,15 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
     try {
       final result = await pushBarcodeScannerScreen(context);
 
-      _transactionIdController.text = result.toString();
+      if (result != null) {
+        _transactionIdController.text = result.toString();
+      } else {
+        if (mounted) {
+          context.showSnackbar(
+            context.appText.track_transaction_scan_cancelled,
+          );
+        }
+      }
     } catch (e) {
       if (mounted) {
         context.showSnackbar(
