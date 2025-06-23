@@ -45,8 +45,8 @@
 
 <div align="center">
 
-| I want to...                | Go directly to...                                   |
-| --------------------------- | --------------------------------------------------- |
+| I want to...                 | Go directly to...                                   |
+| ---------------------------  | --------------------------------------------------- |
 | 🚀 **Start from scratch**   | [🗃️ Database Setup](./supabase.md)                  |
 | 📊 **Add analytics**        | [📊 Dashboard Functions](./dashboard_statistics.md) |
 | 🗂️ **Browse all tables**    | [📋 Tables Overview](./tables/)                     |

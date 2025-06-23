@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../../../src/generated/i18n/app_localizations.dart';
+import '../src/generated/i18n/app_localizations.dart';
+import 'config/environment/environment_config.dart';
+import 'config/environment/environment_loader.dart';
 import 'config/i18n/i18n.dart';
 import 'config/routes/app_routes.dart';
 import 'config/theme/app_themes.dart';
-import 'core/constants/app_consts.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/customer/presentation/bloc/customer_bloc.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
@@ -18,6 +19,9 @@ import 'injection_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load production environment
+  await EnvironmentLoader.loadEnvironment(Environment.production);
 
   await initializeDependencies();
 
@@ -43,8 +47,8 @@ class MainApp extends StatelessWidget {
         valueListenable: AppLocales.localeNotifier,
         builder: (context, locale, child) {
           return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: appName,
+            debugShowCheckedModeBanner: EnvironmentConfig.debugMode,
+            title: EnvironmentConfig.appDisplayName,
             routerConfig: AppRoutes.routes,
             themeMode: ThemeMode.light,
             theme: AppThemes.lightTheme,

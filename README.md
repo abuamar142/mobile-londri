@@ -82,7 +82,8 @@ lib/
 │   └── home/                 # Dashboard & Statistics
 │   └── other-features/       # Other features (e.g., transactions, customers)
 ├── injection_container.dart  # Dependency Injection Setup
-└── main.dart                 # Application Entry Point
+├── main_dev.dart             # Development Entry Point
+└── main_prod.dart            # Production Entry Point
 ```
 
 ### 🏛️ Architecture Benefits
@@ -248,7 +249,6 @@ flutter analyze
 1. **[Supabase Setup](./docs/supabase.md)** - Database foundation setup
 2. **[Tables Documentation](./docs/tables/)** - Understand data structure
 3. **[Dashboard Statistics](./docs/dashboard_statistics.md)** - Implement analytics
-
 
 ### 🗄️ **Step 2: Database Setup**
 

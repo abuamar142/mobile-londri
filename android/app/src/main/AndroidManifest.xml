@@ -15,9 +15,8 @@
     
     <!-- Add feature declaration -->
     <uses-feature android:name="android.hardware.bluetooth" android:required="true" />
-    
-    <application
-        android:label="Londri"
+      <application
+        android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">

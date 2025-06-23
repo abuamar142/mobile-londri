@@ -80,7 +80,7 @@ flutter_icons:
 flutter:
   generate: true
   uses-material-design: true
-
   assets:
-    - .env
+    - .env.dev
+    - .env.prod
     - assets/images/

@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,6 +6,7 @@ import 'package:timezone/data/latest.dart' as timezone;
 import 'package:timezone/timezone.dart' as timezone;
 
 import 'app_observer.dart';
+import 'config/environment/environment_config.dart';
 import 'config/i18n/i18n.dart';
 import 'core/services/auth_service.dart';
 import 'core/services/permission_service.dart';
@@ -87,13 +87,10 @@ import 'features/transaction/presentation/bloc/transaction_bloc.dart';
 final serviceLocator = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  // Flutter Dotenv
-  await dotenv.load(fileName: ".env");
-
-  // Initialize Supabase dengan persistence
+  // Initialize Supabase with environment-specific credentials
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_KEY']!,
+    url: EnvironmentConfig.getSupabaseUrl(),
+    anonKey: EnvironmentConfig.getSupabaseKey(),
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
       autoRefreshToken: true,
