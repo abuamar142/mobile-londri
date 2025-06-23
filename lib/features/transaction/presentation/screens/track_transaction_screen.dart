@@ -13,6 +13,7 @@ import '../../../../core/widgets/widget_button.dart';
 import '../../../../core/widgets/widget_text_form_field.dart';
 import '../../../../injection_container.dart';
 import '../bloc/transaction_bloc.dart';
+import 'barcode_scanner_screen.dart';
 import 'transaction_detail_screen.dart';
 
 void pushTrackTransactionsScreen(BuildContext context) {
@@ -186,20 +187,28 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
               );
             }
           },
-          suffixIcon: IconButton(
-            onPressed: () => _transactionIdController.clear(),
-            icon: const Icon(Icons.clear),
+          suffixIcon: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: _scanBarcode,
+                icon: const Icon(Icons.qr_code_scanner),
+                tooltip: context.appText.track_transaction_scan_barcode_title,
+              ),
+              IconButton(
+                onPressed: () => _transactionIdController.clear(),
+                icon: const Icon(Icons.clear),
+                tooltip: context.appText.button_clear,
+              ),
+            ],
           ),
         ),
         AppSizes.spaceHeight16,
-        SizedBox(
-          width: double.infinity,
-          child: WidgetButton(
-            label: context.appText.track_transaction_button_search,
-            isLoading: state is TransactionStateLoading,
-            onPressed: _searchTransaction,
-            backgroundColor: AppColors.success,
-          ),
+        WidgetButton(
+          label: context.appText.track_transaction_button_search,
+          isLoading: state is TransactionStateLoading,
+          onPressed: _searchTransaction,
+          backgroundColor: AppColors.success,
         ),
       ],
     );
@@ -246,6 +255,20 @@ class _TrackTransactionsScreenState extends State<TrackTransactionsScreen> {
         ],
       ),
     );
+  }
+
+  void _scanBarcode() async {
+    try {
+      final result = await pushBarcodeScannerScreen(context);
+
+      _transactionIdController.text = result.toString();
+    } catch (e) {
+      if (mounted) {
+        context.showSnackbar(
+          context.appText.track_transaction_scan_error(e.toString()),
+        );
+      }
+    }
   }
 
   void _searchTransaction() {

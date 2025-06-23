@@ -12,6 +12,7 @@ import '../../features/printer/presentation/screens/print_transaction_invoice_sc
 import '../../features/printer/presentation/screens/printer_settings_screen.dart';
 import '../../features/service/presentation/screens/manage_service_screen.dart';
 import '../../features/service/presentation/screens/services_screen.dart';
+import '../../features/transaction/presentation/screens/barcode_scanner_screen.dart';
 import '../../features/transaction/presentation/screens/manage_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/track_transaction_screen.dart';
 import '../../features/transaction/presentation/screens/transaction_detail_screen.dart';
@@ -39,6 +40,7 @@ class RouteNames {
   static const String editTransaction = 'edit-transaction';
   static const String printTransaction = 'print-transaction';
   static const String trackTransactions = 'track-transactions';
+  static const String scanTransaction = 'scan-transaction';
   static const String printerSettings = 'printer-settings';
   static const String exportReports = 'export-reports';
 }
@@ -205,6 +207,15 @@ class AppRoutes {
         builder: (context, state) {
           return const TrackTransactionsScreen();
         },
+        routes: [
+          GoRoute(
+            path: 'scan',
+            name: RouteNames.scanTransaction,
+            builder: (context, state) {
+              return const BarcodeScannerScreen();
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/printer-settings',

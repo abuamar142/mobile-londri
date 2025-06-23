@@ -120,6 +120,11 @@
   "track_transaction_button_search": "Cari Transaksi",
   "track_transaction_instructions_title": "Cara menggunakan",
   "track_transaction_instructions_content": "• Masukkan ID transaksi Anda pada kolom di atas\n• Ketuk \"Cari Transaksi\" untuk menemukan pesanan Anda\n• Lihat informasi detail tentang status laundry Anda\n• Hubungi kami jika Anda butuh bantuan mencari ID transaksi",
+  "track_transaction_scan_barcode_title": "Scan Barcode",
+  "track_transaction_scan_instructions_title": "Posisikan barcode dalam frame",
+  "track_transaction_scan_instructions_content": "Scanner akan otomatis mendeteksi dan membaca barcode",
+  "track_transaction_scan_success": "Barcode berhasil discan: {code}",
+  "track_transaction_scan_error": "Error scanning barcode: {error}",
 
   "@_CUSTOMER": {},
 

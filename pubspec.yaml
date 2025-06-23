@@ -67,6 +67,9 @@ dependencies:
   path_provider: ^2.1.4
   share_plus: ^10.1.2
 
+  # Mobile Scanner
+  mobile_scanner: ^7.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

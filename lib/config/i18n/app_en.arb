@@ -432,6 +432,26 @@
   "@track_transaction_instructions_content": {
     "description": "Instructions content for track transaction"
   },
+  "track_transaction_scan_barcode_title": "Scan Barcode",
+  "@track_transaction_scan_barcode_title": {
+    "description": "Title for scan barcode screen"
+  },
+  "track_transaction_scan_instructions_title": "Position the barcode within the frame",
+  "@track_transaction_scan_instructions_title": {
+    "description": "Instructions for scanning barcode"
+  },
+  "track_transaction_scan_instructions_content": "The scanner will automatically detect and read the barcode",
+  "@track_transaction_scan_instructions_content": {
+    "description": "Instructions content for scanning barcode"
+  },
+  "track_transaction_scan_success": "Barcode successfully scanned: {code}",
+  "@track_transaction_scan_success": {
+    "description": "Success message when barcode is scanned"
+  },
+  "track_transaction_scan_error": "Error scanning barcode: {error}",
+  "@track_transaction_scan_error": {
+    "description": "Error message when barcode scanning fails"
+  },
   
   "@_CUSTOMER": {},
 
