@@ -64,12 +64,12 @@ class TransactionModel extends Transaction {
       'description': description,
       'transaction_status': transactionStatus?.value,
       'payment_status': paymentStatus?.value,
-      'start_date': startDate?.toIso8601String(),
-      'end_date': endDate?.toIso8601String(),
-      'created_at': createdAt?.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'paid_at': paidAt?.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'start_date': startDate?.toUtc().toIso8601String(),
+      'end_date': endDate?.toUtc().toIso8601String(),
+      'created_at': createdAt?.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
+      'paid_at': paidAt?.toUtc().toIso8601String(),
+      'deleted_at': deletedAt?.toUtc().toIso8601String(),
     };
   }
 }
